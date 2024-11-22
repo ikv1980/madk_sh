@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyCaptcha.Wpf" Version="0.9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.20" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.6" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+    <PackageReference Include="WPF-UI" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\DefaultUserPhoto.png" />
+    <None Remove="Resources\ico\attention.png" />
+    <None Remove="Resources\ico\danger.png" />
+    <None Remove="Resources\ico\success.png" />
+    <None Remove="Resources\Logo_tomware.png" />
+    <Resource Include="Resources\DefaultUserPhoto.png" />
+    <None Remove="Resources\Logo.png" />
+    <Resource Include="Resources\ico\attention.png" />
+    <Resource Include="Resources\ico\danger.png" />
+    <Resource Include="Resources\ico\success.png" />
+    <Resource Include="Resources\Logo.png" />
+    <None Remove="Resources\MapIcon.png" />
+    <Resource Include="Resources\Logo_tomware.png" />
+    <Resource Include="Resources\MapIcon.png" />
+  </ItemGroup>
+
+</Project>
