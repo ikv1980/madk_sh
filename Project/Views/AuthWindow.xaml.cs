@@ -29,8 +29,11 @@ namespace Project.Views
         // Авторизация пользователя 
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginTextBox.Text;
-            string enteredPassword = HashPassword(PasswordBox.Password);
+            //string login = LoginTextBox.Text;
+            //string enteredPassword = HashPassword(PasswordBox.Password);
+
+            string login = "ikv1980";
+            string enteredPassword = HashPassword("Kostik80");
 
             var user = await Task.Run(() => DbUtils.db.Users.SingleOrDefault(u => u.UsersLogin == login));
 
@@ -42,8 +45,8 @@ namespace Project.Views
                     MessageOk.Show("Доступ запрещён", "Ваш аккаунт заблокирован. Обратитесь к администратору.", "danger");
                     return;
                 }
-
-                new UserWindow(user).Show();
+                // Запуск рабочего окна проекта
+                new ProjectWindow(user).Show();
                 Close();
             }
             else

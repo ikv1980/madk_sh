@@ -1,0 +1,68 @@
+﻿<Window x:Class="Project.Views.ProjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Автосалон"
+        Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="#FFC4CBE8">
+    <Grid>
+        <TabControl x:Name="MainTabControl"
+                        FontSize="15"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        SelectionChanged="TabControl_Select">
+            <!-- Вкладка Пользователь -->
+            <TabItem Tag="UserPage">
+                <TabItem.Header>
+                    <DockPanel HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/user.png" Width="30" Height="30"/>
+                            <TextBlock Text="Пользователь" Margin="5"/>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Header>
+                <Frame x:Name="UserContent" Background="White" />
+            </TabItem>
+
+            <!-- Вкладка Заказы -->
+            <TabItem Tag="OrdersPage">
+                <TabItem.Header>
+                    <DockPanel HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/orders.png" Width="30" Height="30"/>
+                            <TextBlock Text="Заказы" Margin="5"/>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Header>
+                <Frame x:Name="OrdersContent" Background="White" />
+            </TabItem>
+
+            <!-- Вкладка Словари -->
+            <TabItem Tag="DictionaryPage">
+                <TabItem.Header>
+                    <DockPanel HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30"/>
+                            <TextBlock Text="Словари" Margin="5"/>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Header>
+                <Frame x:Name="DictionaryContent" Background="White" />
+            </TabItem>
+
+            <!-- Вкладка Настройки -->
+            <TabItem Tag="SettingsPage">
+                <TabItem.Header>
+                    <DockPanel HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/settings.png" Width="30" Height="30"/>
+                            <TextBlock Text="Настройки" Margin="5"/>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Header>
+                <Frame x:Name="SettingsContent" Background="White" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
