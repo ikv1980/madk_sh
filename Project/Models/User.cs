@@ -21,6 +21,8 @@ public partial class User
 
     public int UsersStatus { get; set; }
 
+    public DateOnly? UsersStatusChange { get; set; }
+
     public string UsersName { get; set; }
 
     public string UsersSurname { get; set; }
@@ -39,7 +41,7 @@ public partial class User
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-    public virtual UsersDepartmment UsersDepartmentNavigation { get; set; }
+    public virtual UsersDepartment UsersDepartmentNavigation { get; set; }
 
     public virtual UsersFunction UsersFunctionNavigation { get; set; }
 

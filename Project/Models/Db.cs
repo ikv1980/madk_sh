@@ -51,7 +51,7 @@ public partial class Db : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UsersDepartmment> UsersDepartmments { get; set; }
+    public virtual DbSet<UsersDepartment> UsersDepartmments { get; set; }
 
     public virtual DbSet<UsersFunction> UsersFunctions { get; set; }
 
@@ -703,6 +703,10 @@ public partial class Db : DbContext
                 .HasComment("Статус")
                 .HasColumnType("int(4)")
                 .HasColumnName("users_status");
+            entity.Property(e => e.UsersStatusChange)
+                .HasDefaultValueSql("current_timestamp()")
+                .HasComment("Дата смены статуса")
+                .HasColumnName("users_status_change");
             entity.Property(e => e.UsersSurname)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -723,12 +727,12 @@ public partial class Db : DbContext
                 .HasConstraintName("users_ibfk_3");
         });
 
-        modelBuilder.Entity<UsersDepartmment>(entity =>
+        modelBuilder.Entity<UsersDepartment>(entity =>
         {
             entity.HasKey(e => e.DepartmentId).HasName("PRIMARY");
 
             entity
-                .ToTable("users_departmment")
+                .ToTable("users_department")
                 .UseCollation("utf8mb3_uca1400_ai_ci");
 
             entity.Property(e => e.DepartmentId)
