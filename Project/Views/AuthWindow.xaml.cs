@@ -1,13 +1,11 @@
 ﻿using Project.Models;
 using Project.Tools;
-using System;
-using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Security.Cryptography;
-using Wpf.Ui.Animations;
 using Wpf.Ui.Controls;
+using Microsoft.EntityFrameworkCore;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views
 {
@@ -15,11 +13,15 @@ namespace Project.Views
     {
         int attemptCount;
         string answerForCaptcha;
+        private ValidateField checkField;
+        private Helpers helper;
 
         public AuthWindow()
         {
             InitializeComponent();
+            helper = new Helpers();
         }
+
         // Загрузка окна
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -30,19 +32,24 @@ namespace Project.Views
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
             //string login = LoginTextBox.Text;
-            //string enteredPassword = HashPassword(PasswordBox.Password);
+            //string enteredPassword = helper.HashPasswor(PasswordBox.Password);
 
             string login = "ikv1980";
-            string enteredPassword = HashPassword("Kostik80");
+            string enteredPassword = helper.HashPassword("Kostik80");
 
-            var user = await Task.Run(() => DbUtils.db.Users.SingleOrDefault(u => u.UsersLogin == login));
+            var user = await DbUtils.db.Users
+                .Where(u => u.UsersLogin == login)
+                .Include(u => u.UsersDepartmentNavigation)
+                .Include(u => u.UsersFunctionNavigation)
+                .Include(u => u.UsersStatusNavigation)
+                .SingleOrDefaultAsync();
 
             if (user != null && enteredPassword == user.UsersPassword)
             {
                 // Проверяем статус пользователя
                 if (user.UsersStatus == 1)
                 {
-                    MessageOk.Show("Доступ запрещён", "Ваш аккаунт заблокирован. Обратитесь к администратору.", "danger");
+                    MessageBox.Show("Ваш аккаунт заблокирован. Обратитесь к администратору.", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 // Запуск рабочего окна проекта
@@ -59,7 +66,7 @@ namespace Project.Views
                 }
                 else
                 {
-                    MessageOk.Show("Ошибка авторизации", "Логин или пароль введены неверно.\nПроверьте введенные данные", "attention");
+                    MessageBox.Show("Логин или пароль введены неверно.\nПроверьте введенные данные", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -70,23 +77,23 @@ namespace Project.Views
             string login = RegisterLoginTextBox.Text;
             string name = NameTextBox.Text;
             string surename = SurnameTextBox.Text;
-            string password = HashPassword(RegisterPasswordBox.Password);
+            string password = helper.HashPassword(RegisterPasswordBox.Password);
 
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surename))
             {
-                MessageOk.Show("Ошибка регистрации", "Необходимо заполнить все поля", "attention");
+                MessageBox.Show("Необходимо заполнить все поля.", "Ошибка регистрации", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (RegisterPasswordBox.Password.Length < 6)
+            checkField = new ValidateField();
+            if (checkField.Validate(RegisterPasswordBox.Password, "password", "Ошибка регистрации"))
             {
-                MessageOk.Show("Ошибка регистрации", "Пароль должен содержать не менее 6 символов.", "attention");
                 return;
             }
 
             if (DbUtils.db.Users.Any(u => u.UsersLogin == login))
             {
-                MessageOk.Show("Ошибка регистрации", "Пользователь с таким логином уже существует.", "danger");
+                MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка регистрации", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -107,26 +114,10 @@ namespace Project.Views
                 DbUtils.db.SaveChanges();                
             });
 
-            MessageOk.Show("Успешно", "Вы успешно зарегистрированы!", "success");
+            MessageBox.Show("Вы успешно зарегистрированы.\nДоступ будет разрешен, после подтверждения администратором.", "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);
             RegisterLoginTextBox.Text = string.Empty;
             RegisterPasswordBox.Clear();
             MainTabControl.SelectedIndex = 0;
-        }
-
-        // Шифрование пароля
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                // Генерация соли
-                byte[] salt = Encoding.UTF8.GetBytes("ikv1980MadK");
-                byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-                byte[] saltedPassword = passwordBytes.Concat(salt).ToArray();
-
-                // Хэширование
-                byte[] hash = sha256.ComputeHash(saltedPassword);
-                return Convert.ToBase64String(hash);
-            }
         }
 
         // Генерация капчи 
@@ -137,11 +128,13 @@ namespace Project.Views
             answerForCaptcha = Captcha.CaptchaText;
             AnswerTextBox.Text = string.Empty;
         }
+
         // генерация новой капчи
         private void CaptchaLeftClick(object sender, RoutedEventArgs e)
         {
             GenerateCaptcha();
         }
+
         // проверка капчи
         private void CaptchaRightClick(object sender, RoutedEventArgs e)
         {

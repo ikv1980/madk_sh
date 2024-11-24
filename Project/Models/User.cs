@@ -21,7 +21,7 @@ public partial class User
 
     public int UsersStatus { get; set; }
 
-    public DateOnly? UsersStatusChange { get; set; }
+    public DateOnly UsersStatusChange { get; set; }
 
     public string UsersName { get; set; }
 
@@ -31,7 +31,7 @@ public partial class User
 
     public string UsersPhone { get; set; }
 
-    public DateOnly? UsersBirthday { get; set; }
+    public DateOnly UsersBirthday { get; set; }
 
     public DateOnly UsersStartWork { get; set; }
 

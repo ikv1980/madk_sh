@@ -51,7 +51,7 @@ public partial class Db : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UsersDepartment> UsersDepartmments { get; set; }
+    public virtual DbSet<UsersDepartment> UsersDepartments { get; set; }
 
     public virtual DbSet<UsersFunction> UsersFunctions { get; set; }
 

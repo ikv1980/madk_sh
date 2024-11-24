@@ -7,11 +7,15 @@ namespace Project.Views
 {
     public partial class ProjectWindow : Window
     {
+        private User _currentUser;
+
         public ProjectWindow(User user)
         {
             InitializeComponent();
+
             // Устанавливаем начальную страницу
-            UserContent.Content = new UserPage();
+            _currentUser = user;
+            UserContent.Content = new UserPage(_currentUser);
         }
 
         private void TabControl_Select(object sender, SelectionChangedEventArgs e)
@@ -24,7 +28,7 @@ namespace Project.Views
                 switch (tag)
                 {
                     case "UserPage":
-                        UserContent.Content = new UserPage();
+                        UserContent.Content = new UserPage(_currentUser);
                         break;
                     case "OrdersPage":
                         OrdersContent.Content = new OrdersPage();
