@@ -1,9 +1,10 @@
-﻿using Project.Models;
-using Wpf.Ui.Controls;
+﻿using System.Windows;
+using Project.Models;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Tools
 {
-    static class DbUtils
+    internal static class DbUtils
     {
         public static Db db;
 
@@ -15,11 +16,19 @@ namespace Project.Tools
             }
             catch (Exception e)
             {
-                MessageBox box = new MessageBox();
-                box.Title = "Ошибка";
-                box.Content = "Ошибка подключения к БД";
-                box.Show();
+                MessageBox.Show("Ошибка подключения к БД\n${e}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        
+        //  Уровни доступа в программе (users.users_permission)
+        // В принципе можно не устанавливать тут, а просто сразу проверять на странице авторизации
+        public static class Roles
+        {
+            public static string admin = "1";
+
+            public static string manager = "2";
+
+            public static string newuser = "3";
         }
     }
 }

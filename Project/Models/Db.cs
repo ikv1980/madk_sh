@@ -223,9 +223,9 @@ public partial class Db : DbContext
                 .HasComment("Наименование")
                 .HasColumnName("country_name")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.CuuntryDelete)
+            entity.Property(e => e.CountryDelete)
                 .HasComment("Метка удаления")
-                .HasColumnName("cuuntry_delete");
+                .HasColumnName("country_delete");
         });
 
         modelBuilder.Entity<CarsMark>(entity =>

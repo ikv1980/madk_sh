@@ -11,6 +11,10 @@
   <ItemGroup>
     <PackageReference Include="EasyCaptcha.Wpf" Version="0.9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     <PackageReference Include="WPF-UI" Version="2.0.3" />
@@ -27,6 +31,8 @@
     <Resource Include="Resources\ico\user.png" />
     <Resource Include="Resources\Logo.png" />
     <Resource Include="Resources\Logo_tomware.png" />
+    <None Remove="Resources\ico\report.png" />
+    <Resource Include="Resources\ico\report.png" />
   </ItemGroup>
 
 </Project>

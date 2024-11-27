@@ -1,8 +1,6 @@
 ﻿using Project.Models;
 using Project.Tools;
-using System.Text;
 using System.Windows;
-using System.Security.Cryptography;
 using Wpf.Ui.Controls;
 using Microsoft.EntityFrameworkCore;
 using MessageBox = System.Windows.MessageBox;
@@ -34,7 +32,7 @@ namespace Project.Views
             //string login = LoginTextBox.Text;
             //string enteredPassword = helper.HashPasswor(PasswordBox.Password);
 
-            string login = "ikv1980";
+            string login = "admin";
             string enteredPassword = helper.HashPassword("Kostik80");
 
             var user = await DbUtils.db.Users
@@ -106,7 +104,8 @@ namespace Project.Views
                 UsersSurname = surename,
                 UsersDepartment = 1,
                 UsersFunction = 1,
-                UsersStatus = 1
+                UsersStatus = 1,
+                UsersPermissions = "3",
             };
 
             await Task.Run(() => { 

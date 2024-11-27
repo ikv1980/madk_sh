@@ -10,17 +10,19 @@ namespace Project.Views.Pages
     public partial class UserPage : Page
     {
         private readonly UserViewModel _viewModel;
+        private readonly User _user;
         private ValidateField checkField;
         private Helpers helper;
+        private bool showButton;
 
-        public UserPage(User user)
+        public UserPage()
         {
             InitializeComponent();
-
-            _viewModel = new UserViewModel(user);
-            DataContext = new UserViewModel(user);
+            _user = Global.CurrentUser;
+            _viewModel = new UserViewModel(_user);
+            DataContext = _viewModel;
             helper = new Helpers();
-
+            
             // Отслеживание изменений
             NewPasswordBox.PasswordChanged += OnFieldChanged;
             NewEmailTextBox.TextChanged += OnFieldChanged;
@@ -44,7 +46,6 @@ namespace Project.Views.Pages
             {
                 FullName = $"{user.UsersName} {user.UsersPatronymic} {user.UsersSurname}";
                 UsersLogin = user.UsersLogin;
-                UsersPassword = user.UsersPassword;
                 UsersEmail = user.UsersMail;
                 UsersPhone = user.UsersPhone;
                 UsersBirthday = user.UsersBirthday.ToString("dd.MM.yyyy");
@@ -57,11 +58,10 @@ namespace Project.Views.Pages
         // Отображение кнопки при изменениях в полях
         private void OnFieldChanged(object sender, RoutedEventArgs e)
         {
-            var flag = false;
-            flag = NewPasswordBox.Password != "" ||
+            showButton = NewPasswordBox.Password != "" ||
                    NewEmailTextBox.Text != _viewModel.UsersEmail ||
                    NewPhoneTextBox.Text != _viewModel.UsersPhone;
-            UpdateButton.Visibility = flag ?  Visibility.Visible : Visibility.Hidden;
+            UpdateButton.Visibility = showButton ?  Visibility.Visible : Visibility.Hidden;
         }
         // Сохранение изменений
         private async void UpdateButton_Click(object sender, RoutedEventArgs e)
@@ -88,27 +88,29 @@ namespace Project.Views.Pages
 
             try
             {
-                var user = await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
+                var currentUser = await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
 
-                if (user != null)
+                if (currentUser != null)
                 {
                     if (_viewModel.UsersPassword != "" && NewPasswordBox.Password != "")
                     {
-                        user.UsersPassword = helper.HashPassword(_viewModel.UsersPassword);
+                        currentUser.UsersPassword = helper.HashPassword(_viewModel.UsersPassword);
                     }
                   
-                    user.UsersMail = _viewModel.UsersEmail;
-                    user.UsersPhone = _viewModel.UsersPhone;
+                    currentUser.UsersMail = _viewModel.UsersEmail;
+                    currentUser.UsersPhone = _viewModel.UsersPhone;
 
-                    await DbUtils.db.SaveChangesAsync(); // Сохраняем изменения
+                    await DbUtils.db.SaveChangesAsync();
+
                     MessageBox.Show("Данные успешно обновленны.", "Сохранение данных", MessageBoxButton.OK, MessageBoxImage.Information);
+                    UpdateButton.Visibility = Visibility.Hidden;
+                    showButton = false;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка обновления данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
     }
 }

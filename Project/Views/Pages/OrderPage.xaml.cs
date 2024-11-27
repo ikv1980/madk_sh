@@ -2,9 +2,9 @@
 
 namespace Project.Views.Pages
 {
-    public partial class SettingsPage : Page
+    public partial class OrderPage : Page
     {
-        public SettingsPage()
+        public OrderPage()
         {
             InitializeComponent();
         }

@@ -6,7 +6,7 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:modern="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d"
-      Title="TestPage">
+      Title="UserPage">
     <ScrollViewer>
         <Grid Margin="50, 20">
             <!-- Основная структура -->

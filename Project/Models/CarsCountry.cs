@@ -11,7 +11,7 @@ public partial class CarsCountry
 
     public string CountryName { get; set; }
 
-    public bool CuuntryDelete { get; set; }
+    public bool CountryDelete { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
