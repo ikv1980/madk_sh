@@ -36,6 +36,7 @@ namespace Project.Views.Pages
                 new { Header = "Страны", Tag = "CarsCountry" },
                 new { Header = "Цвета", Tag = "CarsColor" },
                 new { Header = "Тип кузова", Tag = "CarsType" },
+                new { Header = "Страницы", Tag = "Pages" },
             };
 
             foreach (var tab in tabs)

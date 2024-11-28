@@ -31,6 +31,21 @@ public class Tables_Request
                 new ColumnDefinition("ColorName", "Название"),
                 new ColumnDefinition("ColorDelete", "Удалено", false)
             },
+            "CarsType" => new List<ColumnDefinition>
+            {
+                new ColumnDefinition("TypeId", "ID", false),
+                new ColumnDefinition("TypeName", "Название"),
+                //new ColumnDefinition("TypeDelete", "Удалено", false)
+            },
+            "SitePage" => new List<ColumnDefinition>
+            {
+                new ColumnDefinition("PageId", "ID", false),
+                new ColumnDefinition("PageNumber", "Номер"),
+                new ColumnDefinition("PageNameEng", "Название_ENG"),
+                new ColumnDefinition("PageNameRus", "Название_RUS"),
+                new ColumnDefinition("PageIcon", "Иконка"),
+                new ColumnDefinition("PageShow", "Видимость", false)
+            },
             _ => new List<ColumnDefinition>()
         };
     }
@@ -45,10 +60,16 @@ public class Tables_Request
             {
                 "CarsCountry" => _context.CarsCountries
                     .Select(x => new { x.CountryId, x.CountryName, CuuntryDelete = x.CountryDelete })
-                    .OrderBy(x => x.CountryId), // Добавлена сортировка
+                    .OrderBy(x => x.CountryId),
                 "CarsColor" => _context.CarsColors
                     .Select(x => new { x.ColorId, x.ColorName, x.ColorDelete })
-                    .OrderBy(x => x.ColorId), // Добавлена сортировка
+                    .OrderBy(x => x.ColorId),
+                "CarsType" => _context.CarsTypes
+                    .Select(x => new { x.TypeId, x.TypeName, x.TypeDelete })
+                    .OrderBy(x => x.TypeName),
+                "SitePage" => _context.SitePages
+                    .Select(x => new { x.PageId, x.PageNumber, x.PageNameEng, x.PageNameRus, x.PageIcon })
+                    .OrderBy(x => x.PageNumber),
                 _ => Enumerable.Empty<object>().AsQueryable()
             };
         }

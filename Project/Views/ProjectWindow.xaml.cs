@@ -24,9 +24,9 @@ namespace Project.Views
         {
             if(user.UsersPermissions == "3")
             {
-                OrderTab.Visibility = Visibility.Collapsed;
-                ReportTab.Visibility = Visibility.Collapsed;
-                DirectoryTab.Visibility = Visibility.Collapsed;
+                OrderPage.Visibility = Visibility.Collapsed;
+                ReportPage.Visibility = Visibility.Collapsed;
+                DirectoryPage.Visibility = Visibility.Collapsed;
                 SettingTab.Visibility = Visibility.Collapsed;
             }
             if(user.UsersPermissions == "2")
