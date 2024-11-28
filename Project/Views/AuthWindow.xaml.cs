@@ -30,7 +30,7 @@ namespace Project.Views
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
             //string login = LoginTextBox.Text;
-            //string enteredPassword = helper.HashPasswor(PasswordBox.Password);
+            //string enteredPassword = helper.HashPassword(PasswordBox.Password);
 
             string login = "admin";
             string enteredPassword = helper.HashPassword("Kostik80");
@@ -52,6 +52,7 @@ namespace Project.Views
                 }
                 // Запуск рабочего окна проекта
                 new ProjectWindow(user).Show();
+                Global.CurrentUser = user;
                 Close();
             }
             else

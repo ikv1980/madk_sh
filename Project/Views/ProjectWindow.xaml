@@ -6,7 +6,7 @@
         Height="1000" Width="1400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
-        Background="#FFC4CBE8">
+        Background="LightSkyBlue">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -21,15 +21,15 @@
                     SelectionChanged="TabControl_Select"
                     Grid.Row="0">
             <!-- Вкладка Выход -->
-            <TabItem Tag="Exit">
+            <TabItem x:Name="ExitTab">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/danger.png" Width="30" Height="30"/>
+                        <Image Source="/Resources/ico/exit.png" Width="30" Height="30"/>
                     </StackPanel>
                 </TabItem.Header>
             </TabItem>
             <!-- Вкладка Пользователь -->
-            <TabItem Tag="Project.Views.Pages.UserPage">
+            <TabItem x:Name="UserTab" Tag="Project.Views.Pages.UserPage">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/user.png" Width="30" Height="30"/>
@@ -39,7 +39,7 @@
             </TabItem>
 
             <!-- Вкладка Заказы -->
-            <TabItem Tag="Project.Views.Pages.OrderPage">
+            <TabItem x:Name="OrderTab" Tag="Project.Views.Pages.OrderPage">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/orders.png" Width="30" Height="30"/>
@@ -49,7 +49,7 @@
             </TabItem>
             
             <!-- Вкладка Отчеты -->
-            <TabItem Tag="Project.Views.Pages.ReportPage">
+            <TabItem x:Name="ReportTab" Tag="Project.Views.Pages.ReportPage">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/report.png" Width="30" Height="30"/>
@@ -59,7 +59,7 @@
             </TabItem>
 
             <!-- Вкладка Словари -->
-            <TabItem Tag="Project.Views.Pages.DictionaryPage">
+            <TabItem x:Name="DirectoryTab" Tag="Project.Views.Pages.DirectoryPage">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30"/>
@@ -69,7 +69,7 @@
             </TabItem>
 
             <!-- Вкладка Настройки -->
-            <TabItem Tag="Project.Views.Pages.SettingPage">
+            <TabItem x:Name="SettingTab" Tag="Project.Views.Pages.SettingPage">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/settings.png" Width="30" Height="30"/>

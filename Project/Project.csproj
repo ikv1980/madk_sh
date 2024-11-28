@@ -22,17 +22,16 @@
 
   <ItemGroup>
     <Resource Include="Resources\DefaultUserPhoto.png" />
-    <Resource Include="Resources\ico\attention.png" />
-    <Resource Include="Resources\ico\danger.png" />
     <Resource Include="Resources\ico\dictionary.png" />
     <Resource Include="Resources\ico\orders.png" />
     <Resource Include="Resources\ico\settings.png" />
-    <Resource Include="Resources\ico\success.png" />
     <Resource Include="Resources\ico\user.png" />
     <Resource Include="Resources\Logo.png" />
     <Resource Include="Resources\Logo_tomware.png" />
     <None Remove="Resources\ico\report.png" />
     <Resource Include="Resources\ico\report.png" />
+    <None Remove="Resources\ico\exit.png" />
+    <Resource Include="Resources\ico\exit.png" />
   </ItemGroup>
 
 </Project>

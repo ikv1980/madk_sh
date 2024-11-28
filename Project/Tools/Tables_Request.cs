@@ -3,7 +3,7 @@ using Project.Models;
 
 namespace Project.Tools
 {
-public class DictForTabl
+public class Tables_Request
 {
     private readonly string _tableName;         // тег запроса
     private readonly Db _context;               // контекст базы данных
@@ -12,7 +12,7 @@ public class DictForTabl
 
     public List<ColumnDefinition> Columns { get; private set; }
 
-    public DictForTabl(string tableName)
+    public Tables_Request(string tableName)
     {
         _tableName = tableName;
         _context = new Db();

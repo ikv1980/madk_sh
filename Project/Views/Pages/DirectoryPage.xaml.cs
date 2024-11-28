@@ -1,22 +1,26 @@
 ﻿using System.Data;
+using System.Windows;
 using Project.Tools;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Project.Views.Pages
 {
-    public partial class DictionaryPage : Page
+    public partial class DirectoryPage : Page
     {
-        private DictForTabl _currentDict;       // Активный справочник
+        private Tables_Request _currentDict;       // Активный справочник
         private int _currentPage = 1;           // Текущая страница
         private int _pageSize = 20;             // Значение по умолчанию
         private bool _isDataLoaded = false;     // Флаг загрузки данных
         private DispatcherTimer _searchTimer;   // Таймер
 
-        public DictionaryPage()
+        public DirectoryPage()
         {
             InitializeComponent();
             this.Loaded += Load_Default_Page;
+            
+            // Инициализация вкладок
+            InitializeTabs();
             
             // Инициализация таймера
             _searchTimer = new DispatcherTimer();
@@ -24,11 +28,37 @@ namespace Project.Views.Pages
             _searchTimer.Tick += OnSearchTimerTick;
         }
 
+        private void InitializeTabs()
+        {
+            // Определяем массив объектов с заголовками и тегами
+            var tabs = new[]
+            {
+                new { Header = "Страны", Tag = "CarsCountry" },
+                new { Header = "Цвета", Tag = "CarsColor" },
+                new { Header = "Тип кузова", Tag = "CarsType" },
+            };
+
+            foreach (var tab in tabs)
+            {
+                TabItem tabItem = new TabItem
+                {
+                    Header = tab.Header,
+                    Tag = tab.Tag,
+                };
+                DictionaryTabs.Items.Add(tabItem);
+            }
+
+            if (DictionaryTabs.Items.Count > 0)
+            {
+                DictionaryTabs.SelectedIndex = 0;
+            }
+        }
+        
         private void Load_Default_Page(object sender, System.Windows.RoutedEventArgs e)
         {
             if (DictionaryTabs.Items.Count > 0 && DictionaryTabs.Items[0] is TabItem firstTab && firstTab.Tag is string tag)
             {
-                _currentDict = new DictForTabl(tag);
+                _currentDict = new Tables_Request(tag);
                 LoadData();
             }
         }
@@ -37,7 +67,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.SelectedItem is TabItem selectedTab && selectedTab.Tag is string tag)
             {
-                _currentDict = new DictForTabl(tag);
+                _currentDict = new Tables_Request(tag);
                 _currentPage = 1;
                 _isDataLoaded = false; // Сбросить флаг при смене вкладки
                 LoadData();
@@ -51,15 +81,7 @@ namespace Project.Views.Pages
 
             //var searchQuery = SearchBox.Text;
             var searchQuery = SearchBox?.Text ?? string.Empty; // Проверка на null
-            Console.WriteLine($"++++++++++++ Search Text: {searchQuery}");
             var data = _currentDict.GetPageData(_currentPage, _pageSize, searchQuery);
-
-
-            if (DataTable == null)
-            {
-                Console.WriteLine("DataTable is not initialized!");
-                return; // Или выбросить исключение
-            }
 
             DataTable.Columns.Clear();
             foreach (var column in _currentDict.Columns.Where(c => c.IsVisible))
@@ -76,17 +98,15 @@ namespace Project.Views.Pages
 
             UpdatePaginationButtons();
         }
-
+        
+        // Номер текущей строки
         private void DataTable_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = $"{((_currentPage - 1) * _pageSize) + e.Row.GetIndex() + 1}";
         }
 
         
-
-
-
-        
+      
         // Добавление новой записи в БД
         private void AddRecordButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
