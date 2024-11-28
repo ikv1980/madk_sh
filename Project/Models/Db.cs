@@ -49,6 +49,8 @@ public partial class Db : DbContext
 
     public virtual DbSet<OrdersStatus> OrdersStatuses { get; set; }
 
+    public virtual DbSet<SitePage> SitePages { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UsersDepartment> UsersDepartments { get; set; }
@@ -217,15 +219,15 @@ public partial class Db : DbContext
             entity.Property(e => e.CountryId)
                 .HasColumnType("int(10)")
                 .HasColumnName("country_id");
+            entity.Property(e => e.CountryDelete)
+                .HasComment("Метка удаления")
+                .HasColumnName("country_delete");
             entity.Property(e => e.CountryName)
                 .IsRequired()
                 .HasMaxLength(30)
                 .HasComment("Наименование")
                 .HasColumnName("country_name")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.CountryDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("country_delete");
         });
 
         modelBuilder.Entity<CarsMark>(entity =>
@@ -624,6 +626,35 @@ public partial class Db : DbContext
                 .HasColumnName("order_status_name");
         });
 
+        modelBuilder.Entity<SitePage>(entity =>
+        {
+            entity.HasKey(e => e.PageId).HasName("PRIMARY");
+
+            entity.ToTable("site_pages");
+
+            entity.Property(e => e.PageId)
+                .HasColumnType("int(11)")
+                .HasColumnName("page_id");
+            entity.Property(e => e.PageIcon)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("page_icon");
+            entity.Property(e => e.PageNameEng)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("page_name_eng");
+            entity.Property(e => e.PageNameRus)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("page_name_rus");
+            entity.Property(e => e.PageNumber)
+                .HasColumnType("int(11)")
+                .HasColumnName("page_number");
+            entity.Property(e => e.PageShow)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("page_show");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UsersId).HasName("PRIMARY");
@@ -649,13 +680,16 @@ public partial class Db : DbContext
                 .HasComment("Дата рождения")
                 .HasColumnName("users_birthday");
             entity.Property(e => e.UsersDepartment)
+                .HasDefaultValueSql("'1'")
                 .HasComment("Отдел")
                 .HasColumnType("int(4)")
                 .HasColumnName("users_department");
             entity.Property(e => e.UsersFlagDelete)
+                .HasDefaultValueSql("'0'")
                 .HasComment("Метка удаления")
                 .HasColumnName("users_flag_delete");
             entity.Property(e => e.UsersFunction)
+                .HasDefaultValueSql("'1'")
                 .HasComment("Должность")
                 .HasColumnType("int(4)")
                 .HasColumnName("users_function");
@@ -696,7 +730,7 @@ public partial class Db : DbContext
                 .HasColumnName("users_phone")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.UsersStartWork)
-                .HasComment("Статус")
+                .HasComment("Дата устройства на работу")
                 .HasColumnName("users_start_work");
             entity.Property(e => e.UsersStatus)
                 .HasDefaultValueSql("'1'")
@@ -747,7 +781,6 @@ public partial class Db : DbContext
                 .HasComment("Метка удаления")
                 .HasColumnName("department_flag_delete");
             entity.Property(e => e.DepartmentMail)
-                .IsRequired()
                 .HasMaxLength(100)
                 .HasComment("E-mail отдела")
                 .HasColumnName("department_mail")

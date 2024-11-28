@@ -75,6 +75,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "site_pages",
+         "ObjectType": 0
+      },
+      {
          "Name": "users",
          "ObjectType": 0
       },
