@@ -45,14 +45,13 @@ namespace Project.Views
             if (user != null && enteredPassword == user.UsersPassword)
             {
                 // Проверяем статус пользователя
-                if (user.UsersStatus == 1)
+                if (user.UsersStatus == 1 || user.UsersStatus == 3)
                 {
-                    MessageBox.Show("Ваш аккаунт заблокирован. Обратитесь к администратору.", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Ваш аккаунт заблокирован.\nСтатус в системе [{user.UsersStatusNavigation.StatusName}].\nОбратитесь к администратору.", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 // Запуск рабочего окна проекта
                 new ProjectWindow(user).Show();
-                Global.CurrentUser = user;
                 Close();
             }
             else

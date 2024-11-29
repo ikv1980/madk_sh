@@ -2,17 +2,17 @@
 using System.Windows;
 using Project.Tools;
 using System.Windows.Controls;
-using System.Windows.Threading;
+using Project.Models;
+using Project.Tools.DbRequest;
 
 namespace Project.Views.Pages
 {
     public partial class DirectoryPage : Page
     {
-        private Tables_Request _currentDict;       // Активный справочник
+        private TablesRequest _currentDict;    // Активный справочник
         private int _currentPage = 1;           // Текущая страница
         private int _pageSize = 20;             // Значение по умолчанию
         private bool _isDataLoaded = false;     // Флаг загрузки данных
-        private DispatcherTimer _searchTimer;   // Таймер
 
         public DirectoryPage()
         {
@@ -21,22 +21,20 @@ namespace Project.Views.Pages
             
             // Инициализация вкладок
             InitializeTabs();
-            
-            // Инициализация таймера
-            _searchTimer = new DispatcherTimer();
-            _searchTimer.Interval = TimeSpan.FromMilliseconds(500); // Задержка 300 мс
-            _searchTimer.Tick += OnSearchTimerTick;
         }
 
+        // Построение вкладок справочников
         private void InitializeTabs()
         {
             // Определяем массив объектов с заголовками и тегами
+            // в теории так же можно вывести в БД, с возможностью управления.
+            // например `Dictionary` (dictionary_id, dictionary_number, dictionary_name_eng, dictionary_name_rus, dictionary_show)
             var tabs = new[]
             {
-                new { Header = "Страны", Tag = "CarsCountry" },
-                new { Header = "Цвета", Tag = "CarsColor" },
-                new { Header = "Тип кузова", Tag = "CarsType" },
-                new { Header = "Страницы", Tag = "Pages" },
+                new { Header = "Страны", Tag = "country" },
+                new { Header = "Цвета", Tag = "color" },
+                new { Header = "Тип кузова", Tag = "type" },
+                new { Header = "Страницы", Tag = "page" },
             };
 
             foreach (var tab in tabs)
@@ -59,7 +57,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.Items.Count > 0 && DictionaryTabs.Items[0] is TabItem firstTab && firstTab.Tag is string tag)
             {
-                _currentDict = new Tables_Request(tag);
+                _currentDict = new TablesRequest(tag);
                 LoadData();
             }
         }
@@ -68,7 +66,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.SelectedItem is TabItem selectedTab && selectedTab.Tag is string tag)
             {
-                _currentDict = new Tables_Request(tag);
+                _currentDict = new TablesRequest(tag);
                 _currentPage = 1;
                 _isDataLoaded = false; // Сбросить флаг при смене вкладки
                 LoadData();
@@ -81,11 +79,12 @@ namespace Project.Views.Pages
             if (_currentDict == null || _isDataLoaded) return;
 
             //var searchQuery = SearchBox.Text;
-            var searchQuery = SearchBox?.Text ?? string.Empty; // Проверка на null
+            var searchQuery = "";
+            //var searchQuery = SearchBox?.Text ?? string.Empty; // Проверка на null
             var data = _currentDict.GetPageData(_currentPage, _pageSize, searchQuery);
 
             DataTable.Columns.Clear();
-            foreach (var column in _currentDict.Columns.Where(c => c.IsVisible))
+            foreach (var column in _currentDict.GetColumns())
             {
                 DataTable.Columns.Add(new DataGridTextColumn
                 {
@@ -106,16 +105,6 @@ namespace Project.Views.Pages
             e.Row.Header = $"{((_currentPage - 1) * _pageSize) + e.Row.GetIndex() + 1}";
         }
 
-        
-      
-        // Добавление новой записи в БД
-        private void AddRecordButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            _currentDict?.AddRecord();
-            _isDataLoaded = false;
-            LoadData();
-        }
-
         // Выбор количества отображаемых записей из БД
         private void PageSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -124,9 +113,8 @@ namespace Project.Views.Pages
                 if (int.TryParse(selectedItem.Content.ToString(), out int newPageSize))
                 {
                     _pageSize = newPageSize;
-                    Console.WriteLine($"++++++++++++ Count Items for Page: {_pageSize}");
                     _currentPage = 1;
-                    _isDataLoaded = false; // Сбрасываем флаг загрузки данных
+                    _isDataLoaded = false;
                     LoadData();
                 }
             }
@@ -165,21 +153,18 @@ namespace Project.Views.Pages
         }
         
         
-
+        
+        
+        
+        
+        // Добавление новой записи в БД
+        private void AddRecord(object sender, System.Windows.RoutedEventArgs e)
+        {
+            return;
+        }
         private void SearchText(object sender, TextChangedEventArgs e)
         {
-            // Сбрасываем таймер при каждом изменении текста
-            _searchTimer.Stop();
-            _currentPage = 1;
-            _isDataLoaded = false;
-    
-            // Запускаем таймер
-            _searchTimer.Start();
-        }
-        private void OnSearchTimerTick(object sender, EventArgs e)
-        {
-            _searchTimer.Stop();
-            LoadData();
+            Console.WriteLine($"-----------------------{SearchBox.Text}");
         }
     }
 }

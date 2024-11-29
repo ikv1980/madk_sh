@@ -13,7 +13,6 @@ namespace Project.Views
             InitializeComponent();
             Global.CurrentUser = user;
             this.Loaded += change_Screeen;
-            // Можно добавить доп.инфу (ФИО, кнопку выхода, логотип)
             MainTabControl.SelectedIndex = 1;
             MainContent.Content = new UserPage();
             SetAccess(user);
