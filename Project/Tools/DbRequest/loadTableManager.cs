@@ -5,15 +5,19 @@ using System.Linq;
 
 namespace Project.Tools.DbRequest
 {
-    public class TableQueryManager
+    public class loadTableManager
     {
         private readonly Db _dbContext;
         private readonly Dictionary<string, List<ColumnDefinition>> _columnsMapping;
+        private readonly Dictionary<string, object> _parameters;
 
-        public TableQueryManager()
+        public loadTableManager(object parameters = null)
         {
-            _dbContext = DbUtils.db;
-
+            _dbContext = DbConnect.db;
+            _parameters = parameters?.GetType()
+                              .GetProperties()
+                              .ToDictionary(p => p.Name, p => p.GetValue(parameters)) 
+                          ?? new Dictionary<string, object>();
             _columnsMapping = new Dictionary<string, List<ColumnDefinition>>
             {
                 ["country"] = new List<ColumnDefinition>
@@ -45,6 +49,17 @@ namespace Project.Tools.DbRequest
 
             switch (tableTag)
             {
+                case "testRequest":
+                    //_currentDict = new load("country", new { search = SearchBox.Text });
+                    if (_parameters.TryGetValue("search", out var countryName))
+                    {
+                        query = _dbContext.CarsCountries
+                            .Where(x => EF.Functions.Like(x.CountryName, $"%{countryName}%"))
+                            .Select(x => new { x.CountryName });
+                    }
+                    columns = _columnsMapping["country"];
+                    Console.WriteLine(query.ToQueryString());
+                    break;
                 case "country":
                     query = _dbContext.CarsCountries.Select(x => new { x.CountryName });
                     columns = _columnsMapping[tableTag];
@@ -77,6 +92,7 @@ namespace Project.Tools.DbRequest
         }
     }
 
+    // Класс для определения имен полей
     public class ColumnDefinition
     {
         public string ColumnName { get; }

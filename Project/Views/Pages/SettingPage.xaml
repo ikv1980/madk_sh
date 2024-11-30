@@ -3,6 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="http://schemas.modernwpf.com/2019"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Title="SettingPage">
     <Grid>
@@ -13,9 +15,10 @@
                    Margin="15"/>
                    
         <StackPanel Margin="15,50,15,15">
-            <CheckBox x:Name="EditModeCheckBox" Content="Редактировать" 
-                      Checked="EditModeCheckBox_Checked" 
-                      Unchecked="EditModeCheckBox_Unchecked"/>
+            <controls:ToggleSwitch 
+                IsOn="False"
+                Toggled="ToggleSwitch_Toggled"
+                Header="Редактирование"/>
                       
             <!-- Таблица -->
             <DataGrid
@@ -50,7 +53,17 @@
                 </DataGrid.ColumnHeaderStyle>
             </DataGrid>
 
-            <Button Content="Создать" HorizontalAlignment="Left" Click="CreateButton_Click" />
+            <Button 
+                Content="Создать" 
+                HorizontalAlignment="Left" 
+                Click="CreateButton_Click" 
+                x:Name="saveButton" 
+                IsEnabled="False"/>
+            <Button 
+                Content="Удалить"
+                HorizontalAlignment="Left"
+                Click="DeleteButton_Click"
+                x:Name="delButton"/>
         </StackPanel>
     </Grid>
 </Page>

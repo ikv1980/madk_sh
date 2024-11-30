@@ -9,7 +9,7 @@ namespace Project.Views.Pages
 {
     public partial class DirectoryPage : Page
     {
-        private TablesRequest _currentDict;    // Активный справочник
+        private load _currentDict;              // Активный справочник
         private int _currentPage = 1;           // Текущая страница
         private int _pageSize = 20;             // Значение по умолчанию
         private bool _isDataLoaded = false;     // Флаг загрузки данных
@@ -57,7 +57,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.Items.Count > 0 && DictionaryTabs.Items[0] is TabItem firstTab && firstTab.Tag is string tag)
             {
-                _currentDict = new TablesRequest(tag);
+                _currentDict = new load(tag);
                 LoadData();
             }
         }
@@ -66,8 +66,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.SelectedItem is TabItem selectedTab && selectedTab.Tag is string tag)
             {
-                _currentDict = new TablesRequest(tag);
-                _currentPage = 1;
+                _currentDict = new load(tag);
                 _isDataLoaded = false; // Сбросить флаг при смене вкладки
                 LoadData();
             }

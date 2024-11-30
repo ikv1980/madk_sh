@@ -7,14 +7,16 @@ using Project.Models;
 
 namespace Project.Tools.DbRequest
 {
-    public class TablesRequest
+    // передача запроса в виде
+    // currentDict = new load(tag, new { paramentrOne = 1, paramentrTwo = "Home", paramentrThree = true});
+    public class load
     {
         private readonly IQueryable<object> _cachedQuery;
         private readonly List<ColumnDefinition> _columns;
 
-        public TablesRequest(string tableTag)
+        public load(string tableTag, dynamic parameters = null)
         {
-            var queryManager = new TableQueryManager();
+            var queryManager = new loadTableManager(parameters);
 
             if (!queryManager.TryGetQuery(tableTag, out var query, out var columns))
                 throw new ArgumentException($"Invalid table tag: {tableTag}");

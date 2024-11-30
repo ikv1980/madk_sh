@@ -4,11 +4,11 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Tools
 {
-    internal static class DbUtils
+    internal static class DbConnect
     {
         public static Db db;
 
-        static DbUtils()
+        static DbConnect()
         {
             try
             {

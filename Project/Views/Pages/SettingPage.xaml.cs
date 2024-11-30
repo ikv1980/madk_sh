@@ -1,17 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
+using ModernWpf.Controls;
 using Project.Models;
 using Project.Tools;
+
+using Page = System.Windows.Controls.Page;
 
 namespace Project.Views.Pages
 {
     public partial class SettingPage : Page
     {
-        private readonly Db _dbContext = DbUtils.db;
+        private readonly Db _dbContext = DbConnect.db;
         private bool _isEditMode = false;
+        private Dictionary<string, object> _originalValues = new();
 
         public SettingPage()
         {
@@ -19,41 +25,63 @@ namespace Project.Views.Pages
             LoadDataAsync();
         }
 
+        // Получение данных из БД
         private async Task LoadDataAsync()
         {
             DataTable.ItemsSource = await _dbContext.SitePages.ToListAsync();
         }
 
-        private void EditModeCheckBox_Checked(object sender, RoutedEventArgs e)
+        // Обработка редактирования (вкл/выкл)
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            _isEditMode = true;
-            DataTable.IsReadOnly = false;
+            var toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                _isEditMode = toggleSwitch.IsOn;
+                saveButton.IsEnabled = _isEditMode;
+                DataTable.IsReadOnly = !_isEditMode;
+                DataTable.BorderBrush = _isEditMode ? Brushes.Red : Brushes.Gray;
+                DataTable.BorderThickness = _isEditMode ? new Thickness(2) : new Thickness(1);
+                if (!_isEditMode) SaveChangesAsync();
+            }
         }
 
-        private void EditModeCheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            _isEditMode = false;
-            DataTable.IsReadOnly = true;
-            SaveChangesAsync(); // Save changes when edit mode is disabled
-        }
-
+        // Сохранение изменений
         private async void SaveChangesAsync()
         {
+            if (_dbContext.ChangeTracker.HasChanges())
+            {
+                await _dbContext.SaveChangesAsync();
+                MessageBox.Show("Изменения сохранены", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        // Создание записи (потом редактируем)
+        private async void CreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var newPage = new SitePage
+            {
+                PageNumber = 0, 
+                PageNameEng = "New Page",
+                PageNameRus = "Новая Страница",
+                PageIcon = "default.png",
+                PageShow = 1
+            };
+
+            _dbContext.SitePages.Add(newPage);
             await _dbContext.SaveChangesAsync();
-            MessageBox.Show("Изменения сохранены", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
+            await LoadDataAsync();
         }
 
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
+        // Удаление записи
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            //var createPage = new CreateReсord(); // Navigate to create page dialog
-            //createPage.ShowDialog();
-            LoadDataAsync(); // Reload data after creation
-        }
-
-        private void DataTable_LoadingRow(object sender, DataGridRowEventArgs e)
-        {
-            if (_isEditMode)
-                e.Row.Background = System.Windows.Media.Brushes.LightYellow;
+            if (DataTable.SelectedItem is SitePage selectedPage)
+            {
+                _dbContext.SitePages.Remove(selectedPage);
+                await _dbContext.SaveChangesAsync();
+                await LoadDataAsync();
+            }
         }
     }
 }
