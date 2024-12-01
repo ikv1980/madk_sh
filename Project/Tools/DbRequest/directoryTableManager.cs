@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace Project.Tools.DbRequest
 {
-    public class loadTableManager
+    public class directoryTableManager
     {
         private readonly Db _dbContext;
         private readonly Dictionary<string, List<ColumnDefinition>> _columnsMapping;
         private readonly Dictionary<string, object> _parameters;
 
-        public loadTableManager(object parameters = null)
+        public directoryTableManager(object parameters = null)
         {
             _dbContext = DbConnect.db;
             _parameters = parameters?.GetType()

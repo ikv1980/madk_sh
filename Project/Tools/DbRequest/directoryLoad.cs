@@ -9,14 +9,14 @@ namespace Project.Tools.DbRequest
 {
     // передача запроса в виде
     // currentDict = new load(tag, new { paramentrOne = 1, paramentrTwo = "Home", paramentrThree = true});
-    public class load
+    public class directoryLoad
     {
         private readonly IQueryable<object> _cachedQuery;
         private readonly List<ColumnDefinition> _columns;
 
-        public load(string tableTag, dynamic parameters = null)
+        public directoryLoad(string tableTag, dynamic parameters = null)
         {
-            var queryManager = new loadTableManager(parameters);
+            var queryManager = new directoryTableManager(parameters);
 
             if (!queryManager.TryGetQuery(tableTag, out var query, out var columns))
                 throw new ArgumentException($"Invalid table tag: {tableTag}");

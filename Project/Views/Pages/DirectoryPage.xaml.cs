@@ -9,7 +9,7 @@ namespace Project.Views.Pages
 {
     public partial class DirectoryPage : Page
     {
-        private load _currentDict;              // Активный справочник
+        private directoryLoad _currentDict;     // Активный справочник
         private int _currentPage = 1;           // Текущая страница
         private int _pageSize = 20;             // Значение по умолчанию
         private bool _isDataLoaded = false;     // Флаг загрузки данных
@@ -57,7 +57,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.Items.Count > 0 && DictionaryTabs.Items[0] is TabItem firstTab && firstTab.Tag is string tag)
             {
-                _currentDict = new load(tag);
+                _currentDict = new directoryLoad(tag);
                 LoadData();
             }
         }
@@ -66,7 +66,7 @@ namespace Project.Views.Pages
         {
             if (DictionaryTabs.SelectedItem is TabItem selectedTab && selectedTab.Tag is string tag)
             {
-                _currentDict = new load(tag);
+                _currentDict = new directoryLoad(tag);
                 _isDataLoaded = false; // Сбросить флаг при смене вкладки
                 LoadData();
             }
@@ -75,11 +75,9 @@ namespace Project.Views.Pages
         private void LoadData()
         {
             // Если объект не создан или данные уже загружены, то выход
-            if (_currentDict == null || _isDataLoaded) return;
+            if (_currentDict == null) return;
 
-            //var searchQuery = SearchBox.Text;
-            var searchQuery = "";
-            //var searchQuery = SearchBox?.Text ?? string.Empty; // Проверка на null
+            var searchQuery = SearchBox?.Text ?? string.Empty;
             var data = _currentDict.GetPageData(_currentPage, _pageSize, searchQuery);
 
             DataTable.Columns.Clear();
@@ -163,7 +161,9 @@ namespace Project.Views.Pages
         }
         private void SearchText(object sender, TextChangedEventArgs e)
         {
-            Console.WriteLine($"-----------------------{SearchBox.Text}");
+            _currentPage = 1;
+            _isDataLoaded = false;
+            LoadData();
         }
     }
 }
