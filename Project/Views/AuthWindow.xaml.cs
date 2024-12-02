@@ -35,7 +35,7 @@ namespace Project.Views
             string login = "admin";
             string enteredPassword = helper.HashPassword("Kostik80");
 
-            var user = await DbConnect.db.Users
+            var user = await DbUtils.db.Users
                 .Where(u => u.UsersLogin == login)
                 .Include(u => u.UsersDepartmentNavigation)
                 .Include(u => u.UsersFunctionNavigation)
@@ -89,7 +89,7 @@ namespace Project.Views
                 return;
             }
 
-            if (DbConnect.db.Users.Any(u => u.UsersLogin == login))
+            if (DbUtils.db.Users.Any(u => u.UsersLogin == login))
             {
                 MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка регистрации", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -109,8 +109,8 @@ namespace Project.Views
             };
 
             await Task.Run(() => { 
-                DbConnect.db.Users.Add(newUser);
-                DbConnect.db.SaveChanges();                
+                DbUtils.db.Users.Add(newUser);
+                DbUtils.db.SaveChanges();                
             });
 
             MessageBox.Show("Вы успешно зарегистрированы.\nДоступ будет разрешен, после подтверждения администратором.", "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);

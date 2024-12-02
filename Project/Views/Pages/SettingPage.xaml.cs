@@ -15,7 +15,7 @@ namespace Project.Views.Pages
 {
     public partial class SettingPage : Page
     {
-        private readonly Db _dbContext = DbConnect.db;
+        private readonly Db _dbContext = DbUtils.db;
         private bool _isEditMode = false;
         private Dictionary<string, object> _originalValues = new();
 

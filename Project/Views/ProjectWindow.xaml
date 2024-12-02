@@ -59,7 +59,7 @@
             </TabItem>
 
             <!-- Вкладка Словари -->
-            <TabItem x:Name="DirectoryPage" Tag="Project.Views.Pages.DirectoryPage">
+            <TabItem x:Name="DirectoryPage" Tag="Project.Views.Pages.DirectoryPages">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30"/>

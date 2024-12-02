@@ -14,7 +14,7 @@ namespace Project.Views
         {
             try
             {
-                bool canConnect = await Task.Run(() => DbConnect.db.Database.CanConnect());
+                bool canConnect = await Task.Run(() => DbUtils.db.Database.CanConnect());
 
                 if (canConnect)
                 {

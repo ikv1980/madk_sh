@@ -88,7 +88,7 @@ namespace Project.Views.Pages
 
             try
             {
-                var currentUser = await DbConnect.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
+                var currentUser = await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
 
                 if (currentUser != null)
                 {
@@ -100,7 +100,7 @@ namespace Project.Views.Pages
                     currentUser.UsersMail = _viewModel.UsersEmail;
                     currentUser.UsersPhone = _viewModel.UsersPhone;
 
-                    await DbConnect.db.SaveChangesAsync();
+                    await DbUtils.db.SaveChangesAsync();
 
                     MessageBox.Show("Данные успешно обновленны.", "Сохранение данных", MessageBoxButton.OK, MessageBoxImage.Information);
                     UpdateButton.Visibility = Visibility.Hidden;
