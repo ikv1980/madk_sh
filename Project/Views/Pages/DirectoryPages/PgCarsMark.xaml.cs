@@ -4,12 +4,13 @@ using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-    public partial class CarsColorPage : Page
+    public partial class PgCarsMark : Page
     {
-        public CarsColorPage()
+        public PgCarsMark()
         {
             InitializeComponent();
-            this.DataContext = new SomePagesViewModel<CarsColor>();
+            this.DataContext = new SomePagesViewModel<Models.CarsMark>();
         }
     }
 }
+

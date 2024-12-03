@@ -4,12 +4,12 @@ using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-   public partial class MmModelCountryPage : Page
+   public partial class PgMmModelCountry : Page
    {
-       public MmModelCountryPage()
+       public PgMmModelCountry()
        {
            InitializeComponent();
-           this.DataContext = new SomePagesViewModel<MmModelCountry>();
+           this.DataContext = new SomePagesViewModel<Models.MmModelCountry>();
        }
    } 
 }

@@ -4,12 +4,12 @@ using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-    public partial class MmMarkModelPage : Page
+    public partial class PgMmMarkModel : Page
     {
-        public MmMarkModelPage()
+        public PgMmMarkModel()
         {
             InitializeComponent();
-            this.DataContext = new SomePagesViewModel<MmMarkModel>();
+            this.DataContext = new SomePagesViewModel<Models.MmMarkModel>();
         }
     }
 }

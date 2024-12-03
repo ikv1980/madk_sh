@@ -100,32 +100,32 @@
                                 Width="{Binding ActualWidth, ElementName=Directoryes}">
                                 <Button
                                     Content="Страны"
-                                    Tag="{x:Type direct:CarsCountryPage}"
+                                    Tag="{x:Type direct:PgCarsCountry}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Цвета" 
-                                    Tag="{x:Type direct:CarsColorPage}"
+                                    Tag="{x:Type direct:PgCarsColor}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Марки" 
-                                    Tag="{x:Type direct:CarsMarkPage}"
+                                    Tag="{x:Type direct:PgCarsMark}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели" 
-                                    Tag="{x:Type direct:CarsModelPage}"
+                                    Tag="{x:Type direct:PgCarsModel}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели и Марки" 
-                                    Tag="{x:Type direct:MmMarkModelPage}"
+                                    Tag="{x:Type direct:PgMmMarkModel}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Страны и Модели" 
-                                    Tag="{x:Type direct:MmModelCountryPage}"
+                                    Tag="{x:Type direct:PgMmModelCountry}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                             </StackPanel>

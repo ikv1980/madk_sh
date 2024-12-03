@@ -131,10 +131,6 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
                 MessageBox.Show($"Ошибка при открытии страницы:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        else
-        {
-
-        }
     }
 
     private void OpenChangeDialog(object parameter)

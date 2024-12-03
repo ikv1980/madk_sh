@@ -1,0 +1,50 @@
+﻿<Window x:Class="Project.Views.Pages.DirectoryPages.Edit.EditColor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
+        mc:Ignorable="d"
+        xmlns:modern="http://schemas.modernwpf.com/2019"
+        xmlns:easy="clr-namespace:EasyCaptcha.Wpf;assembly=EasyCaptcha.Wpf"
+        WindowStartupLocation="CenterScreen"
+        modern:WindowHelper.UseModernWindowStyle="True"
+        Icon="/Resources/Logo.png"
+        modern:TitleBar.IsIconVisible="True"
+        Height="350" Width="350">
+    <Window.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="White"
+                          Offset="1"/>
+            <GradientStop Color="LightSkyBlue"
+                          Offset="0.4"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid>
+        <Image Source="/Resources/Logo.png" Width="130"
+               Margin="0 10 0 0"
+               VerticalAlignment="Top"/>
+        <modern:SimpleStackPanel HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Spacing="30"
+                                 Margin="0 100 0 0">
+            <TextBox FontSize="17"
+                     Width="280"
+                     modern:ControlHelper.CornerRadius="10"
+                     modern:ControlHelper.Header="Цвет"
+                     MaxLength="30"
+                     x:Name="ColorNameTextBox"
+                     modern:ControlHelper.PlaceholderText="Введите цвет"
+                     SelectionBrush="DeepSkyBlue"
+                     BorderBrush="DeepSkyBlue"/>
+            <Button Background="DeepSkyBlue"
+                    Content="Сохранить"
+                    x:Name="SaveButton"
+                    modern:ControlHelper.CornerRadius="10"
+                    Foreground="White"
+                    FontSize="17"
+                    Click="SaveButton_Click"
+                    HorizontalAlignment="Stretch"/>
+        </modern:SimpleStackPanel>
+    </Grid>
+</Window>
