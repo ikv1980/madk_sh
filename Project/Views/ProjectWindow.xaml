@@ -1,83 +1,139 @@
 ﻿<Window x:Class="Project.Views.ProjectWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:pages="clr-namespace:Project.Views.Pages"
+        xmlns:modern="http://schemas.modernwpf.com/2019"
+        xmlns:direct="clr-namespace:Project.Views.Pages.DirectoryPages"
         Title="Автосалон"
         Height="1000" Width="1400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="LightSkyBlue">
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="54"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Вкладки -->
-        <TabControl x:Name="MainTabControl"
-                    FontSize="15"
-                    VerticalAlignment="Stretch"
-                    SelectionChanged="TabControl_Select"
-                    Grid.Row="0">
-            <!-- Вкладка Выход -->
-            <TabItem x:Name="ExitPage">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/exit.png" Width="30" Height="30"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-            <!-- Вкладка Пользователь -->
-            <TabItem x:Name="UserPage" Tag="Project.Views.Pages.UserPage">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/user.png" Width="30" Height="30"/>
-                        <TextBlock Text="Пользователь" Margin="5"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
+        <!-- Основной Grid для вкладок -->
+        <Grid x:Name="MenuGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Для всех вкладок -->
+                <ColumnDefinition Width="Auto" />
+                <!-- Для справочников -->
+            </Grid.ColumnDefinitions>
 
-            <!-- Вкладка Заказы -->
-            <TabItem x:Name="OrderPage" Tag="Project.Views.Pages.OrderPage">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/orders.png" Width="30" Height="30"/>
-                        <TextBlock Text="Заказы" Margin="5"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-            
-            <!-- Вкладка Отчеты -->
-            <TabItem x:Name="ReportPage" Tag="Project.Views.Pages.ReportPage">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/report.png" Width="30" Height="30"/>
-                        <TextBlock Text="Отчеты" Margin="5"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-
-            <!-- Вкладка Словари -->
-            <TabItem x:Name="DirectoryPage" Tag="Project.Views.Pages.DirectoryPages">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30"/>
-                        <TextBlock Text="Справочники" Margin="5"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-
-            <!-- Вкладка Настройки -->
-            <TabItem x:Name="SettingTab" Tag="Project.Views.Pages.SettingPage">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="/Resources/ico/settings.png" Width="30" Height="30"/>
-                        <TextBlock Text="Настройки" Margin="5"/>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-        </TabControl>
+            <!-- Вкладки -->
+            <TabControl x:Name="MainTabControl"
+                        FontSize="15"
+                        VerticalAlignment="Stretch"
+                        SelectionChanged="TabControl_Select"
+                        Grid.Column="0">
+                <!-- Первый Grid -->
+                <!-- Вкладка Выход -->
+                <TabItem x:Name="ExitPage">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/exit.png" Width="30" Height="30"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <!-- Вкладка Пользователь -->
+                <TabItem x:Name="UserPage" Tag="Project.Views.Pages.UserPage">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/user.png" Width="30" Height="30"/>
+                            <TextBlock Text="Пользователь" Margin="5"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <!-- Вкладка Заказы -->
+                <TabItem x:Name="OrderPage" Tag="Project.Views.Pages.OrderPage">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/orders.png" Width="30" Height="30"/>
+                            <TextBlock Text="Заказы" Margin="5"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <!-- Вкладка Отчеты -->
+                <TabItem x:Name="ReportPage" Tag="Project.Views.Pages.ReportPage">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/report.png" Width="30" Height="30"/>
+                            <TextBlock Text="Отчеты" Margin="5"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <!-- Вкладка Настройки -->
+                <TabItem x:Name="SettingTab" Tag="Project.Views.Pages.SettingPage">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/settings.png" Width="30" Height="30"/>
+                            <TextBlock Text="Настройки" Margin="5"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+            </TabControl>
+            <TabControl x:Name="TabControl"
+                        FontSize="15"
+                        VerticalAlignment="Stretch"
+                        SelectionChanged="TabControl_Select"
+                        Margin="0, 0,5,0"
+                        Grid.Column="1">
+                <!-- Вкладка Настройки -->
+                <TabItem x:Name="Directoryes" MouseUp="Directoryes_MouseUp">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30"/>
+                            <TextBlock Text="Справочники" Margin="5"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <Popup x:Name="SubMenuPopup" PlacementTarget="{Binding ElementName=Directoryes}" StaysOpen="False">
+                        <Border 
+                            BorderBrush="LightSkyBlue" 
+                            BorderThickness="1" 
+                            Background="LightSkyBlue">  
+                            <StackPanel
+                                Background="White"
+                                Width="{Binding ActualWidth, ElementName=Directoryes}">
+                                <Button
+                                    Content="Страны"
+                                    Tag="{x:Type direct:CarsCountryPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Цвета" 
+                                    Tag="{x:Type direct:CarsColorPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Марки" 
+                                    Tag="{x:Type direct:CarsMarkPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Модели" 
+                                    Tag="{x:Type direct:CarsModelPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Модели и Марки" 
+                                    Tag="{x:Type direct:MmMarkModelPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Страны и Модели" 
+                                    Tag="{x:Type direct:MmModelCountryPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </TabItem>
+            </TabControl>
+        </Grid>
 
         <!-- Общий Frame для отображения страниц -->
         <Frame x:Name="MainContent" 

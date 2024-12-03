@@ -14,6 +14,6 @@ public partial class MmMarkModel
     public int ModelId { get; set; }
 
     public virtual CarsMark Mark { get; set; }
-
+    
     public virtual CarsModel Model { get; set; }
 }

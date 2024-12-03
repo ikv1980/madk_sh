@@ -1,0 +1,121 @@
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.MmModelCountryPage"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project.Views.Pages"
+      mc:Ignorable="d"
+      xmlns:props="clr-namespace:Project.Tools"
+      d:DesignHeight="450" d:DesignWidth="1100"
+      xmlns:modern="http://schemas.modernwpf.com/2019"
+      Title="CountryModelPage">
+    <Page.Resources>
+        <props:MultiBindingConverter x:Key="MultiBindingConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+
+        <modern:SimpleStackPanel Orientation="Vertical"
+                                 Margin="5 30"
+                                 Spacing="30">
+            <modern:AutoSuggestBox x:Name="SearchTextBox"
+                                   VerticalAlignment="Center"
+                                   PlaceholderText="Поиск"           
+                                   FontSize="17"
+                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchDataCommand}"
+                                   Text="{Binding SearchingText, Mode=TwoWay}"
+                                   BorderBrush="DeepSkyBlue"
+                                   modern:ControlHelper.CornerRadius="10"
+                                   QueryIcon="Find">
+
+            </modern:AutoSuggestBox>
+
+            <Button Background="DeepSkyBlue"
+                    Content="Добавить"
+                    x:Name="AddButton"
+                    Command="{Binding OpenAddDialogCommand}"
+                    
+                    modern:ControlHelper.CornerRadius="10"
+                    Foreground="White"
+                    FontSize="17"
+                    HorizontalAlignment="Stretch"/>
+
+            <Button Background="DeepSkyBlue"
+                    Content="Обновить"
+                    Command="{Binding RefreshCommand}"
+                    x:Name="RefreshButton"
+                    modern:ControlHelper.CornerRadius="10"
+                    Foreground="White"
+                    FontSize="17"
+                    HorizontalAlignment="Stretch"/>
+        </modern:SimpleStackPanel>
+
+        <DataGrid Grid.Column="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="0 5 0 0"
+                  HeadersVisibility="Column"
+                  BorderThickness="1"
+                  BorderBrush="DeepSkyBlue"
+                  Foreground="Black"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Auto"
+                  FontSize="18"
+                  ItemsSource="{Binding TableValue}">
+            <DataGrid.Columns>
+
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="DeepSkyBlue"
+                                    x:Name="ChangeButton"
+                                    Foreground="White"
+                                    Content="🖍"
+                                    Command="{Binding DataContext.OpenChangeDialogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                    FontSize="13"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Изменить">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                        <Binding RelativeSource="{RelativeSource Self}"/>
+
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Header="Модель"
+                                    Binding="{Binding Country.CountryName}" />
+                <DataGridTextColumn Header="Марка"
+                                    Binding="{Binding Model.ModelName}" />
+
+            </DataGrid.Columns>
+
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                       TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                    <Setter Property="FontWeight"
+                            Value="SemiBold" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="5 0 0 0" />
+                </Style>
+                <Style TargetType="ScrollBar">
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+    </Grid>
+</Page>
+

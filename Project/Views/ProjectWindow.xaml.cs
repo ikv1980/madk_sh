@@ -1,8 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using ModernWpf.Controls;
 using Project.Models;
 using Project.Tools;
 using Project.Views.Pages;
+using Page = System.Windows.Controls.Page;
 
 namespace Project.Views
 {
@@ -25,7 +28,6 @@ namespace Project.Views
             {
                 OrderPage.Visibility = Visibility.Collapsed;
                 ReportPage.Visibility = Visibility.Collapsed;
-                DirectoryPage.Visibility = Visibility.Collapsed;
                 SettingTab.Visibility = Visibility.Collapsed;
             }
             if(user.UsersPermissions == "2")
@@ -59,17 +61,64 @@ namespace Project.Views
             }
         }
         
+        // Выбор справочника
+        private void NavigationView_SelectionChanged(ModernWpf.Controls.NavigationView sender, ModernWpf.Controls.NavigationViewSelectionChangedEventArgs args)
+        {
+            NavigationViewItem item = args.SelectedItem as NavigationViewItem;
+            if (item.Tag is Type pageType && typeof(System.Windows.Controls.Page).IsAssignableFrom(pageType))
+            {
+                MainContent.Content = (System.Windows.Controls.Page)Activator.CreateInstance(pageType);
+            }
+            else if (item.Tag != null)
+            {
+                AuthWindow window = new AuthWindow();
+                window.Show();
+                this.Close();
+            }
+        }
+
         // Изменение размера рабочего экрана
         private void change_Screeen(object sender, RoutedEventArgs e)
         {
             if (SystemParameters.PrimaryScreenHeight > 1000)
             {
-                this.Width = 800;
+                this.Width = 1200;
                 this.Height = 960;
             }
             else
             {
                 this.WindowState = WindowState.Maximized;
+            }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        private void Directoryes_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen; // Переключение видимости подменю
+        }
+
+        private void Directoryes_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
+        }
+
+        private void SubMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
+            var button = sender as Button;
+            if (button != null)
+            {
+                var pageType = button.Tag as Type;
+                if (pageType != null)
+                {
+                    MainContent.Content = (System.Windows.Controls.Page)Activator.CreateInstance(pageType);
+                }
             }
         }
     }
