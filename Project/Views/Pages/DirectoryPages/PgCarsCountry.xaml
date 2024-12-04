@@ -40,6 +40,7 @@
                        modern:ControlHelper.CornerRadius="10"
                        Appearance="Primary"
                        x:Name="AddButton"
+                       CommandParameter="{x:Type wind:EditCountry}"
                        Command="{Binding OpenAddDialogCommand}"/>
             <ui:Button FontSize="19"
                        Content="Обновить"
