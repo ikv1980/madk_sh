@@ -9,9 +9,15 @@ public partial class CarsColor
 {
     public int ColorId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string ColorName { get; set; }
 
-    public bool ColorDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 }

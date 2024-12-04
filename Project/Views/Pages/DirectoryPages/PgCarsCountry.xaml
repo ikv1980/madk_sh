@@ -1,13 +1,14 @@
 ﻿<Page x:Class="Project.Views.Pages.DirectoryPages.PgCarsCountry"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Project.Views.Pages"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:modern="http://schemas.modernwpf.com/2019"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       xmlns:props="clr-namespace:Project.Tools"
+      xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      xmlns:modern="http://schemas.modernwpf.com/2019"
       Title="CountryPage">
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter"/>
@@ -31,27 +32,23 @@
                                    BorderBrush="DeepSkyBlue"
                                    modern:ControlHelper.CornerRadius="10"
                                    QueryIcon="Find">
-                
             </modern:AutoSuggestBox>
-
-            <Button Background="DeepSkyBlue"
-                    Content="Добавить"
-                    x:Name="AddButton"
-                    Command="{Binding OpenAddDialogCommand}"
-                    
-                    modern:ControlHelper.CornerRadius="10"
-                    Foreground="White"
-                    FontSize="17"
-                    HorizontalAlignment="Stretch"/>
-
-            <Button Background="DeepSkyBlue"
-                    Content="Обновить"
-                    Command="{Binding RefreshCommand}"
-                    x:Name="RefreshButton"
-                    modern:ControlHelper.CornerRadius="10"
-                    Foreground="White"
-                    FontSize="17"
-                    HorizontalAlignment="Stretch"/>
+            <ui:Button FontSize="19"
+                       Content="Добавить"
+                       Background="#FF2395FF"
+                       HorizontalAlignment="Stretch"
+                       modern:ControlHelper.CornerRadius="10"
+                       Appearance="Primary"
+                       x:Name="AddButton"
+                       Command="{Binding OpenAddDialogCommand}"/>
+            <ui:Button FontSize="19"
+                       Content="Обновить"
+                       Background="#FF2395FF"
+                       HorizontalAlignment="Stretch"
+                       modern:ControlHelper.CornerRadius="10"
+                       Appearance="Primary"
+                       x:Name="RefreshButton"
+                       Command="{Binding RefreshCommand}"/>
         </modern:SimpleStackPanel>
 
         <DataGrid Grid.Column="1"
@@ -60,7 +57,7 @@
                   Margin="0 5 0 0"
                   HeadersVisibility="Column"
                   BorderThickness="1"
-                  BorderBrush="DeepSkyBlue"
+                  BorderBrush="Gray"
                   Foreground="Black"
                   CanUserReorderColumns="False"
                   CanUserResizeColumns="False"
@@ -68,7 +65,6 @@
                   FontSize="18"
                   ItemsSource="{Binding TableValue}">
             <DataGrid.Columns>
-
                 <DataGridTemplateColumn Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -83,7 +79,7 @@
                                 <Button.CommandParameter>
                                     <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                         <Binding RelativeSource="{RelativeSource Self}"/>
-                                        
+                                        <Binding Source="{x:Type wind:EditCountry}"/>
                                     </MultiBinding>
                                 </Button.CommandParameter>
                             </Button>
@@ -105,7 +101,7 @@
                     <Setter Property="HorizontalAlignment"
                             Value="Left" />
                     <Setter Property="Margin"
-                            Value="5 0 0 0" />
+                            Value="5, 5, 2, 5" />
                 </Style>
                 <Style TargetType="ScrollBar">
                     <Setter Property="Background"

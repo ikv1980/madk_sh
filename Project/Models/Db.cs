@@ -122,10 +122,6 @@ public partial class Db : DbContext
             entity.Property(e => e.CarDate)
                 .HasComment("Дата производства")
                 .HasColumnName("car_date");
-            entity.Property(e => e.CarDelete)
-                .HasComment("Метка удаления")
-                .HasColumnType("tinyint(4)")
-                .HasColumnName("car_delete");
             entity.Property(e => e.CarMark)
                 .HasComment("Производитель(марка)")
                 .HasColumnType("int(10)")
@@ -160,6 +156,10 @@ public partial class Db : DbContext
                 .HasComment("VIN-код")
                 .HasColumnName("car_vin")
                 .UseCollation("utf8mb4_uca1400_ai_ci");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("delete");
 
             entity.HasOne(d => d.CarColorNavigation).WithMany(p => p.Cars)
                 .HasForeignKey(d => d.CarColor)
@@ -195,15 +195,15 @@ public partial class Db : DbContext
             entity.Property(e => e.ColorId)
                 .HasColumnType("int(10)")
                 .HasColumnName("color_id");
-            entity.Property(e => e.ColorDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("color_delete");
             entity.Property(e => e.ColorName)
                 .IsRequired()
                 .HasMaxLength(30)
                 .HasComment("Наименование")
                 .HasColumnName("color_name")
                 .UseCollation("utf8mb4_uca1400_ai_ci");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
         });
 
         modelBuilder.Entity<CarsCountry>(entity =>
@@ -219,15 +219,15 @@ public partial class Db : DbContext
             entity.Property(e => e.CountryId)
                 .HasColumnType("int(10)")
                 .HasColumnName("country_id");
-            entity.Property(e => e.CountryDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("country_delete");
             entity.Property(e => e.CountryName)
                 .IsRequired()
                 .HasMaxLength(30)
                 .HasComment("Наименование")
                 .HasColumnName("country_name")
                 .HasCharSet("utf8mb3");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
         });
 
         modelBuilder.Entity<CarsMark>(entity =>
@@ -241,9 +241,9 @@ public partial class Db : DbContext
             entity.Property(e => e.MarkId)
                 .HasColumnType("int(10)")
                 .HasColumnName("mark_id");
-            entity.Property(e => e.MarkDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("mark_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.MarkName)
                 .IsRequired()
                 .HasMaxLength(30)
@@ -264,9 +264,9 @@ public partial class Db : DbContext
             entity.Property(e => e.ModelId)
                 .HasColumnType("int(10)")
                 .HasColumnName("model_id");
-            entity.Property(e => e.ModelDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("model_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.ModelName)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -286,9 +286,9 @@ public partial class Db : DbContext
             entity.Property(e => e.TypeId)
                 .HasColumnType("int(4)")
                 .HasColumnName("type_id");
-            entity.Property(e => e.TypeDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("type_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.TypeName)
                 .IsRequired()
                 .HasMaxLength(30)
@@ -451,6 +451,9 @@ public partial class Db : DbContext
             entity.Property(e => e.OrdersId)
                 .HasColumnType("int(10)")
                 .HasColumnName("orders_id");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
             entity.Property(e => e.OrdersAddress)
                 .HasComment("Адрес доставки")
                 .HasColumnType("text")
@@ -464,9 +467,6 @@ public partial class Db : DbContext
                 .HasComment("Дата создания заказа")
                 .HasColumnType("datetime")
                 .HasColumnName("orders_data");
-            entity.Property(e => e.OrdersDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("orders_delete");
             entity.Property(e => e.OrdersDelivery)
                 .HasComment("Тип доставки")
                 .HasColumnType("int(4)")
@@ -521,9 +521,6 @@ public partial class Db : DbContext
                 .HasComment("Дата регистрации")
                 .HasColumnType("datetime")
                 .HasColumnName("client_date_registration");
-            entity.Property(e => e.ClientFlagDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("client_flag_delete");
             entity.Property(e => e.ClientLogin)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -559,6 +556,9 @@ public partial class Db : DbContext
                 .HasComment("Фамилия")
                 .HasColumnName("client_surname")
                 .HasCharSet("utf8mb3");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
         });
 
         modelBuilder.Entity<OrdersDelivery>(entity =>
@@ -572,9 +572,9 @@ public partial class Db : DbContext
             entity.Property(e => e.DeliveryId)
                 .HasColumnType("int(4)")
                 .HasColumnName("delivery_id");
-            entity.Property(e => e.DeliveryDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("delivery_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.DeliveryName)
                 .IsRequired()
                 .HasMaxLength(30)
@@ -593,9 +593,9 @@ public partial class Db : DbContext
             entity.Property(e => e.PaymentId)
                 .HasColumnType("int(4)")
                 .HasColumnName("payment_id");
-            entity.Property(e => e.PaymentDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("payment_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.PaymentName)
                 .IsRequired()
                 .HasMaxLength(30)
@@ -612,9 +612,9 @@ public partial class Db : DbContext
             entity.Property(e => e.OrderStatusId)
                 .HasColumnType("int(4)")
                 .HasColumnName("order_status_id");
-            entity.Property(e => e.OrderStatusDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("order_status_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.OrderStatusDescription)
                 .HasComment("Описание")
                 .HasColumnType("text")
@@ -635,6 +635,9 @@ public partial class Db : DbContext
             entity.Property(e => e.PageId)
                 .HasColumnType("int(11)")
                 .HasColumnName("page_id");
+            entity.Property(e => e.Delete)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("delete");
             entity.Property(e => e.PageIcon)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -650,9 +653,6 @@ public partial class Db : DbContext
             entity.Property(e => e.PageNumber)
                 .HasColumnType("int(11)")
                 .HasColumnName("page_number");
-            entity.Property(e => e.PageShow)
-                .HasColumnType("tinyint(4)")
-                .HasColumnName("page_show");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -676,6 +676,10 @@ public partial class Db : DbContext
             entity.Property(e => e.UsersId)
                 .HasColumnType("int(10)")
                 .HasColumnName("users_id");
+            entity.Property(e => e.Delete)
+                .HasDefaultValueSql("'0'")
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
             entity.Property(e => e.UsersBirthday)
                 .HasComment("Дата рождения")
                 .HasColumnName("users_birthday");
@@ -684,10 +688,6 @@ public partial class Db : DbContext
                 .HasComment("Отдел")
                 .HasColumnType("int(4)")
                 .HasColumnName("users_department");
-            entity.Property(e => e.UsersFlagDelete)
-                .HasDefaultValueSql("'0'")
-                .HasComment("Метка удаления")
-                .HasColumnName("users_flag_delete");
             entity.Property(e => e.UsersFunction)
                 .HasDefaultValueSql("'1'")
                 .HasComment("Должность")
@@ -772,14 +772,14 @@ public partial class Db : DbContext
             entity.Property(e => e.DepartmentId)
                 .HasColumnType("int(4)")
                 .HasColumnName("department_id");
+            entity.Property(e => e.Delete)
+                .HasComment("Метка удаления")
+                .HasColumnName("delete");
             entity.Property(e => e.DepartmentDescription)
                 .HasComment("Описание")
                 .HasColumnType("text")
                 .HasColumnName("department_description")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.DepartmentFlagDelete)
-                .HasComment("Метка удаления")
-                .HasColumnName("department_flag_delete");
             entity.Property(e => e.DepartmentMail)
                 .HasMaxLength(100)
                 .HasComment("E-mail отдела")
@@ -804,9 +804,9 @@ public partial class Db : DbContext
             entity.Property(e => e.FunctionId)
                 .HasColumnType("int(4)")
                 .HasColumnName("function_id");
-            entity.Property(e => e.FunctionDelete)
+            entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnName("function_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.FunctionDescription)
                 .HasComment("Описание")
                 .HasColumnType("text")
@@ -831,9 +831,9 @@ public partial class Db : DbContext
             entity.Property(e => e.StatusId)
                 .HasColumnType("int(4)")
                 .HasColumnName("status_id");
-            entity.Property(e => e.StatusDelete)
+            entity.Property(e => e.Delete)
                 .HasColumnType("tinyint(4)")
-                .HasColumnName("status_delete");
+                .HasColumnName("delete");
             entity.Property(e => e.StatusName)
                 .IsRequired()
                 .HasMaxLength(30)

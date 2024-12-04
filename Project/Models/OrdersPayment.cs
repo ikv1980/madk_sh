@@ -9,9 +9,15 @@ public partial class OrdersPayment
 {
     public int PaymentId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string PaymentName { get; set; }
 
-    public bool PaymentDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

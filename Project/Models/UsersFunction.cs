@@ -9,11 +9,20 @@ public partial class UsersFunction
 {
     public int FunctionId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string FunctionName { get; set; }
 
+    /// <summary>
+    /// Описание
+    /// </summary>
     public string FunctionDescription { get; set; }
 
-    public bool FunctionDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

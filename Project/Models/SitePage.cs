@@ -17,5 +17,5 @@ public partial class SitePage
 
     public string PageIcon { get; set; }
 
-    public sbyte PageShow { get; set; }
+    public sbyte Delete { get; set; }
 }

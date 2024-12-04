@@ -9,8 +9,14 @@ public partial class MmOrdersCar
 {
     public int Id { get; set; }
 
+    /// <summary>
+    /// id для заказа
+    /// </summary>
     public int OrderId { get; set; }
 
+    /// <summary>
+    /// id для авто
+    /// </summary>
     public int CarId { get; set; }
 
     public virtual Car Car { get; set; }

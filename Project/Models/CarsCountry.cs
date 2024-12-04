@@ -9,9 +9,15 @@ public partial class CarsCountry
 {
     public int CountryId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string CountryName { get; set; }
 
-    public bool CountryDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 

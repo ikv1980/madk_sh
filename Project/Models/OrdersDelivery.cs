@@ -9,9 +9,15 @@ public partial class OrdersDelivery
 {
     public int DeliveryId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string DeliveryName { get; set; }
 
-    public bool DeliveryDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

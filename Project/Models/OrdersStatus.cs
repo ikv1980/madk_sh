@@ -9,11 +9,20 @@ public partial class OrdersStatus
 {
     public int OrderStatusId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string OrderStatusName { get; set; }
 
+    /// <summary>
+    /// Описание
+    /// </summary>
     public string OrderStatusDescription { get; set; }
 
-    public bool OrderStatusDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<MmOrdersStatus> MmOrdersStatuses { get; set; } = new List<MmOrdersStatus>();
 }

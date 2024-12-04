@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Project.Models;
 using MessageBox = System.Windows.MessageBox;
+using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace Project.Tools
 {
@@ -31,14 +32,41 @@ namespace Project.Tools
             public static string newuser = "3";
         }
         
+        // Получить все значения из таблицы
         public static List<T> GetTableAllValues<T>() where T : class
         {
             return db.Set<T>().ToList();
         }
         
+        // Поиск в таблице
         public static List<T> GetSearchingValues<T>(string searchText) where T : class
         {
-            return db.Set<T>().ToList().Where(p => p.ToString().ToLower().Contains(searchText.ToLower())).ToList();
+            var parameter = LinqExpression.Parameter(typeof(T), "e");
+            var stringProperties = typeof(T).GetProperties()
+                .Where(p => p.PropertyType == typeof(string));
+
+            if (!stringProperties.Any())
+                return new List<T>();
+
+            LinqExpression orExpression = null;
+
+            foreach (var prop in stringProperties)
+            {
+                var propertyExpression = LinqExpression.Property(parameter, prop);
+                var likeExpression = LinqExpression.Call(
+                    propertyExpression,
+                    nameof(string.Contains),
+                    Type.EmptyTypes,
+                    LinqExpression.Constant(searchText, typeof(string))
+                );
+
+                orExpression = orExpression == null
+                    ? likeExpression
+                    : LinqExpression.OrElse(orExpression, likeExpression);
+            }
+
+            var lambda = LinqExpression.Lambda<Func<T, bool>>(orExpression, parameter);
+            return db.Set<T>().Where(lambda).ToList();
         }
         
         public static IEnumerable<object> GetTableAllValuesByName(string tableName)

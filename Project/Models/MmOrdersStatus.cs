@@ -9,10 +9,19 @@ public partial class MmOrdersStatus
 {
     public int Id { get; set; }
 
+    /// <summary>
+    /// id заказа
+    /// </summary>
     public int OrderId { get; set; }
 
+    /// <summary>
+    /// id статуса
+    /// </summary>
     public int StatusId { get; set; }
 
+    /// <summary>
+    /// Дата смены статуса
+    /// </summary>
     public DateTime Date { get; set; }
 
     public virtual Order Order { get; set; }

@@ -9,8 +9,14 @@ public partial class MmModelCountry
 {
     public int Id { get; set; }
 
+    /// <summary>
+    /// id для модели
+    /// </summary>
     public int ModelId { get; set; }
 
+    /// <summary>
+    /// id для страны
+    /// </summary>
     public int CountryId { get; set; }
 
     public virtual CarsCountry Country { get; set; }

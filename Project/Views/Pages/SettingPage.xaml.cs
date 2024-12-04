@@ -65,7 +65,7 @@ namespace Project.Views.Pages
                 PageNameEng = "New Page",
                 PageNameRus = "Новая Страница",
                 PageIcon = "default.png",
-                PageShow = 1
+                Delete = 1
             };
 
             _dbContext.SitePages.Add(newPage);

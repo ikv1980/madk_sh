@@ -9,29 +9,65 @@ public partial class Car
 {
     public int CarId { get; set; }
 
+    /// <summary>
+    /// Производитель(марка)
+    /// </summary>
     public int CarMark { get; set; }
 
+    /// <summary>
+    /// Модель
+    /// </summary>
     public int CarModel { get; set; }
 
+    /// <summary>
+    /// Страна производства
+    /// </summary>
     public int CarCountry { get; set; }
 
+    /// <summary>
+    /// Тип
+    /// </summary>
     public int CarType { get; set; }
 
+    /// <summary>
+    /// VIN-код
+    /// </summary>
     public string CarVin { get; set; }
 
+    /// <summary>
+    /// ПТС авто
+    /// </summary>
     public string CarPts { get; set; }
 
+    /// <summary>
+    /// Дата производства
+    /// </summary>
     public DateOnly CarDate { get; set; }
 
+    /// <summary>
+    /// Цвет
+    /// </summary>
     public int CarColor { get; set; }
 
+    /// <summary>
+    /// Ссылка на фотографии
+    /// </summary>
     public string CarPhoto { get; set; }
 
+    /// <summary>
+    /// Цена
+    /// </summary>
     public float CarPrice { get; set; }
 
+    /// <summary>
+    /// Блок
+    /// </summary>
     public bool CarBlock { get; set; }
 
-    public sbyte CarDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public sbyte Delete { get; set; }
 
     public virtual CarsColor CarColorNavigation { get; set; }
 

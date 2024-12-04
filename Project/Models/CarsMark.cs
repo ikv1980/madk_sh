@@ -9,9 +9,15 @@ public partial class CarsMark
 {
     public int MarkId { get; set; }
 
+    /// <summary>
+    /// Наименование марки
+    /// </summary>
     public string MarkName { get; set; }
 
-    public bool MarkDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 

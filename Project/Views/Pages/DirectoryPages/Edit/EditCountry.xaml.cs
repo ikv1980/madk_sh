@@ -6,24 +6,24 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditColor : UiWindow
+    public partial class EditCountry : UiWindow
     {
         private readonly bool _isEditMode;
-        private readonly int _colorId;
+        private readonly int _countryId;
 
-        public EditColor()
+        public EditCountry()
         {
             InitializeComponent();
-            _colorId = -1;
+            _countryId = -1;
             _isEditMode = false;
         }
 
-        public EditColor(CarsColor color) : this()
+        public EditCountry(CarsCountry country) : this()
         {
-            if (color == null) throw new ArgumentNullException(nameof(color));
+            if (country == null) throw new ArgumentNullException(nameof(country));
 
-            _colorId = color.ColorId;
-            ColorNameTextBox.Text = color.ColorName;
+            _countryId = country.CountryId;
+            CountryNameTextBox.Text = country.CountryName;
             _isEditMode = true;
         }
 
@@ -34,20 +34,20 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 if (!IsValidInput())
                     return;
 
-                var color = _isEditMode 
-                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _colorId) 
-                    : new CarsColor();
+                var country = _isEditMode 
+                    ? DbUtils.db.CarsCountries.FirstOrDefault(x => x.CountryId == _countryId) 
+                    : new CarsCountry();
 
-                if (color == null)
+                if (country == null)
                 {
                     MessageBox.Show("Цвет не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                color.ColorName = ColorNameTextBox.Text.ToLower();
+                country.CountryName = CountryNameTextBox.Text.ToLower();
 
                 if (!_isEditMode)
-                    DbUtils.db.CarsColors.Add(color);
+                    DbUtils.db.CarsCountries.Add(country);
 
                 DbUtils.db.SaveChanges();
                 Close();
@@ -61,17 +61,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Валидация данных
         private bool IsValidInput()
         {
-            var colorName = ColorNameTextBox.Text.Trim().ToLower();
+            var countryName = CountryNameTextBox.Text.Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(colorName))
+            if (string.IsNullOrWhiteSpace(countryName))
             {
                 MessageBox.Show("Поле 'Название цвета' не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (DbUtils.db.CarsColors.Any(x => x.ColorName == colorName && x.ColorId != _colorId))
+            if (DbUtils.db.CarsCountries.Any(x => x.CountryName == countryName && x.CountryId != _countryId))
             {
-                MessageBox.Show($"Запись '{ColorNameTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{CountryNameTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;

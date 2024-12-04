@@ -9,19 +9,40 @@ public partial class Order
 {
     public int OrdersId { get; set; }
 
+    /// <summary>
+    /// id клиента
+    /// </summary>
     public int OrdersClient { get; set; }
 
+    /// <summary>
+    /// id сотрудника
+    /// </summary>
     public int? OrdersUser { get; set; }
 
+    /// <summary>
+    /// Дата создания заказа
+    /// </summary>
     public DateTime OrdersData { get; set; }
 
+    /// <summary>
+    /// Тип оплаты
+    /// </summary>
     public int OrdersPayment { get; set; }
 
+    /// <summary>
+    /// Тип доставки
+    /// </summary>
     public int OrdersDelivery { get; set; }
 
+    /// <summary>
+    /// Адрес доставки
+    /// </summary>
     public string OrdersAddress { get; set; }
 
-    public bool OrdersDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<MmOrdersCar> MmOrdersCars { get; set; } = new List<MmOrdersCar>();
 

@@ -9,13 +9,25 @@ public partial class UsersDepartment
 {
     public int DepartmentId { get; set; }
 
+    /// <summary>
+    /// Наименование
+    /// </summary>
     public string DepartmentName { get; set; }
 
+    /// <summary>
+    /// Описание
+    /// </summary>
     public string DepartmentDescription { get; set; }
 
+    /// <summary>
+    /// E-mail отдела
+    /// </summary>
     public string DepartmentMail { get; set; }
 
-    public bool DepartmentFlagDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool Delete { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

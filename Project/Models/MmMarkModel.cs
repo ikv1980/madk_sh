@@ -9,11 +9,17 @@ public partial class MmMarkModel
 {
     public int Id { get; set; }
 
+    /// <summary>
+    /// id для марки
+    /// </summary>
     public int MarkId { get; set; }
 
+    /// <summary>
+    /// id для модели
+    /// </summary>
     public int ModelId { get; set; }
 
     public virtual CarsMark Mark { get; set; }
-    
+
     public virtual CarsModel Model { get; set; }
 }

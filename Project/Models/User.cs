@@ -9,35 +9,80 @@ public partial class User
 {
     public int UsersId { get; set; }
 
+    /// <summary>
+    /// Логин
+    /// </summary>
     public string UsersLogin { get; set; }
 
+    /// <summary>
+    /// Пароль (хеш)
+    /// </summary>
     public string UsersPassword { get; set; }
 
+    /// <summary>
+    /// E-mail
+    /// </summary>
     public string UsersMail { get; set; }
 
+    /// <summary>
+    /// Отдел
+    /// </summary>
     public int UsersDepartment { get; set; }
 
+    /// <summary>
+    /// Должность
+    /// </summary>
     public int UsersFunction { get; set; }
 
+    /// <summary>
+    /// Статус
+    /// </summary>
     public int UsersStatus { get; set; }
 
+    /// <summary>
+    /// Дата смены статуса
+    /// </summary>
     public DateOnly UsersStatusChange { get; set; }
 
+    /// <summary>
+    /// Имя
+    /// </summary>
     public string UsersName { get; set; }
 
+    /// <summary>
+    /// Фамилия
+    /// </summary>
     public string UsersSurname { get; set; }
 
+    /// <summary>
+    /// Отчество
+    /// </summary>
     public string UsersPatronymic { get; set; }
 
+    /// <summary>
+    /// Телефон
+    /// </summary>
     public string UsersPhone { get; set; }
 
+    /// <summary>
+    /// Дата рождения
+    /// </summary>
     public DateOnly UsersBirthday { get; set; }
 
+    /// <summary>
+    /// Дата устройства на работу
+    /// </summary>
     public DateOnly UsersStartWork { get; set; }
 
+    /// <summary>
+    /// Разрешения
+    /// </summary>
     public string UsersPermissions { get; set; }
 
-    public bool UsersFlagDelete { get; set; }
+    /// <summary>
+    /// Метка удаления
+    /// </summary>
+    public bool? Delete { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
