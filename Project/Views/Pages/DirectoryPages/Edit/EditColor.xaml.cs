@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using Project.Models;
 using Project.Tools;
+using Wpf.Ui.Controls;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditColor : Window
+    public partial class EditColor : UiWindow
     {
         private readonly bool _isEditMode;
         private readonly int _colorId;
@@ -74,7 +74,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 MessageBox.Show($"Запись '{ColorNameTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             return true;
         }
     }
