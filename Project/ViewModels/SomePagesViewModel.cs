@@ -35,51 +35,20 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         }
     }
 
-    #endregion
-
     public SomePagesViewModel()
     {
         TableValue = new ObservableCollection<TTable>();
         Refresh();
     }
     
-    public void LoadDataForTable(string tableName)
-    {
-        try
-        {
-            var data = DbUtils.GetTableAllValuesByName(tableName);
+    #endregion
 
-            if (data != null && data is IEnumerable<TTable> typedData)
-            {
-                TableValue = new ObservableCollection<TTable>(typedData);
-                Console.WriteLine($"Загружены данные для таблицы {tableName}: {string.Join(", ", typedData)}");
-            }
-            else
-            {
-                // Преобразуем данные через LINQ
-                var castedData = ((IEnumerable<object>)data).Cast<TTable>();
-                TableValue = new ObservableCollection<TTable>(castedData);
-                Console.WriteLine($"Загружены данные для таблицы {tableName}: {string.Join(", ", castedData)}");
-            }
-        }
-        catch (InvalidCastException ex)
-        {
-            Console.WriteLine($"Ошибка приведения типов:\n {ex.Message}");
-            MessageBox.Show($"Ошибка приведения типов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка загрузки данных:\n {ex.Message}");
-            MessageBox.Show($"Ошибка загрузки данных:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-    
     #region Commands
     public RelayCommand SearchDataCommand => new RelayCommand(obj => SearchData(SearchingText));
 
-    public RelayCommand OpenAddDialogCommand => new RelayCommand(obj => OpenAddDialog(obj));
+    public RelayCommand OpenAddDialogCommand => new RelayCommand(obj => AddDialog(obj));
 
-    public RelayCommand OpenChangeDialogCommand => new RelayCommand(obj => OpenChangeDialog(obj));
+    public RelayCommand OpenChangeDialogCommand => new RelayCommand(obj => ChangeDialog(obj));
 
     public RelayCommand RefreshCommand => new RelayCommand(obj => Refresh());
 
@@ -91,14 +60,24 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         try
         {
             var values = DbUtils.GetTableAllValues<TTable>();
-            TableValue = new ObservableCollection<TTable>(values);
+            
+            var filteredValues = values.Where(item =>
+            {
+                var deleteProperty = item.GetType().GetProperty("Delete");
+                if (deleteProperty != null && deleteProperty.PropertyType == typeof(bool))
+                {
+                    return !(bool)deleteProperty.GetValue(item);
+                }
+                return true;
+            }).ToList();
+
+            // Преобразуем отфильтрованные данные в ObservableCollection
+            TableValue = new ObservableCollection<TTable>(filteredValues);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка запроса к серверу:\n {ex.Message}");
             MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
     }
 
     protected virtual void SearchData(string searchText)
@@ -107,16 +86,14 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         {
             var values = DbUtils.GetSearchingValues<TTable>(searchText);
             TableValue = new ObservableCollection<TTable>(values);
-            Console.WriteLine($"Результаты поиска для '{searchText}': {string.Join(", ", values)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка запроса к серверу:\n {ex.Message}");
             MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
-    private void OpenAddDialog(object parameter)
+    private void AddDialog(object parameter)
     {
         if (parameter is Type userControlType && typeof(Window).IsAssignableFrom(userControlType))
         {
@@ -127,23 +104,22 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при открытии страницы:\n {ex.Message}");
                 MessageBox.Show($"Ошибка при открытии страницы:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
 
-    private void OpenChangeDialog(object parameter)
+    private void ChangeDialog(object parameter)
     {
         if (parameter is object[] parameters && parameters.Length == 2)
         {
             if (parameters[1] is Type userControlType && typeof(Window).IsAssignableFrom(userControlType) && parameters[0] is Button button)
             {
-                ConstructorInfo constructor = userControlType.GetConstructor(new Type[] { typeof(TTable) });
+                ConstructorInfo constructor = userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
                 if (constructor != null)
                 {
                     TTable value = (TTable)button.DataContext;
-                    var window = (Window)constructor.Invoke(new object[] { value });
+                    var window = (Window)constructor.Invoke(new object[] { value, button.Name });
                     window.ShowDialog();
                 }
                 else
@@ -152,7 +128,6 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
                 }
             }
         }
-
     }
     #endregion
 }

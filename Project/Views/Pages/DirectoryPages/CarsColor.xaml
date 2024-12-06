@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.PgCarsColor"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsColor"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -33,7 +33,7 @@
                                    modern:ControlHelper.CornerRadius="5"
                                    QueryIcon="Find">
             </modern:AutoSuggestBox>
-            <ui:Button FontSize="19"
+            <ui:Button FontSize="18"
                        Content="Добавить"
                        Background="#FF2395FF"
                        HorizontalAlignment="Stretch"
@@ -42,7 +42,7 @@
                        x:Name="AddButton"
                        CommandParameter="{x:Type wind:EditColor}"
                        Command="{Binding OpenAddDialogCommand}"/>
-            <ui:Button FontSize="19"
+            <ui:Button FontSize="18"
                        Content="Обновить"
                        Background="#FF2395FF"
                        HorizontalAlignment="Stretch"
@@ -90,8 +90,29 @@
 
                 <DataGridTextColumn Header="Цвета"
                                     Binding="{Binding ColorName}" />
+                
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Red"
+                                    x:Name="DeleteButton"
+                                    Foreground="White"
+                                    Content="❌"
+                                    Command="{Binding DataContext.OpenChangeDialogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                    FontSize="13"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Удалить">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                        <Binding RelativeSource="{RelativeSource Self}"/>
+                                        <Binding Source="{x:Type wind:EditColor}"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
-
             <DataGrid.Resources>
                 <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
                        TargetType="{x:Type DataGridColumnHeader}">

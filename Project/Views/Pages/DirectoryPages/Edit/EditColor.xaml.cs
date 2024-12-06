@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Project.Models;
 using Project.Tools;
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
@@ -9,24 +10,50 @@ namespace Project.Views.Pages.DirectoryPages.Edit
     public partial class EditColor : UiWindow
     {
         private readonly bool _isEditMode;
-        private readonly int _colorId;
+        private readonly bool _isDeleteMode;
+        private readonly int _itemId;
 
+
+        // Конструктор для добавления данных
         public EditColor()
         {
             InitializeComponent();
-            _colorId = -1;
+            _itemId = -1;
             _isEditMode = false;
+            _isDeleteMode = false;
+            Title = "Добавление данных";
+            SaveButton.Content = "Добавить";
+            SaveButton.Icon = SymbolRegular.AddCircle24;
         }
 
-        public EditColor(CarsColor color) : this()
+        // Конструктор для изменения (удаления) данных
+        public EditColor(Models.CarsColor item, string button) : this()
         {
-            if (color == null) throw new ArgumentNullException(nameof(color));
+            if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _colorId = color.ColorId;
-            ColorNameTextBox.Text = color.ColorName;
-            _isEditMode = true;
+            _itemId = item.ColorId;
+            ItemTextBox.Text = item.ColorName;
+            
+            // изменяем диалоговое окно, в зависимости от нажатой кнопки
+            if (button == "ChangeButton")
+            {
+                _isEditMode = true;
+                Title = "Изменение данных";
+                SaveButton.Content = "Изменить";
+                SaveButton.Icon = SymbolRegular.EditProhibited28;
+            }
+            if (button == "DeleteButton")
+            {
+                _isDeleteMode = true;
+                Title = "Удаление данных";
+                SaveButton.Content = "Удалить";
+                SaveButton.Icon = SymbolRegular.Delete24;
+                TextBlock.Visibility = Visibility.Visible;
+                ItemTextBox.Visibility = Visibility.Collapsed;
+            }
         }
-
+        
+        // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -34,21 +61,32 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 if (!IsValidInput())
                     return;
 
-                var color = _isEditMode 
-                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _colorId) 
-                    : new CarsColor();
+                var item = (_isEditMode || _isDeleteMode)
+                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId) 
+                    : new Models.CarsColor();
 
-                if (color == null)
+                if (item == null)
                 {
-                    MessageBox.Show("Цвет не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Данные не найдены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
-                color.ColorName = ColorNameTextBox.Text.ToLower();
-
-                if (!_isEditMode)
-                    DbUtils.db.CarsColors.Add(color);
-
+                
+                // Изменение
+                if (_isEditMode)
+                {
+                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
+                }
+                // Удаление
+                if (_isDeleteMode){
+                    item.Delete = true; //DbUtils.db.CarsColors.Remove(item);
+                }
+                // Добавление
+                if (!_isEditMode && !_isDeleteMode)
+                {
+                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
+                    DbUtils.db.CarsColors.Add(item);
+                }
+                
                 DbUtils.db.SaveChanges();
                 Close();
             }
@@ -58,23 +96,35 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
         }
 
+        // Закрытие окна
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        
         // Валидация данных
         private bool IsValidInput()
         {
-            var colorName = ColorNameTextBox.Text.Trim().ToLower();
+            var item = ItemTextBox.Text.Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(colorName))
+            if (string.IsNullOrWhiteSpace(item))
             {
                 MessageBox.Show("Поле 'Название цвета' не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (DbUtils.db.CarsColors.Any(x => x.ColorName == colorName && x.ColorId != _colorId))
+            if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
             {
-                MessageBox.Show($"Запись '{ColorNameTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
+        }
+
+        private void Print(object obj)
+        {
+            var helper = new Helpers();
+            helper.PrintObject(obj);
         }
     }
 }

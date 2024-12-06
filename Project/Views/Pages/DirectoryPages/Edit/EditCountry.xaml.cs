@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Project.Models;
 using Project.Tools;
+using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
@@ -9,24 +10,50 @@ namespace Project.Views.Pages.DirectoryPages.Edit
     public partial class EditCountry : UiWindow
     {
         private readonly bool _isEditMode;
-        private readonly int _countryId;
+        private readonly bool _isDeleteMode;
+        private readonly int _itemId;
 
+
+        // Конструктор для добавления данных
         public EditCountry()
         {
             InitializeComponent();
-            _countryId = -1;
+            _itemId = -1;
             _isEditMode = false;
+            _isDeleteMode = false;
+            Title = "Добавление данных";
+            SaveButton.Content = "Добавить";
+            SaveButton.Icon = SymbolRegular.AddCircle24;
         }
 
-        public EditCountry(CarsCountry country) : this()
+        // Конструктор для изменения (удаления) данных
+        public EditCountry(Models.CarsCountry item, string button) : this()
         {
-            if (country == null) throw new ArgumentNullException(nameof(country));
+            if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _countryId = country.CountryId;
-            CountryNameTextBox.Text = country.CountryName;
-            _isEditMode = true;
+            _itemId = item.CountryId;
+            ItemTextBox.Text = item.CountryName;
+            
+            // изменяем диалоговое окно, в зависимости от нажатой кнопки
+            if (button == "ChangeButton")
+            {
+                _isEditMode = true;
+                Title = "Изменение данных";
+                SaveButton.Content = "Изменить";
+                SaveButton.Icon = SymbolRegular.EditProhibited28;
+            }
+            if (button == "DeleteButton")
+            {
+                _isDeleteMode = true;
+                Title = "Удаление данных";
+                SaveButton.Content = "Удалить";
+                SaveButton.Icon = SymbolRegular.Delete24;
+                TextBlock.Visibility = Visibility.Visible;
+                ItemTextBox.Visibility = Visibility.Collapsed;
+            }
         }
-
+        
+        // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -34,21 +61,32 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 if (!IsValidInput())
                     return;
 
-                var country = _isEditMode 
-                    ? DbUtils.db.CarsCountries.FirstOrDefault(x => x.CountryId == _countryId) 
-                    : new CarsCountry();
+                var item = (_isEditMode || _isDeleteMode)
+                    ? DbUtils.db.CarsCountries.FirstOrDefault(x => x.CountryId == _itemId) 
+                    : new Models.CarsCountry();
 
-                if (country == null)
+                if (item == null)
                 {
-                    MessageBox.Show("Цвет не найден.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Данные не найдены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
-                country.CountryName = CountryNameTextBox.Text.ToLower();
-
-                if (!_isEditMode)
-                    DbUtils.db.CarsCountries.Add(country);
-
+                
+                // Изменение
+                if (_isEditMode)
+                {
+                    item.CountryName = ItemTextBox.Text.Trim().ToLower();
+                }
+                // Удаление
+                if (_isDeleteMode){
+                    DbUtils.db.CarsCountries.Remove(item);
+                }
+                // Добавление
+                if (!_isEditMode && !_isDeleteMode)
+                {
+                    item.CountryName = ItemTextBox.Text.Trim().ToLower();
+                    DbUtils.db.CarsCountries.Add(item);
+                }
+                
                 DbUtils.db.SaveChanges();
                 Close();
             }
@@ -58,23 +96,35 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
         }
 
+        // Закрытие окна
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        
         // Валидация данных
         private bool IsValidInput()
         {
-            var countryName = CountryNameTextBox.Text.Trim().ToLower();
+            var item = ItemTextBox.Text.Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(countryName))
+            if (string.IsNullOrWhiteSpace(item))
             {
                 MessageBox.Show("Поле 'Название цвета' не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (DbUtils.db.CarsCountries.Any(x => x.CountryName == countryName && x.CountryId != _countryId))
+            if (DbUtils.db.CarsCountries.Any(x => x.CountryName == item && x.CountryId != _itemId))
             {
-                MessageBox.Show($"Запись '{CountryNameTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
+        }
+
+        private void Print(object obj)
+        {
+            var helper = new Helpers();
+            helper.PrintObject(obj);
         }
     }
 }
