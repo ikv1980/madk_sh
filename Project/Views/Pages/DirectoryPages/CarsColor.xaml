@@ -21,8 +21,8 @@
         </Grid.ColumnDefinitions>
 
         <modern:SimpleStackPanel Orientation="Vertical"
-                                 Margin="5 30"
-                                 Spacing="30">
+                                 Margin="5 5"
+                                 Spacing="20">
             <modern:AutoSuggestBox x:Name="SearchTextBox"
                                    VerticalAlignment="Center"
                                    PlaceholderText="Поиск"           

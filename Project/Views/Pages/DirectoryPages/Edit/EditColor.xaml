@@ -10,7 +10,8 @@
              SizeToContent="WidthAndHeight"
              WindowStartupLocation="CenterScreen"
              Title="Заголовок окна"
-             ResizeMode="NoResize">
+             ResizeMode="NoResize"
+             Loaded="UiWindow_Loaded">
     <Grid>
         <modern:SimpleStackPanel HorizontalAlignment="Center"
                                  VerticalAlignment="Center"

@@ -35,8 +35,8 @@
         </Grid.ColumnDefinitions>
 
         <modern:SimpleStackPanel Orientation="Vertical"
-                                 Margin="5 30"
-                                 Spacing="30">
+                                 Margin="5 5"
+                                 Spacing="20">
             <modern:AutoSuggestBox x:Name="SearchTextBox"
                                    VerticalAlignment="Center"
                                    PlaceholderText="Поиск"
@@ -47,15 +47,6 @@
                                    modern:ControlHelper.CornerRadius="5"
                                    QueryIcon="Find">
             </modern:AutoSuggestBox>
-            <ui:Button FontSize="18"
-                       Content="Добавить"
-                       Background="#FF2395FF"
-                       HorizontalAlignment="Stretch"
-                       modern:ControlHelper.CornerRadius="10"
-                       Appearance="Primary"
-                       x:Name="AddButton"
-                       CommandParameter="{x:Type wind:EditCountry}"
-                       Command="{Binding AddDialogButton}" />
             <ui:Button FontSize="18"
                        Content="Обновить"
                        Background="#FF2395FF"
@@ -78,6 +69,7 @@
                   CanUserResizeColumns="False"
                   HorizontalScrollBarVisibility="Auto"
                   FontSize="18"
+                  AlternationCount="2"
                   ItemsSource="{Binding TableValue}">
             <DataGrid.Resources>
                 <!-- Контекстное меню -->
@@ -119,6 +111,18 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                    <Setter Property="Background" Value="White"/>
+                    <Style.Triggers>
+                        <!-- Цвет при наведении мыши -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightGray" />
+                        </Trigger>
+
+                        <!-- Цвет при выделении строки -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="LightSkyBlue" />
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
 

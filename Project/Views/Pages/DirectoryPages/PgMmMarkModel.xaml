@@ -1,57 +1,60 @@
 ﻿<Page x:Class="Project.Views.Pages.DirectoryPages.PgMmMarkModel"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Project.Views.Pages"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:modern="http://schemas.modernwpf.com/2019"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       xmlns:props="clr-namespace:Project.Tools"
+      xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      xmlns:modern="http://schemas.modernwpf.com/2019"
       Title="MarkModelPage">
     <Page.Resources>
-        <props:MultiBindingConverter x:Key="MultiBindingConverter"/>
+        <props:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <!-- Стили для заголовков колонок -->
+        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+               TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="5, 5, 2, 5" />
+        </Style>
+
+        <!-- Стили для ScrollBar -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
     </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
         <modern:SimpleStackPanel Orientation="Vertical"
-                                 Margin="5 30"
-                                 Spacing="30">
+                                 Margin="5 5"
+                                 Spacing="20">
             <modern:AutoSuggestBox x:Name="SearchTextBox"
                                    VerticalAlignment="Center"
-                                   PlaceholderText="Поиск"           
+                                   PlaceholderText="Поиск"
                                    FontSize="17"
                                    props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
                                    Text="{Binding SearchingText, Mode=TwoWay}"
-                                   BorderBrush="DeepSkyBlue"
-                                   modern:ControlHelper.CornerRadius="10"
+                                   BorderBrush="Gray"
+                                   modern:ControlHelper.CornerRadius="5"
                                    QueryIcon="Find">
-
             </modern:AutoSuggestBox>
-
-            <Button Background="DeepSkyBlue"
-                    Content="Добавить"
-                    x:Name="AddButton"
-                    Command="{Binding AddDialogButton}"
-                    
-                    modern:ControlHelper.CornerRadius="10"
-                    Foreground="White"
-                    FontSize="17"
-                    HorizontalAlignment="Stretch"/>
-
-            <Button Background="DeepSkyBlue"
-                    Content="Обновить"
-                    Command="{Binding RefreshCommand}"
-                    x:Name="RefreshButton"
-                    modern:ControlHelper.CornerRadius="10"
-                    Foreground="White"
-                    FontSize="17"
-                    HorizontalAlignment="Stretch"/>
+            <ui:Button FontSize="18"
+                       Content="Обновить"
+                       Background="#FF2395FF"
+                       HorizontalAlignment="Stretch"
+                       modern:ControlHelper.CornerRadius="10"
+                       Appearance="Primary"
+                       x:Name="RefreshButton"
+                       Command="{Binding RefreshCommand}" />
         </modern:SimpleStackPanel>
 
         <DataGrid Grid.Column="1"
@@ -60,61 +63,77 @@
                   Margin="0 5 0 0"
                   HeadersVisibility="Column"
                   BorderThickness="1"
-                  BorderBrush="DeepSkyBlue"
+                  BorderBrush="Gray"
                   Foreground="Black"
                   CanUserReorderColumns="False"
                   CanUserResizeColumns="False"
                   HorizontalScrollBarVisibility="Auto"
                   FontSize="18"
+                  AlternationCount="2"
                   ItemsSource="{Binding TableValue}">
+            <DataGrid.Resources>
+                <!-- Контекстное меню -->
+                <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18">
+                    <MenuItem Header="Добавить"
+                              Icon="➕"
+                              Tag="Add"
+                              Height="35"
+                              Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                              CommandParameter="{x:Type wind:EditCountry}" />
+                    <MenuItem Header="Изменить"
+                              Icon="✏️"
+                              Tag="Change"
+                              Height="35"
+                              Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" />
+                                <Binding Source="{x:Type wind:EditCountry}" />
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
+                    <MenuItem Header="Удалить"
+                              Icon="❌"
+                              Tag="Delete"
+                              Height="35"
+                              Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" />
+                                <Binding Source="{x:Type wind:EditCountry}" />
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.Resources>
+
+            <!-- Применение контекстного меню к строкам -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                    <Setter Property="Background" Value="White" />
+                    <Style.Triggers>
+                        <!-- Цвет при наведении мыши -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightGray" />
+                        </Trigger>
+
+                        <!-- Цвет при выделении строки -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="LightSkyBlue" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn Header="">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Background="DeepSkyBlue"
-                                    x:Name="Change"
-                                    Foreground="White"
-                                    Content="🖍"
-                                    Command="{Binding DataContext.ChangeDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                    FontSize="13"
-                                    HorizontalAlignment="Center"
-                                    ToolTip="Изменить">
-                                <Button.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                                        <Binding RelativeSource="{RelativeSource Self}"/>
-
-                                    </MultiBinding>
-                                </Button.CommandParameter>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                
                 <DataGridTextColumn Header="Модель"
                                     Binding="{Binding Model.ModelName}" />
                 <DataGridTextColumn Header="Марка"
                                     Binding="{Binding Mark.MarkName}" />
 
             </DataGrid.Columns>
-
-            <DataGrid.Resources>
-                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                       TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background"
-                            Value="Transparent" />
-                    <Setter Property="FontWeight"
-                            Value="SemiBold" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="5 0 0 0" />
-                </Style>
-                <Style TargetType="ScrollBar">
-                    <Setter Property="Background"
-                            Value="Transparent" />
-                </Style>
-            </DataGrid.Resources>
         </DataGrid>
     </Grid>
 </Page>

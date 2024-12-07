@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -121,10 +120,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             return true;
         }
 
-        private void Print(object obj)
+        // События после загрузки окна
+        private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var helper = new Helpers();
-            helper.PrintObject(obj);
+            ItemTextBox.Focus();
         }
     }
 }

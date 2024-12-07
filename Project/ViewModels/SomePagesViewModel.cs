@@ -172,11 +172,5 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         }
     }
 
-    public void Print(object parameter)
-    {
-        Helpers helper = new Helpers();
-        helper.PrintObject(parameter);
-    }
-
     #endregion
 }
