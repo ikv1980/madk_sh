@@ -9,9 +9,10 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
 {
     #region fields
     private ObservableCollection<TTable> _tableValue;
-
     private string _searchingText;
-
+    private int _currentPage;   // текущая страница
+    private int _itemsPerPage;  //  
+    private int _totalItems;    // всего страниц
     #endregion
 
     #region props
@@ -35,9 +36,26 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         }
     }
 
+    public int CurrentPage
+    {
+        get => _currentPage;
+        set
+        {
+            _currentPage = value;
+            OnPropertyChanged(nameof(CurrentPage));
+            OnPropertyChanged(nameof(CurrentPageText));
+        }
+    }
+    
+    public int TotalPages => (_totalItems + _itemsPerPage - 1) / _itemsPerPage;
+
+    public string CurrentPageText => $"{CurrentPage} из {TotalPages}";
+    
     public SomePagesViewModel()
     {
         TableValue = new ObservableCollection<TTable>();
+        _itemsPerPage = 22;
+        _currentPage = 1;
         Refresh();
     }
     
@@ -53,6 +71,10 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
     public RelayCommand ChangeDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
 
     public RelayCommand RefreshCommand => new RelayCommand(obj => Refresh());
+    
+    public RelayCommand PreviousPageCommand => new RelayCommand(obj => ChangePage(CurrentPage - 1));
+
+    public RelayCommand NextPageCommand => new RelayCommand(obj => ChangePage(CurrentPage + 1));
 
     #endregion
 
@@ -61,8 +83,12 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
     {
         try
         {
-            var values = DbUtils.GetTableAllValues<TTable>();
-            
+            // Получаем общее количество элементов
+            _totalItems = DbUtils.GetTableCount<TTable>();
+
+            // Получаем элементы для текущей страницы
+            var values = DbUtils.GetTablePagedValues<TTable>(CurrentPage, _itemsPerPage);
+
             var filteredValues = values.Where(item =>
             {
                 var deleteProperty = item.GetType().GetProperty("Delete");
@@ -171,6 +197,13 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
             }
         }
     }
-
+    
+    private void ChangePage(int newPage)
+    {
+        if (newPage < 1 || newPage > TotalPages) return; // Проверка на валидность страницы
+        CurrentPage = newPage;
+        Refresh();
+    }
+    
     #endregion
 }

@@ -77,6 +77,27 @@ namespace Project.Tools
                 return dbSet?.Cast<object>().ToList() ?? Enumerable.Empty<object>();
             }
         }
+        
+        public static int GetTableCount<TTable>() where TTable : class
+        {
+            // Здесь можно использовать Entity Framework для подсчета всех записей в таблице
+            using (var context = new Db())
+            {
+                return context.Set<TTable>().Count();
+            }
+        }
+        
+        public static List<TTable> GetTablePagedValues<TTable>(int page, int pageSize) where TTable : class
+        {
+            // Получение данных для указанной страницы
+            using (var context = new Db())
+            {
+                return context.Set<TTable>()
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+            }
+        }
     }
 }
 
