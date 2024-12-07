@@ -44,11 +44,13 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
     #endregion
 
     #region Commands
-    public RelayCommand SearchDataCommand => new RelayCommand(obj => SearchData(SearchingText));
+    public RelayCommand SearchCommand => new RelayCommand(obj => SearchData(SearchingText));
 
-    public RelayCommand OpenAddDialogCommand => new RelayCommand(obj => AddDialog(obj));
+    public RelayCommand AddDialogButton => new RelayCommand(obj => AddDialog(obj));
 
-    public RelayCommand OpenChangeDialogCommand => new RelayCommand(obj => ChangeDialog(obj));
+    public RelayCommand ChangeDialogButton => new RelayCommand(obj => ChangeDialogBtn(obj));
+    
+    public RelayCommand ChangeDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
 
     public RelayCommand RefreshCommand => new RelayCommand(obj => Refresh());
 
@@ -109,7 +111,7 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
         }
     }
 
-    private void ChangeDialog(object parameter)
+    private void ChangeDialogBtn(object parameter)
     {
         if (parameter is object[] parameters && parameters.Length == 2)
         {
@@ -129,5 +131,52 @@ internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
             }
         }
     }
+    
+    private void ChangeDialogCtxMenu(object parameter)
+    {
+        if (parameter is object[] parameters && parameters.Length > 1)
+        {
+            if (parameters[1] is Type userControlType && typeof(Window).IsAssignableFrom(userControlType))
+            {
+                string sourceName = string.Empty;
+                object dataContext = null;
+                
+                if (parameters[0] is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+                {
+                    if (contextMenu.PlacementTarget is DataGridRow row)
+                    {
+                        sourceName = menuItem.Tag.ToString();
+                        dataContext = row.DataContext;
+                    }
+                }
+                
+                if (!string.IsNullOrEmpty(sourceName) && dataContext != null)
+                {
+                    ConstructorInfo constructor = userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
+                    if (constructor != null)
+                    {
+                        TTable value = (TTable)dataContext;
+                        var window = (Window)constructor.Invoke(new object[] { value, sourceName });
+                        window.ShowDialog();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Ошибка при открытии страницы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Не удалось определить источник вызова.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+    }
+
+    public void Print(object parameter)
+    {
+        Helpers helper = new Helpers();
+        helper.PrintObject(parameter);
+    }
+
     #endregion
 }

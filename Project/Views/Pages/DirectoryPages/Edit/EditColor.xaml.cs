@@ -35,14 +35,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             ItemTextBox.Text = item.ColorName;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
-            if (button == "ChangeButton")
+            if (button == "Change")
             {
                 _isEditMode = true;
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
             }
-            if (button == "DeleteButton")
+            if (button == "Delete")
             {
                 _isDeleteMode = true;
                 Title = "Удаление данных";

@@ -25,7 +25,7 @@
                                    VerticalAlignment="Center"
                                    PlaceholderText="Поиск"           
                                    FontSize="17"
-                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchDataCommand}"
+                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
                                    Text="{Binding SearchingText, Mode=TwoWay}"
                                    BorderBrush="DeepSkyBlue"
                                    modern:ControlHelper.CornerRadius="10"
@@ -36,7 +36,7 @@
             <Button Background="DeepSkyBlue"
                     Content="Добавить"
                     x:Name="AddButton"
-                    Command="{Binding OpenAddDialogCommand}"
+                    Command="{Binding AddDialogButton}"
                     
                     modern:ControlHelper.CornerRadius="10"
                     Foreground="White"
@@ -72,10 +72,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Background="DeepSkyBlue"
-                                    x:Name="ChangeButton"
+                                    x:Name="Change"
                                     Foreground="White"
                                     Content="🖍"
-                                    Command="{Binding DataContext.OpenChangeDialogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                    Command="{Binding DataContext.ChangeDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                                     FontSize="13"
                                     HorizontalAlignment="Center"
                                     ToolTip="Изменить">

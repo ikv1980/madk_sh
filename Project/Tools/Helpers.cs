@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Project.Tools
@@ -17,6 +18,25 @@ namespace Project.Tools
                 // Хэширование
                 byte[] hash = sha256.ComputeHash(saltedPassword);
                 return Convert.ToBase64String(hash);
+            }
+        }
+        
+        // Вывод объекта в консоль
+        public void PrintObject(object obj)
+        {
+            if (obj == null)
+            {
+                Console.WriteLine("Объект равен null.");
+                return;
+            }
+        
+            Type type = obj.GetType();
+            Console.WriteLine($"Содержимое объекта типа {type.Name}:");
+        
+            foreach (PropertyInfo property in type.GetProperties())
+            {
+                var value = property.GetValue(obj);
+                Console.WriteLine($"{property.Name}: {value}");
             }
         }
     }
