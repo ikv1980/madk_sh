@@ -6,7 +6,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditCountry : UiWindow
+    public partial class EditMark : UiWindow
     {
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
@@ -14,7 +14,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
 
         // Конструктор для добавления данных
-        public EditCountry()
+        public EditMark()
         {
             InitializeComponent();
             _itemId = -1;
@@ -26,12 +26,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditCountry(Models.CarsCountry item, string button) : this()
+        public EditMark(Models.CarsMark item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.CountryId;
-            ItemTextBox.Text = item.CountryName;
+            _itemId = item.MarkId;
+            ItemTextBox.Text = item.MarkName;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -61,8 +61,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     return;
 
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsCountries.FirstOrDefault(x => x.CountryId == _itemId) 
-                    : new Models.CarsCountry();
+                    ? DbUtils.db.CarsMarks.FirstOrDefault(x => x.MarkId == _itemId) 
+                    : new Models.CarsMark();
 
                 if (item == null)
                 {
@@ -73,17 +73,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.CountryName = ItemTextBox.Text.Trim();
+                    item.MarkName = ItemTextBox.Text.Trim();
                 }
                 // Удаление
                 if (_isDeleteMode){
-                    DbUtils.db.CarsCountries.Remove(item);
+                    DbUtils.db.CarsMarks.Remove(item);
                 }
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.CountryName = ItemTextBox.Text.Trim();
-                    DbUtils.db.CarsCountries.Add(item);
+                    item.MarkName = ItemTextBox.Text.Trim();
+                    DbUtils.db.CarsMarks.Add(item);
                 }
                 
                 DbUtils.db.SaveChanges();
@@ -112,7 +112,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsCountries.Any(x => x.CountryName.Trim().ToLower() == item && x.CountryId != _itemId))
+            if (DbUtils.db.CarsMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.MarkId != _itemId))
             {
                 MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
