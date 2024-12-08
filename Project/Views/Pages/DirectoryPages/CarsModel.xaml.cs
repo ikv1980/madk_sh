@@ -4,9 +4,9 @@ using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-    public partial class PgCarsModel : Page
+    public partial class CarsModel : Page
     {
-        public PgCarsModel()
+        public CarsModel()
         {
             InitializeComponent();
             this.DataContext = new SomePagesViewModel<Models.CarsModel>();

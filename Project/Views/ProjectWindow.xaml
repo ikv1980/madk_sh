@@ -110,12 +110,12 @@
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Марки" 
-                                    Tag="{x:Type direct:PgCarsMark}"
+                                    Tag="{x:Type direct:CarsMark}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели" 
-                                    Tag="{x:Type direct:PgCarsModel}"
+                                    Tag="{x:Type direct:CarsModel}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 

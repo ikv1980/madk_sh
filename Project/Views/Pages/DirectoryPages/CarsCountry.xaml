@@ -61,8 +61,7 @@
                        Command="{Binding RefreshCommand}" />
         </modern:SimpleStackPanel>
 
-        <DataGrid Grid.Column="1"
-                  Grid.Row="0"
+        <DataGrid Grid.Column="1" Grid.Row="0"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   Margin="0 5 0 0"
@@ -184,7 +183,8 @@
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Grid.Column="1" Grid.Row="1">
+        <StackPanel Grid.Column="1" Grid.Row="1"
+            Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" >
             <ui:Button 
                 Icon="ArrowPrevious24"
                 Background="#FF2395FF"

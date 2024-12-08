@@ -31,6 +31,7 @@ namespace Project.Tools
             }
         
             Type type = obj.GetType();
+            Console.WriteLine($"____________________________________");
             Console.WriteLine($"Содержимое объекта типа {type.Name}:");
         
             foreach (PropertyInfo property in type.GetProperties())
