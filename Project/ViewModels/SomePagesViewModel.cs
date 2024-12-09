@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using Project.Interfaces;
 
 namespace Project.ViewModels
 {
@@ -97,6 +98,7 @@ namespace Project.ViewModels
                     }));
 
                 // Выводим данные в консоль
+                /*
                 foreach (var item in TableValue)
                 {
                     var properties = item.GetType().GetProperties();
@@ -107,6 +109,7 @@ namespace Project.ViewModels
                     }
                     Console.WriteLine("-----------------"); // Разделитель между объектами
                 }
+                */
             }
             catch (Exception ex)
             {
@@ -134,6 +137,7 @@ namespace Project.ViewModels
                 try
                 {
                     var window = (Window)Activator.CreateInstance(userControlType);
+                    if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
                     window.ShowDialog();
                 }
                 catch (Exception ex)
@@ -154,6 +158,7 @@ namespace Project.ViewModels
                     {
                         TTable value = (TTable)button.DataContext;
                         var window = (Window)constructor.Invoke(new object[] { value, button.Name });
+                        if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
                         window.ShowDialog();
                     }
                     else

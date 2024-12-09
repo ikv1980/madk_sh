@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
@@ -7,12 +8,12 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditColor : UiWindow
+    public partial class EditColor : UiWindow, IRefresh
     {
+        public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
-
 
         // Конструктор для добавления данных
         public EditColor()
@@ -88,6 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 }
                 
                 DbUtils.db.SaveChanges();
+                RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
