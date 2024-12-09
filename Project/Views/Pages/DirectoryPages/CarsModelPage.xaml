@@ -130,16 +130,14 @@
                 </Style>
             </DataGrid.RowStyle>
 
+            <!-- Основной контент -->
             <DataGrid.Columns>
-
-                <DataGridTextColumn Header="Модель"
-                                    Binding="{Binding ModelName}" />
-
+                <DataGridTextColumn Header="Модель" Binding="{Binding ModelName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
         <StackPanel Grid.Column="1" Grid.Row="1"
-            Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" >
+                    Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <ui:Button
                 Icon="ArrowPrevious24"
                 Background="#FF2395FF"

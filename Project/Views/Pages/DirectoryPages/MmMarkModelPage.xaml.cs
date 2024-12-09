@@ -1,5 +1,6 @@
 ﻿using Project.ViewModels;
 using System.Windows.Controls;
+using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
@@ -8,7 +9,7 @@ namespace Project.Views.Pages.DirectoryPages
         public MmMarkModelPage()
         {
             InitializeComponent();
-            this.DataContext = new SomePagesViewModel<Models.MmMarkModel>();
+            this.DataContext = new SomePagesViewModel<MmMarkModel>();
         }
     }
 }

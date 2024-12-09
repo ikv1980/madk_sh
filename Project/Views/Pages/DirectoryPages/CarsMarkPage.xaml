@@ -130,33 +130,31 @@
                 </Style>
             </DataGrid.RowStyle>
 
+            <!-- Основной контент -->
             <DataGrid.Columns>
-
-                <DataGridTextColumn Header="Марка"
-                                    Binding="{Binding MarkName}" />
-
+                <DataGridTextColumn Header="Марка" Binding="{Binding MarkName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
         <StackPanel Grid.Column="1" Grid.Row="1"
-            Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <ui:Button 
+                    Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <ui:Button
                 Icon="ArrowPrevious24"
                 Background="#FF2395FF"
-                Command="{Binding PreviousPageCommand}" 
+                Command="{Binding PreviousPageCommand}"
                 Margin="5, 0"
                 Width="40"
                 Height="30" />
-            <TextBlock 
-                Text="{Binding CurrentPageText}" 
-                VerticalAlignment="Center" 
-                HorizontalAlignment="Center" 
+            <TextBlock
+                Text="{Binding CurrentPageText}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
                 Margin="5"
                 FontSize="16" />
-            <ui:Button 
+            <ui:Button
                 Icon="ArrowNext24"
                 Background="#FF2395FF"
-                Command="{Binding NextPageCommand}" 
+                Command="{Binding NextPageCommand}"
                 Margin="5, 0"
                 Width="40"
                 Height="30" />

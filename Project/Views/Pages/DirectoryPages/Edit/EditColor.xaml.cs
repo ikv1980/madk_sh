@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -26,7 +27,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditColor(Models.CarsColor item, string button) : this()
+        public EditColor(CarsColor item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
@@ -62,7 +63,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                 var item = (_isEditMode || _isDeleteMode)
                     ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId) 
-                    : new Models.CarsColor();
+                    : new CarsColor();
 
                 if (item == null)
                 {

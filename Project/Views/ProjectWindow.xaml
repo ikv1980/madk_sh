@@ -105,7 +105,7 @@
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Цвета" 
-                                    Tag="{x:Type direct:CarsColor}"
+                                    Tag="{x:Type direct:CarsColorPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 

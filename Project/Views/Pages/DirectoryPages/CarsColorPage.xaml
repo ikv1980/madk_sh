@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsColor"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsColorPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -87,9 +87,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
-                <DataGridTextColumn Header="Цвета"
-                                    Binding="{Binding ColorName}" />
+                
+                <!-- Основной контент -->
+                <DataGridTextColumn Header="Цвета" Binding="{Binding ColorName}" />
                 
                 <DataGridTemplateColumn Header="">
                     <DataGridTemplateColumn.CellTemplate>

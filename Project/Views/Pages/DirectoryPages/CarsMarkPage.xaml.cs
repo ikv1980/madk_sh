@@ -9,7 +9,7 @@ namespace Project.Views.Pages.DirectoryPages
         public CarsMarkPage()
         {
             InitializeComponent();
-            this.DataContext = new SomePagesViewModel<Models.CarsMark>();
+            this.DataContext = new SomePagesViewModel<CarsMark>();
         }
     }
 }

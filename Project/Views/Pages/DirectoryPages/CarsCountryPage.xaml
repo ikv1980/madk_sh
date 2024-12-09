@@ -155,9 +155,8 @@
                 </DataGridTemplateColumn>-->
 
                 <!-- Основной контент -->
-                <DataGridTextColumn Header="Страны"
-                                    Binding="{Binding CountryName}" />
-
+                <DataGridTextColumn Header="Страны" Binding="{Binding CountryName}" />
+                
                 <!-- Колонка с кнопкой "Удалить" 
                 <DataGridTemplateColumn Header="">
                     <DataGridTemplateColumn.CellTemplate>

@@ -131,7 +131,8 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
-
+            
+            <!-- Основной контент -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Марка" Binding="{Binding Mark.MarkName}" />
                 <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
