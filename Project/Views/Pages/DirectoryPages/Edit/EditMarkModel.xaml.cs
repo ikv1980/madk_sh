@@ -6,7 +6,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditMark : UiWindow
+    public partial class EditMarkModel : UiWindow
     {
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
@@ -14,9 +14,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
 
         // Конструктор для добавления данных
-        public EditMark()
+        public EditMarkModel()
         {
             InitializeComponent();
+            Init();
             _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
@@ -26,12 +27,15 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMark(Models.CarsMark item, string button) : this()
+        public EditMarkModel(Models.MmMarkModel item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            _itemId = item.MarkId;
-            ItemTextBox.Text = item.MarkName;
+            
+            InitializeComponent();
+            Init();
+            _itemId = item.Id;
+            ComboBoxMark.SelectedItem = item.MarkId;
+            ComboBoxModel.SelectedItem = item.ModelId;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -46,9 +50,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 _isDeleteMode = true;
                 Title = "Удаление данных";
                 SaveButton.Content = "Удалить";
-                SaveButton.Icon = SymbolRegular.Delete24;
                 TextBlock.Visibility = Visibility.Visible;
-                ItemTextBox.Visibility = Visibility.Collapsed;
+                SaveButton.Icon = SymbolRegular.Delete24;
+                ComboBoxMark.Visibility = Visibility.Collapsed;
+                ComboBoxModel.Visibility = Visibility.Collapsed;
             }
         }
         
@@ -59,10 +64,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 if (!IsValidInput())
                     return;
-
+                
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsMarks.FirstOrDefault(x => x.MarkId == _itemId) 
-                    : new Models.CarsMark();
+                    ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId) 
+                    : new Models.MmMarkModel();
 
                 if (item == null)
                 {
@@ -73,17 +78,19 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.MarkName = ItemTextBox.Text.Trim();
+                    item.MarkId = (ComboBoxMark.SelectedItem as Models.MmMarkModel).MarkId;
+                    item.ModelId = (ComboBoxModel.SelectedItem as Models.MmMarkModel).ModelId;
                 }
                 // Удаление
                 if (_isDeleteMode){
-                    DbUtils.db.CarsMarks.Remove(item);
+                    DbUtils.db.MmMarkModels.Remove(item);
                 }
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.MarkName = ItemTextBox.Text.Trim();
-                    DbUtils.db.CarsMarks.Add(item);
+                    item.MarkId = (ComboBoxMark.SelectedItem as Models.MmMarkModel).MarkId;
+                    item.ModelId = (ComboBoxModel.SelectedItem as Models.MmMarkModel).ModelId;
+                    DbUtils.db.MmMarkModels.Add(item);
                 }
                 
                 DbUtils.db.SaveChanges();
@@ -94,27 +101,40 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        
         // Закрытие окна
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
         
+        private void Init()
+        {
+            ComboBoxMark.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
+            ComboBoxModel.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
+        }
+        
         // Валидация данных
         private bool IsValidInput()
         {
-            var item = ItemTextBox.Text.Trim().ToLower();
-
-            if (string.IsNullOrWhiteSpace(item))
+            if (ComboBoxMark.SelectedItem == null)
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана марка авто", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
-            if (DbUtils.db.CarsMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.MarkId != _itemId))
+            
+            if (ComboBoxModel.SelectedItem == null)
             {
-                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана модель авто", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            
+            if (DbUtils.db.MmMarkModels.Any(x => 
+                    x.MarkId == (int)ComboBoxMark.SelectedValue && 
+                    x.ModelId == (int)ComboBoxModel.SelectedValue && 
+                    x.Id != _itemId))
+            {
+                MessageBox.Show("Такая запись уже существует в базе данных.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
@@ -123,7 +143,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemTextBox.Focus();
+            ComboBoxModel.Focus();
         }
     }
 }

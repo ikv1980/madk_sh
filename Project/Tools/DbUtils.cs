@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Linq.Expressions;
+using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using Project.Models;
 using MessageBox = System.Windows.MessageBox;
 using LinqExpression = System.Linq.Expressions.Expression;
@@ -31,13 +33,7 @@ namespace Project.Tools
 
             public static string newuser = "3";
         }
-        
-        // Получить все значения из таблицы
-        public static List<T> GetTableAllValues<T>() where T : class
-        {
-            return db.Set<T>().ToList();
-        }
-        
+
         // Поиск в таблице
         public static List<T> GetSearchingValues<T>(string searchText) where T : class
         {
@@ -69,30 +65,36 @@ namespace Project.Tools
             return db.Set<T>().Where(lambda).ToList();
         }
         
-        public static IEnumerable<object> GetTableAllValuesByName(string tableName)
-        {
-            using (var context = new Db())
-            {
-                var dbSet = context.GetType().GetProperty(tableName)?.GetValue(context) as IQueryable;
-                return dbSet?.Cast<object>().ToList() ?? Enumerable.Empty<object>();
-            }
-        }
-        
+        // Подсчет всех записей в таблице
         public static int GetTableCount<TTable>() where TTable : class
         {
-            // Здесь можно использовать Entity Framework для подсчета всех записей в таблице
+            
             using (var context = new Db())
             {
                 return context.Set<TTable>().Count();
             }
         }
         
-        public static List<TTable> GetTablePagedValues<TTable>(int page, int pageSize) where TTable : class
+        // Получение данных из БД
+        public static List<TTable> GetTablePagedValuesWithIncludes<TTable>(int page, int pageSize) where TTable : class
         {
-            // Получение данных для указанной страницы
             using (var context = new Db())
             {
-                return context.Set<TTable>()
+                var query = context.Set<TTable>().AsQueryable();
+
+                // Получаем навигационные свойства
+                var entityType = context.Model.FindEntityType(typeof(TTable));
+                var navigationProperties = entityType.GetNavigations()
+                    .Select(n => n.Name)
+                    .ToList();
+
+                // Применяем Include для загрузки всех связанных сущностей
+                foreach (var property in navigationProperties)
+                {
+                    query = query.Include(property);
+                }
+
+                return query
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -100,4 +102,3 @@ namespace Project.Tools
         }
     }
 }
-

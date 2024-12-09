@@ -120,12 +120,12 @@
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели и Марки" 
-                                    Tag="{x:Type direct:PgMmMarkModel}"
+                                    Tag="{x:Type direct:MmMarkModel}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Страны и Модели" 
-                                    Tag="{x:Type direct:PgMmModelCountry}"
+                                    Tag="{x:Type direct:MmModelCountry}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                             </StackPanel>

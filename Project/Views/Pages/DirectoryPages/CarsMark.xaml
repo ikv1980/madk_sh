@@ -132,7 +132,7 @@
 
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Марки"
+                <DataGridTextColumn Header="Марка"
                                     Binding="{Binding MarkName}" />
 
             </DataGrid.Columns>
@@ -144,9 +144,9 @@
                 Icon="ArrowPrevious24"
                 Background="#FF2395FF"
                 Command="{Binding PreviousPageCommand}" 
-                Margin="5" 
-                Width="40" 
-                Height="40" />
+                Margin="5, 0"
+                Width="40"
+                Height="30" />
             <TextBlock 
                 Text="{Binding CurrentPageText}" 
                 VerticalAlignment="Center" 
@@ -157,9 +157,9 @@
                 Icon="ArrowNext24"
                 Background="#FF2395FF"
                 Command="{Binding NextPageCommand}" 
-                Margin="5" 
-                Width="40" 
-                Height="40" />
+                Margin="5, 0"
+                Width="40"
+                Height="30" />
         </StackPanel>
     </Grid>
 </Page>
