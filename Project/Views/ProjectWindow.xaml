@@ -100,7 +100,7 @@
                                 Width="{Binding ActualWidth, ElementName=Directoryes}">
                                 <Button
                                     Content="Страны"
-                                    Tag="{x:Type direct:CarsCountry}"
+                                    Tag="{x:Type direct:CarsCountryPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
@@ -110,22 +110,22 @@
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Марки" 
-                                    Tag="{x:Type direct:CarsMark}"
+                                    Tag="{x:Type direct:CarsMarkPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели" 
-                                    Tag="{x:Type direct:CarsModel}"
+                                    Tag="{x:Type direct:CarsModelPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Модели и Марки" 
-                                    Tag="{x:Type direct:MmMarkModel}"
+                                    Tag="{x:Type direct:MmMarkModelPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Страны и Модели" 
-                                    Tag="{x:Type direct:MmModelCountry}"
+                                    Tag="{x:Type direct:MmModelCountryPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                             </StackPanel>

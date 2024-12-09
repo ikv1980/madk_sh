@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsCountry"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.MmMarkModelPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
       xmlns:props="clr-namespace:Project.Tools"
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      Title="CountryPage">
+      Title="MarkModelPage">
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
         <!-- Стили для заголовков колонок -->
@@ -41,6 +41,7 @@
         <modern:SimpleStackPanel Orientation="Vertical"
                                  Margin="5 5"
                                  Spacing="20">
+            <!--
             <modern:AutoSuggestBox x:Name="SearchTextBox"
                                    VerticalAlignment="Center"
                                    PlaceholderText="Поиск"
@@ -51,6 +52,7 @@
                                    modern:ControlHelper.CornerRadius="5"
                                    QueryIcon="Find">
             </modern:AutoSuggestBox>
+            -->
             <ui:Button FontSize="18"
                        Content="Обновить"
                        Background="#FF2395FF"
@@ -83,7 +85,7 @@
                               Tag="Add"
                               Height="35"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                              CommandParameter="{x:Type wind:EditCountry}" />
+                              CommandParameter="{x:Type wind:EditMarkModel}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
@@ -92,7 +94,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCountry}" />
+                                <Binding Source="{x:Type wind:EditMarkModel}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -104,7 +106,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCountry}" />
+                                <Binding Source="{x:Type wind:EditMarkModel}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -131,77 +133,30 @@
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <!-- Колонка с кнопкой "Изменить" 
-                <DataGridTemplateColumn Header="">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Background="DeepSkyBlue"
-                                    x:Name="Change"
-                                    Foreground="White"
-                                    Content="🖍"
-                                    Command="{Binding DataContext.ChangeDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                    FontSize="13"
-                                    HorizontalAlignment="Center"
-                                    ToolTip="Изменить">
-                                <Button.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                                        <Binding RelativeSource="{RelativeSource Self}" />
-                                        <Binding Source="{x:Type wind:Edit3y}" />
-                                    </MultiBinding>
-                                </Button.CommandParameter>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
-
-                <!-- Основной контент -->
-                <DataGridTextColumn Header="Страны"
-                                    Binding="{Binding CountryName}" />
-
-                <!-- Колонка с кнопкой "Удалить" 
-                <DataGridTemplateColumn Header="">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Background="Red"
-                                    x:Name="Delete"
-                                    Foreground="White"
-                                    Content="❌"
-                                    Command="{Binding DataContext.ChangeDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                                    FontSize="13"
-                                    HorizontalAlignment="Center"
-                                    ToolTip="Удалить">
-                                <Button.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                                        <Binding RelativeSource="{RelativeSource Self}" />
-                                        <Binding Source="{x:Type wind:EditCountry}" />
-                                    </MultiBinding>
-                                </Button.CommandParameter>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                <DataGridTextColumn Header="Марка" Binding="{Binding Mark.MarkName}" />
+                <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
         <StackPanel Grid.Column="1" Grid.Row="1"
             Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" >
-            <ui:Button 
+            <ui:Button
                 Icon="ArrowPrevious24"
                 Background="#FF2395FF"
-                Command="{Binding PreviousPageCommand}" 
+                Command="{Binding PreviousPageCommand}"
                 Margin="5, 0"
                 Width="40"
                 Height="30" />
-            <TextBlock 
-                Text="{Binding CurrentPageText}" 
-                VerticalAlignment="Center" 
-                HorizontalAlignment="Center" 
+            <TextBlock
+                Text="{Binding CurrentPageText}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
                 Margin="5"
                 FontSize="16" />
-            <ui:Button 
+            <ui:Button
                 Icon="ArrowNext24"
                 Background="#FF2395FF"
-                Command="{Binding NextPageCommand}" 
+                Command="{Binding NextPageCommand}"
                 Margin="5, 0"
                 Width="40"
                 Height="30" />

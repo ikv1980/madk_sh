@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -11,7 +12,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
-
 
         // Конструктор для добавления данных
         public EditMarkModel()
@@ -27,15 +27,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMarkModel(Models.MmMarkModel item, string button) : this()
+        public EditMarkModel(MmMarkModel item, string button) : this()
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            
             InitializeComponent();
             Init();
             _itemId = item.Id;
-            ComboBoxMark.SelectedItem = item.MarkId;
-            ComboBoxModel.SelectedItem = item.ModelId;
+            ComboBoxMark.SelectedItem = DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
+            ComboBoxModel.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -67,7 +65,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 
                 var item = (_isEditMode || _isDeleteMode)
                     ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId) 
-                    : new Models.MmMarkModel();
+                    : new MmMarkModel();
 
                 if (item == null)
                 {
@@ -78,8 +76,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.MarkId = (ComboBoxMark.SelectedItem as Models.MmMarkModel).MarkId;
-                    item.ModelId = (ComboBoxModel.SelectedItem as Models.MmMarkModel).ModelId;
+                    UpdateItem(item);
                 }
                 // Удаление
                 if (_isDeleteMode){
@@ -88,8 +85,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.MarkId = (ComboBoxMark.SelectedItem as Models.MmMarkModel).MarkId;
-                    item.ModelId = (ComboBoxModel.SelectedItem as Models.MmMarkModel).ModelId;
+                    UpdateItem(item);
                     DbUtils.db.MmMarkModels.Add(item);
                 }
                 
@@ -108,6 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             this.Close();
         }
         
+        // Инициализация данных для списков
         private void Init()
         {
             ComboBoxMark.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
@@ -140,6 +137,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             return true;
         }
 
+        // Обновление данных объекта
+        private void UpdateItem(MmMarkModel item)
+        {
+            item.MarkId = (ComboBoxMark.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
+            item.ModelId = (ComboBoxModel.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
+        }
+        
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {

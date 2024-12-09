@@ -1,12 +1,11 @@
 ﻿using Project.ViewModels;
 using System.Windows.Controls;
-using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-    public partial class MmMarkModel : Page
+    public partial class MmMarkModelPage : Page
     {
-        public MmMarkModel()
+        public MmMarkModelPage()
         {
             InitializeComponent();
             this.DataContext = new SomePagesViewModel<Models.MmMarkModel>();

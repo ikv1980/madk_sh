@@ -1,12 +1,11 @@
 ﻿using Project.ViewModels;
 using System.Windows.Controls;
-using Project.Models;
 
 namespace Project.Views.Pages.DirectoryPages
 {
-   public partial class MmModelCountry : Page
+   public partial class MmModelCountryPage : Page
    {
-       public MmModelCountry()
+       public MmModelCountryPage()
        {
            InitializeComponent();
            this.DataContext = new SomePagesViewModel<Models.MmModelCountry>();
