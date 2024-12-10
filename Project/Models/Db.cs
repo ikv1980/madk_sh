@@ -513,6 +513,12 @@ public partial class Db : DbContext
             entity.Property(e => e.ClientId)
                 .HasColumnType("int(10)")
                 .HasColumnName("client_id");
+            entity.Property(e => e.ClientAddData)
+                .IsRequired()
+                .HasMaxLength(500)
+                .HasComment("Фамилия")
+                .HasColumnName("client_add_data")
+                .HasCharSet("utf8mb3");
             entity.Property(e => e.ClientBirthday)
                 .HasComment("Дата рождения")
                 .HasColumnName("client_birthday");
@@ -549,12 +555,6 @@ public partial class Db : DbContext
                 .HasMaxLength(50)
                 .HasComment("Телефон")
                 .HasColumnName("client_phone")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientSurname)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Фамилия")
-                .HasColumnName("client_surname")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")

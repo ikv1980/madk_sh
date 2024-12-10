@@ -32,7 +32,7 @@ public partial class OrdersClient
     /// <summary>
     /// Фамилия
     /// </summary>
-    public string ClientSurname { get; set; }
+    public string ClientAddData { get; set; }
 
     /// <summary>
     /// Телефон
