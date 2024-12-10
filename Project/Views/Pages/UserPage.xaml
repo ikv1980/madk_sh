@@ -31,7 +31,7 @@
                        FontSize="24"
                        FontWeight="Bold"
                        HorizontalAlignment="Left"
-                       Text="{Binding FullName}" 
+                       Text="{Binding FullName}"
                        Margin="0,0,0,50" />
             <!-- Личная информация -->
             <TextBlock Grid.Row="1"
@@ -47,12 +47,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Логин:"
-                    Grid.Row="0" Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Row="0" Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersLogin}"
-                    Grid.Row="0" Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Row="0" Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <Grid Grid.Row="3" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
@@ -60,10 +60,10 @@
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Пароль:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold"
-                    VerticalAlignment="Center" />
-                <ui:PasswordBox 
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <ui:PasswordBox
                     Grid.Column="1"
                     PlaceholderText="Введите новый пароль"
                     FontSize="16"
@@ -71,7 +71,7 @@
                     IconFilled="True"
                     PasswordChar="•"
                     ClearButtonEnabled="False"
-                    x:Name="NewPasswordBox"/>
+                    x:Name="NewPasswordBox" />
             </Grid>
             <Grid Grid.Row="4" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
@@ -79,15 +79,15 @@
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="E-mail:"
-                    Grid.Column="0" 
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
-                <ui:TextBox Text="{Binding UsersEmail}" 
-                    Grid.Column="1"
-                    FontSize="16"        
-                    Icon="Mail16"
-                    IconFilled="True"        
-                    x:Name="NewEmailTextBox"/>
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <ui:TextBox Text="{Binding UsersEmail}"
+                            Grid.Column="1"
+                            FontSize="16"
+                            Icon="Mail16"
+                            IconFilled="True"
+                            x:Name="NewEmailTextBox" />
             </Grid>
             <Grid Grid.Row="5" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
@@ -95,15 +95,15 @@
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Телефон:"
-                    Grid.Column="0" 
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
-                <ui:TextBox Text="{Binding UsersPhone}" 
-                    Grid.Column="1"
-                    FontSize="16"        
-                    Icon="Phone16"
-                    IconFilled="True"        
-                    x:Name="NewPhoneTextBox"/>
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <ui:TextBox Text="{Binding UsersPhone}"
+                            Grid.Column="1"
+                            FontSize="16"
+                            Icon="Phone16"
+                            IconFilled="True"
+                            x:Name="NewPhoneTextBox" />
             </Grid>
             <Grid Grid.Row="6" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
@@ -111,12 +111,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="День рождения:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersBirthday}"
-                    Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <!-- Служебная информация -->
             <TextBlock Grid.Row="7"
@@ -132,12 +132,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Департамент:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersDepartment}"
-                    Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <Grid Grid.Row="9" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
@@ -145,12 +145,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Должность:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersFunction}"
-                    Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <Grid Grid.Row="10" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
@@ -158,12 +158,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Дата приема:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersStartWork}"
-                    Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <Grid Grid.Row="11" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
@@ -171,12 +171,12 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Текущий статус:"
-                    Grid.Column="0"
-                    FontSize="18" FontWeight="SemiBold" 
-                    VerticalAlignment="Center" />
+                           Grid.Column="0"
+                           FontSize="18" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
                 <TextBlock Text="{Binding UsersStatus}"
-                    Grid.Column="1"
-                    FontSize="18"/>
+                           Grid.Column="1"
+                           FontSize="18" />
             </Grid>
             <Grid Grid.Row="12" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
@@ -184,14 +184,14 @@
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
                 <ui:Button Content="Сохранить"
-                    Grid.Column="0"       
-                    HorizontalAlignment="Stretch"
-                    Appearance="Primary"
-                    FontSize="18"
-                    Click="UpdateButton_Click"
-                    x:Name="UpdateButton"
-                    Visibility="Hidden"
-                    Background="#FF2395FF"/>
+                           Grid.Column="0"
+                           HorizontalAlignment="Stretch"
+                           Appearance="Primary"
+                           FontSize="18"
+                           Click="UpdateButton_Click"
+                           x:Name="UpdateButton"
+                           Visibility="Hidden"
+                           Background="#FF2395FF" />
             </Grid>
         </Grid>
     </ScrollViewer>

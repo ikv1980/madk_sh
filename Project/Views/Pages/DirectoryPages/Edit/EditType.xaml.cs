@@ -8,15 +8,15 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditModel : UiWindow, IRefresh
+    public partial class EditType : UiWindow, IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
-
+        
         // Конструктор для добавления данных
-        public EditModel()
+        public EditType()
         {
             InitializeComponent();
             _itemId = -1;
@@ -28,12 +28,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditModel(CarsModel item, string button) : this()
+        public EditType(CarsType item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.ModelId;
-            ItemTextBox.Text = item.ModelName;
+            _itemId = item.TypeId;
+            ItemTextBox.Text = item.TypeName;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -63,8 +63,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     return;
 
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsModels.FirstOrDefault(x => x.ModelId == _itemId) 
-                    : new Models.CarsModel();
+                    ? DbUtils.db.CarsTypes.FirstOrDefault(x => x.TypeId == _itemId) 
+                    : new Models.CarsType();
 
                 if (item == null)
                 {
@@ -75,17 +75,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.ModelName = ItemTextBox.Text.Trim();
+                    item.TypeName = ItemTextBox.Text.Trim();
                 }
                 // Удаление
                 if (_isDeleteMode){
-                    item.Delete = true; //DbUtils.db.CarsModels.Remove(item);
+                    item.Delete = true; //DbUtils.db.CarsTypes.Remove(item);
                 }
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.ModelName = ItemTextBox.Text.Trim();
-                    DbUtils.db.CarsModels.Add(item);
+                    item.TypeName = ItemTextBox.Text.Trim();
+                    DbUtils.db.CarsTypes.Add(item);
                 }
                 
                 DbUtils.db.SaveChanges();
@@ -111,11 +111,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Поле 'Название цвета' не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Поле не должно быть пустым.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (DbUtils.db.CarsModels.Any(x => x.ModelName.Trim().ToLower() == item && x.ModelId != _itemId))
+            if (DbUtils.db.CarsTypes.Any(x => x.TypeName.Trim().ToLower() == item && x.TypeId != _itemId))
             {
                 MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;

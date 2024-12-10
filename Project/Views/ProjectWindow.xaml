@@ -98,14 +98,14 @@
                             <StackPanel
                                 Background="White"
                                 Width="{Binding ActualWidth, ElementName=Directoryes}">
-                                <Button
-                                    Content="Страны"
-                                    Tag="{x:Type direct:CarsCountryPage}"
-                                    Click="SubMenuButton_Click" 
-                                    Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
                                     Content="Цвета" 
                                     Tag="{x:Type direct:CarsColorPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>                                
+                                <Button
+                                    Content="Страны"
+                                    Tag="{x:Type direct:CarsCountryPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
@@ -119,6 +119,11 @@
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                                 <Button 
+                                    Content="Типы кузова" 
+                                    Tag="{x:Type direct:CarsTypePage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
                                     Content="Модели и Марки" 
                                     Tag="{x:Type direct:MmMarkModelPage}"
                                     Click="SubMenuButton_Click" 
@@ -126,6 +131,11 @@
                                 <Button 
                                     Content="Страны и Модели" 
                                     Tag="{x:Type direct:MmModelCountryPage}"
+                                    Click="SubMenuButton_Click" 
+                                    Style="{StaticResource SubMenuButtonStyle}"/>
+                                <Button 
+                                    Content="Клиенты" 
+                                    Tag="{x:Type direct:OrdersClientPage}"
                                     Click="SubMenuButton_Click" 
                                     Style="{StaticResource SubMenuButtonStyle}"/>
                             </StackPanel>

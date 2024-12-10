@@ -78,7 +78,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 }
                 // Удаление
                 if (_isDeleteMode){
-                    DbUtils.db.CarsMarks.Remove(item);
+                    item.Delete = true; //DbUtils.db.CarsMarks.Remove(item);
                 }
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
