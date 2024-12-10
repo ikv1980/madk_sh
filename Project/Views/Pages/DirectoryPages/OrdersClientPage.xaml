@@ -20,12 +20,10 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Margin" Value="5, 5, 2, 5" />
         </Style>
-
         <!-- Стили для ScrollBar -->
         <Style TargetType="ScrollBar">
             <Setter Property="Background" Value="Transparent" />
         </Style>
-
     </Page.Resources>
 
     <Grid>
@@ -121,18 +119,27 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightGray" />
                         </Trigger>
-
                         <!-- Цвет при выделении строки -->
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="LightSkyBlue" />
                         </Trigger>
+                        <!-- Цвет выделения для ClientStatus = false -->
+                        <DataTrigger Binding="{Binding ClientStatus}" Value="False">
+                            <Setter Property="Background" Value="LightPink" />
+                            <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
 
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Марка" Binding="{Binding MarkName}" />
+                <DataGridTextColumn Header="Логин" Binding="{Binding ClientLogin}" />
+                <DataGridTextColumn Header="Наименование" Binding="{Binding ClientName}" />
+                <DataGridTextColumn Header="Телефон" Binding="{Binding ClientPhone}" />
+                <DataGridTextColumn Header="E-mail" Binding="{Binding ClientMail}" />
+                <DataGridTextColumn Header="Регистрация" Binding="{Binding ClientDateRegistration}" />
+                <DataGridTextColumn Header="Доп. информация" Binding="{Binding ClientAddData}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

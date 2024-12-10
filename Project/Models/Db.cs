@@ -514,18 +514,13 @@ public partial class Db : DbContext
                 .HasColumnType("int(10)")
                 .HasColumnName("client_id");
             entity.Property(e => e.ClientAddData)
-                .IsRequired()
                 .HasMaxLength(500)
-                .HasComment("Фамилия")
+                .HasComment("Дополнительные данные")
                 .HasColumnName("client_add_data")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientBirthday)
-                .HasComment("Дата рождения")
-                .HasColumnName("client_birthday");
             entity.Property(e => e.ClientDateRegistration)
                 .HasDefaultValueSql("current_timestamp()")
                 .HasComment("Дата регистрации")
-                .HasColumnType("datetime")
                 .HasColumnName("client_date_registration");
             entity.Property(e => e.ClientLogin)
                 .IsRequired()
@@ -556,6 +551,11 @@ public partial class Db : DbContext
                 .HasComment("Телефон")
                 .HasColumnName("client_phone")
                 .HasCharSet("utf8mb3");
+            entity.Property(e => e.ClientStatus)
+                .IsRequired()
+                .HasDefaultValueSql("'1'")
+                .HasComment("неактивный/активный")
+                .HasColumnName("client_status");
             entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
                 .HasColumnName("delete");

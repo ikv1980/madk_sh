@@ -20,17 +20,18 @@ namespace Project.Views
             MainContent.Content = new UserPage();
             SetAccess(user);
         }
-        
+
         // Доступ к вкладкам пользователя
         private void SetAccess(User user)
         {
-            if(user.UsersPermissions == "3")
+            if (user.UsersPermissions == "3")
             {
                 OrderPage.Visibility = Visibility.Collapsed;
                 ReportPage.Visibility = Visibility.Collapsed;
                 SettingTab.Visibility = Visibility.Collapsed;
             }
-            if(user.UsersPermissions == "2")
+
+            if (user.UsersPermissions == "2")
             {
                 SettingTab.Visibility = Visibility.Collapsed;
             }
@@ -60,9 +61,10 @@ namespace Project.Views
                 }
             }
         }
-        
+
         // Выбор справочника
-        private void NavigationView_SelectionChanged(ModernWpf.Controls.NavigationView sender, ModernWpf.Controls.NavigationViewSelectionChangedEventArgs args)
+        private void NavigationView_SelectionChanged(ModernWpf.Controls.NavigationView sender,
+            ModernWpf.Controls.NavigationViewSelectionChangedEventArgs args)
         {
             NavigationViewItem item = args.SelectedItem as NavigationViewItem;
             if (item.Tag is Type pageType && typeof(System.Windows.Controls.Page).IsAssignableFrom(pageType))
@@ -90,14 +92,8 @@ namespace Project.Views
                 this.WindowState = WindowState.Maximized;
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
+
+
         private void Directoryes_MouseDown(object sender, MouseButtonEventArgs e)
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen; // Переключение видимости подменю

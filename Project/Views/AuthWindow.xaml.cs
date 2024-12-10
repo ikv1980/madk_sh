@@ -9,15 +9,15 @@ namespace Project.Views
 {
     public partial class AuthWindow : UiWindow
     {
-        int attemptCount;
-        string answerForCaptcha;
-        private ValidateField checkField;
-        private Helpers helper;
+        int _attemptCount;
+        string _answerForCaptcha;
+        private ValidateField _validator;
+        private Helpers _helper;
 
         public AuthWindow()
         {
             InitializeComponent();
-            helper = new Helpers();
+            _helper = new Helpers();
         }
 
         // Загрузка окна
@@ -33,7 +33,7 @@ namespace Project.Views
             //string enteredPassword = helper.HashPassword(PasswordBox.Password);
 
             string login = "admin";
-            string enteredPassword = helper.HashPassword("Kostik80");
+            string enteredPassword = _helper.HashPassword("Kostik80");
 
             var user = await DbUtils.db.Users
                 .Where(u => u.UsersLogin == login)
@@ -56,8 +56,8 @@ namespace Project.Views
             }
             else
             {
-                attemptCount++;
-                if (attemptCount == 3)
+                _attemptCount++;
+                if (_attemptCount == 3)
                 {
                     GenerateCaptcha();
                     CaptchaDialog.Show();
@@ -75,7 +75,7 @@ namespace Project.Views
             string login = RegisterLoginTextBox.Text;
             string name = NameTextBox.Text;
             string surename = SurnameTextBox.Text;
-            string password = helper.HashPassword(RegisterPasswordBox.Password);
+            string password = _helper.HashPassword(RegisterPasswordBox.Password);
 
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surename))
             {
@@ -83,15 +83,16 @@ namespace Project.Views
                 return;
             }
 
-            checkField = new ValidateField();
-            if (checkField.Validate(RegisterPasswordBox.Password, "password", "Ошибка регистрации"))
+            _validator = new ValidateField();
+            if (!_validator.IsValid(RegisterPasswordBox.Password, "password"))
             {
+                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (DbUtils.db.Users.Any(u => u.UsersLogin == login))
             {
-                MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка регистрации", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -124,7 +125,7 @@ namespace Project.Views
         {
             CaptchaDialog.Show();
             Captcha.CreateCaptcha(EasyCaptcha.Wpf.Captcha.LetterOption.Alphanumeric, 6);
-            answerForCaptcha = Captcha.CaptchaText;
+            _answerForCaptcha = Captcha.CaptchaText;
             AnswerTextBox.Text = string.Empty;
         }
 
@@ -137,10 +138,10 @@ namespace Project.Views
         // проверка капчи
         private void CaptchaRightClick(object sender, RoutedEventArgs e)
         {
-            if (AnswerTextBox.Text == answerForCaptcha)
+            if (AnswerTextBox.Text == _answerForCaptcha)
             {
                 CaptchaDialog.Hide();
-                attemptCount = 0;
+                _attemptCount = 0;
             }
             else
             {

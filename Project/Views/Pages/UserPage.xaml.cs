@@ -4,16 +4,15 @@ using System.Windows.Controls;
 using Project.Tools;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Project.Views.Pages
 {
     public partial class UserPage : Page
     {
         private readonly UserViewModel _viewModel;
         private readonly User _user;
-        private ValidateField checkField;
-        private Helpers helper;
-        private bool showButton;
+        private readonly ValidateField _validator;
+        private readonly Helpers _helper;
+        private bool _showButton;
 
         public UserPage()
         {
@@ -21,13 +20,15 @@ namespace Project.Views.Pages
             _user = Global.CurrentUser;
             _viewModel = new UserViewModel(_user);
             DataContext = _viewModel;
-            helper = new Helpers();
-            
+            _validator = new ValidateField();
+            _helper = new Helpers();
+
             // Отслеживание изменений
             NewPasswordBox.PasswordChanged += OnFieldChanged;
             NewEmailTextBox.TextChanged += OnFieldChanged;
             NewPhoneTextBox.TextChanged += OnFieldChanged;
         }
+
         public class UserViewModel
         {
             public string FullName { get; }
@@ -40,7 +41,6 @@ namespace Project.Views.Pages
             public string UsersFunction { get; }
             public string UsersStatus { get; }
             public string UsersStartWork { get; }
-            
 
             public UserViewModel(User user)
             {
@@ -50,34 +50,31 @@ namespace Project.Views.Pages
                 UsersPhone = user.UsersPhone;
                 UsersBirthday = user.UsersBirthday.ToString("dd.MM.yyyy");
                 UsersStartWork = user.UsersStartWork.ToString("dd.MM.yyyy");
-                UsersStatus = $"{user.UsersStatusNavigation.StatusName} (c {user.UsersStatusChange.ToString("dd.MM.yyyy")})";
+                UsersStatus = $"{user.UsersStatusNavigation.StatusName} (с {user.UsersStatusChange:dd.MM.yyyy})";
                 UsersDepartment = user.UsersDepartmentNavigation.DepartmentName;
                 UsersFunction = user.UsersFunctionNavigation.FunctionName;
             }
         }
+
         // Отображение кнопки при изменениях в полях
         private void OnFieldChanged(object sender, RoutedEventArgs e)
         {
-            showButton = NewPasswordBox.Password != "" ||
-                   NewEmailTextBox.Text != _viewModel.UsersEmail ||
-                   NewPhoneTextBox.Text != _viewModel.UsersPhone;
-            UpdateButton.Visibility = showButton ?  Visibility.Visible : Visibility.Hidden;
+            _showButton = !string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
+                          NewEmailTextBox.Text != _viewModel.UsersEmail ||
+                          NewPhoneTextBox.Text != _viewModel.UsersPhone;
+            UpdateButton.Visibility = _showButton ? Visibility.Visible : Visibility.Hidden;
         }
+
         // Сохранение изменений
         private async void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            // Проверка корректности заполнения полей
-            checkField = new ValidateField();
-            if (
-                (NewPasswordBox.Password != "" && checkField.Validate(NewPasswordBox.Password, "password")) ||
-                checkField.Validate(NewEmailTextBox.Text, "email") ||
-                checkField.Validate(NewPhoneTextBox.Text, "phone")
-                )
+            if (!ValidateInputs())
             {
                 return;
             }
+
             // Добавление новых данных
-            if (NewPasswordBox.Password != "")
+            if (!string.IsNullOrWhiteSpace(NewPasswordBox.Password))
                 _viewModel.UsersPassword = NewPasswordBox.Password;
 
             if (NewEmailTextBox.Text != _viewModel.UsersEmail)
@@ -92,25 +89,50 @@ namespace Project.Views.Pages
 
                 if (currentUser != null)
                 {
-                    if (_viewModel.UsersPassword != "" && NewPasswordBox.Password != "")
+                    if (!string.IsNullOrWhiteSpace(_viewModel.UsersPassword))
                     {
-                        currentUser.UsersPassword = helper.HashPassword(_viewModel.UsersPassword);
+                        currentUser.UsersPassword = _helper.HashPassword(_viewModel.UsersPassword);
                     }
-                  
+
                     currentUser.UsersMail = _viewModel.UsersEmail;
                     currentUser.UsersPhone = _viewModel.UsersPhone;
 
                     await DbUtils.db.SaveChangesAsync();
 
-                    MessageBox.Show("Данные успешно обновленны.", "Сохранение данных", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Данные успешно обновлены.", "Сохранение данных", MessageBoxButton.OK, MessageBoxImage.Information);
                     UpdateButton.Visibility = Visibility.Hidden;
-                    showButton = false;
+                    _showButton = false;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка обновления данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        
+        // Валидация полей
+        private bool ValidateInputs()
+        {
+            if (!string.IsNullOrWhiteSpace(NewPasswordBox.Password) && 
+                !_validator.IsValid(NewPasswordBox.Password, "password"))
+            {
+                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка данных", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!_validator.IsValid(NewEmailTextBox.Text, "email"))
+            {
+                MessageBox.Show("Некорректный e-mail.", "Ошибка данных", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!_validator.IsValid(NewPhoneTextBox.Text, "phone"))
+            {
+                MessageBox.Show("Некорректный телефон. В номере телефона допускаются цифры и знак +.", "Ошибка данных", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
         }
     }
 }

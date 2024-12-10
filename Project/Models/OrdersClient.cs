@@ -30,7 +30,7 @@ public partial class OrdersClient
     public string ClientName { get; set; }
 
     /// <summary>
-    /// Фамилия
+    /// Дополнительные данные
     /// </summary>
     public string ClientAddData { get; set; }
 
@@ -40,14 +40,14 @@ public partial class OrdersClient
     public string ClientPhone { get; set; }
 
     /// <summary>
-    /// Дата рождения
-    /// </summary>
-    public DateOnly? ClientBirthday { get; set; }
-
-    /// <summary>
     /// Дата регистрации
     /// </summary>
-    public DateTime ClientDateRegistration { get; set; }
+    public DateOnly ClientDateRegistration { get; set; }
+
+    /// <summary>
+    /// неактивный/активный
+    /// </summary>
+    public bool? ClientStatus { get; set; }
 
     /// <summary>
     /// Метка удаления

@@ -1,54 +1,54 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace Project.Tools
 {
-    class ValidateField
+    public class ValidateField
     {
-        // Метод для проверки полей
-        public bool Validate(string value, string key, string title = "Ошибка данных")
+        /// Проверяет значение на соответствие заданному ключу.
+        /// <param name="value">Значение для проверки.</param>
+        /// <param name="key">Ключ проверки: "password", "email", "phone".</param>
+        /// <returns>true, если данные валидны; false, если есть ошибка.</returns>
+        public bool IsValid(string value, string key)
         {
-            var flag = false;
-
             switch (key)
             {
-                // Проверка пароля
                 case "password":
-                    if (value.Length < 6)
-                    {
-                        MessageBox.Show("Пароль должен содержать не менее 6 символов.", title, MessageBoxButton.OK, MessageBoxImage.Warning);
-                        flag = true;
-                    }
-                    break;
-                // Проверка e-mail
+                    return IsPasswordValid(value);
                 case "email":
-                    try
-                    {
-                        if (!string.IsNullOrWhiteSpace(value))
-                        {
-                            new MailAddress(value);
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        MessageBox.Show("Некорректный e-mail.", title, MessageBoxButton.OK, MessageBoxImage.Error);
-                        flag = true;
-                    }
-                    break;
-                // Проверка телефона
+                    return IsEmailValid(value);
                 case "phone":
-                    var regex = new Regex(@"^(\+7|8)?\d{10}$");
-                    if (string.IsNullOrWhiteSpace(value) || !regex.IsMatch(value))
-                    {
-                        MessageBox.Show("Некорректный телефон.\nВ номере телефона допускаются цифры и знак +", title, MessageBoxButton.OK, MessageBoxImage.Error);
-                        flag = true;
-                    }
-                    break;
+                    return IsPhoneValid(value);
                 default:
-                    break;
+                    return false; // Неизвестный тип валидации.
             }
-            return flag;
+        }
+
+        private bool IsPasswordValid(string password)
+        {
+            return !string.IsNullOrWhiteSpace(password) && password.Length >= 6;
+        }
+
+        private bool IsEmailValid(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                new MailAddress(email); // Исключение означает невалидный e-mail.
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsPhoneValid(string phone)
+        {
+            var regex = new Regex(@"^(\+7|8)?\d{10}$");
+            return !string.IsNullOrWhiteSpace(phone) && regex.IsMatch(phone);
         }
     }
 }

@@ -120,13 +120,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             if (ComboBoxMark.SelectedItem == null)
             {
-                MessageBox.Show("Не выбрана марка авто", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана марка авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
             if (ComboBoxModel.SelectedItem == null)
             {
-                MessageBox.Show("Не выбрана модель авто", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана модель авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
@@ -135,7 +135,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     x.ModelId == (int)ComboBoxModel.SelectedValue && 
                     x.Id != _itemId))
             {
-                MessageBox.Show("Такая запись уже существует в базе данных.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;

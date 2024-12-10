@@ -6,7 +6,7 @@
              xmlns:modern="http://schemas.modernwpf.com/2019"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
-             MinHeight="150" MinWidth="340"
+             MinHeight="150" MinWidth="400"
              SizeToContent="WidthAndHeight"
              WindowStartupLocation="CenterScreen"
              Title="Заголовок окна"
@@ -16,8 +16,8 @@
         <modern:SimpleStackPanel HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
                                  Spacing="30"
-                                 Margin="20, 40, 20, 20">
-            <Grid Margin="50, 20">
+                                 Margin="20, 20, 20, 20">
+            <Grid>
                 <!-- Основная структура -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -33,45 +33,142 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="0" />
                 </Grid.RowDefinitions>
-                <!-- Имя Клиента -->
-                <Grid Grid.Row="0" Margin="0,10,0,0">
+                <Grid Grid.Row="0" Margin="0,10,0,10">
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        HorizontalAlignment="Center"
+                        Text="Информация о клиенте"
+                        Margin="0,5" />
+                    <Line X1="0" Y1="40" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                          Y2="40"
+                          Stroke="LightGray" StrokeThickness="1" HorizontalAlignment="Stretch" />
+                </Grid> <!--строка 0-->
+                <Grid Grid.Row="1" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ui:TextBox Grid.Row="0" Grid.Column="0"
-                                PlaceholderText="Введите Имя"
-                                Icon="Person16"
+                    <TextBlock Grid.Column="0"
+                               Text="Наименование:"
+                               Margin="0,0,10,0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <ui:TextBox Grid.Column="1"
+                                Icon="Person24"
                                 FontSize="16"
                                 IconFilled="True"
-                                x:Name="NameTextBox" />
-
-                    <ui:TextBox Grid.Row="0" Grid.Column="1"
-                                PlaceholderText="Введите Фамилию"
-                                Icon="Person16"
-                                FontSize="16"
-                                IconFilled="True"
-                                x:Name="SurnameTextBox" />
-                </Grid>
+                                x:Name="ClientNameTextBox" />
+                </Grid> <!--строка 1-->
                 <Grid Grid.Row="2" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Телефон:"
+                               Grid.Column="0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <ui:TextBox Grid.Column="1"
+                                FontSize="16"
+                                Icon="PersonCall24"
+                                IconFilled="True"
+                                x:Name="ClientPhoneTextBox" />
+                </Grid> <!--строка 2-->
+                <Grid Grid.Row="3" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="E-mail:"
+                               Grid.Column="0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <ui:TextBox Grid.Column="1"
+                                FontSize="16"
+                                Icon="PersonMail24"
+                                IconFilled="True"
+                                x:Name="ClientMailTextBox" />
+                </Grid> <!--строка 3-->
+                <Grid Grid.Row="4" Margin="0,10,0,0">
+                    <TextBlock Text="Дополнительная информация:"
+                               Grid.Column="0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                </Grid> <!--строка 4-->
+                <Grid Grid.Row="5" Margin="0,10,0,0">
+                    <ui:TextBox
+                        AcceptsReturn="True"
+                        MinHeight="60"
+                        VerticalAlignment="Top"
+                        TextWrapping="Wrap"
+                        FontSize="16"
+                        Icon="PersonAdd24"
+                        IconFilled="True"
+                        x:Name="ClientAddDataTextBox" />
+                </Grid> <!--строка 5-->
+                <Grid Grid.Row="6" Margin="0,10,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Дата регистрации:"
+                               Grid.Column="0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               FontSize="18"
+                               x:Name="ClientDateRegistrationTextBlock" />
+                </Grid> <!--строка 6-->
+                <Grid Grid.Row="7" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="Статус:"
+                               Margin="0,0,10,0"
+                               FontSize="18" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <ComboBox Grid.Column="1"
+                              BorderBrush="DarkGray"
+                              HorizontalAlignment="Stretch"
+                              x:Name="StatusComboBox"
+                              FontSize="16">
+                        <ComboBoxItem Content="не активный" Tag="0" />
+                        <ComboBoxItem Content="активный" Tag="1" />
+                    </ComboBox>
+                </Grid> <!--строка 7-->
+                <Grid Grid.Row="8" Margin="0,10,0,0">
+                    <Line X1="0" Y1="20" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+                          Y2="20"
+                          Stroke="LightGray" StrokeThickness="1" HorizontalAlignment="Stretch" />
+                </Grid> <!--строка 8-->
+                <Grid Grid.Row="9" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Логин:"
                                Grid.Row="0" Grid.Column="0"
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding UsersLogin}"
-                               Grid.Row="0" Grid.Column="1"
-                               FontSize="18" />
-                </Grid>
-                <Grid Grid.Row="3" Margin="0,10,0,0">
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                               FontSize="16"
+                               x:Name="ClientLoginTextBlock" />
+                    <ui:TextBox Grid.Column="1"
+                                FontSize="16"
+                                Icon="PersonMail24"
+                                IconFilled="True"
+                                Visibility="Collapsed"
+                                x:Name="ClientLoginTextBox" />
+                </Grid> <!--строка 9-->
+                <Grid Grid.Row="10" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="170" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Пароль:"
                                Grid.Column="0"
@@ -85,93 +182,23 @@
                         IconFilled="True"
                         PasswordChar="•"
                         ClearButtonEnabled="False"
-                        x:Name="NewPasswordBox" />
-                </Grid>
-                <Grid Grid.Row="4" Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="250" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="E-mail:"
-                               Grid.Column="0"
-                               FontSize="18" FontWeight="SemiBold"
-                               VerticalAlignment="Center" />
-                    <ui:TextBox Text="{Binding UsersEmail}"
-                                Grid.Column="1"
-                                FontSize="16"
-                                Icon="Mail16"
-                                IconFilled="True"
-                                x:Name="NewEmailTextBox" />
-                </Grid>
-                <Grid Grid.Row="5" Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="250" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Телефон:"
-                               Grid.Column="0"
-                               FontSize="18" FontWeight="SemiBold"
-                               VerticalAlignment="Center" />
-                    <ui:TextBox Text="{Binding UsersPhone}"
-                                Grid.Column="1"
-                                FontSize="16"
-                                Icon="Phone16"
-                                IconFilled="True"
-                                x:Name="NewPhoneTextBox" />
-                </Grid>
-                <Grid Grid.Row="6" Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="День рождения:"
-                               Grid.Column="0"
-                               FontSize="18" FontWeight="SemiBold"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding UsersBirthday}"
-                               Grid.Column="1"
-                               FontSize="18" />
-                </Grid>
-                <!-- Служебная информация -->
-                <Grid Grid.Row="10" Margin="0,10,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Дата регистрации:"
-                               Grid.Column="0"
-                               FontSize="18" FontWeight="SemiBold"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding UsersStartWork}"
-                               Grid.Column="1"
-                               FontSize="18" />
-                </Grid>
-                <Grid Grid.Row="11" Margin="0,10,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="статус:"
-                               Grid.Column="0"
-                               FontSize="18" FontWeight="SemiBold"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding UsersStatus}"
-                               Grid.Column="1"
-                               FontSize="18" />
-                </Grid>
-                <Grid Grid.Row="12" Margin="0,20,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
-                    <!--
-                    <TextBlock Text="Вы уверены, что хотите удалить данные?"
+                        x:Name="ClientPasswordBox" />
+                </Grid> <!--строка 10-->
+                <Grid Grid.Row="11" Margin="0,10,0,0">
+                    <TextBlock Text="Вы уверены, что хотите удалить клиента?"
                                Grid.Column="0"
                                FontSize="17" FontWeight="SemiBold"
                                VerticalAlignment="Center"
-                               x:Name="TextBlock"
+                               HorizontalAlignment="Center"
+                               x:Name="DeleteTextBlock"
+                               Foreground="Red"
                                Visibility="Collapsed" />
-                    -->
+                </Grid> <!--строка 11-->
+                <Grid Grid.Row="12" Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*" />
+                        <ColumnDefinition Width="50*" />
+                    </Grid.ColumnDefinitions>
                     <ui:Button FontSize="18"
                                Grid.Column="0"
                                Background="#FF2395FF"
@@ -180,8 +207,8 @@
                                modern:ControlHelper.CornerRadius="5"
                                Appearance="Primary"
                                x:Name="SaveButton"
-                               Margin="10"/>
-                                <!--Click="SaveButton_Click"-->
+                               Margin="20,0"
+                               Click="SaveButton_Click" />
                     <ui:Button FontSize="18"
                                Grid.Column="1"
                                Background="#FF2395FF"
@@ -190,14 +217,10 @@
                                HorizontalAlignment="Stretch"
                                modern:ControlHelper.CornerRadius="5"
                                Appearance="Primary"
-                               Margin="10"/>
-                                <!--Click="CancelButton_Click"-->
-                    
-                </Grid>
+                               Margin="20,0"
+                               Click="CancelButton_Click" />
+                </Grid> <!--строка 12-->
             </Grid>
-
-
-
         </modern:SimpleStackPanel>
     </Grid>
 </ui:UiWindow>
