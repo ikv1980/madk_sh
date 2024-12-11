@@ -48,8 +48,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Удаление данных";
                 SaveButton.Content = "Удалить";
                 SaveButton.Icon = SymbolRegular.Delete24;
-                TextBlock.Visibility = Visibility.Visible;
-                ItemTextBox.Visibility = Visibility.Collapsed;
+                DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
         

@@ -85,7 +85,7 @@
                               Tag="Add"
                               Height="35"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                              CommandParameter="{x:Type wind:EditMarkModel}" />
+                              CommandParameter="{x:Type wind:EditModelCountry}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
@@ -94,7 +94,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditMarkModel}" />
+                                <Binding Source="{x:Type wind:EditModelCountry}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -106,7 +106,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditMarkModel}" />
+                                <Binding Source="{x:Type wind:EditModelCountry}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>

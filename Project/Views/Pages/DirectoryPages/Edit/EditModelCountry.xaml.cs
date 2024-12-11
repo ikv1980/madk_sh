@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
@@ -8,7 +9,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditColor : UiWindow, IRefresh
+    public partial class EditModelCountry : UiWindow, IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
@@ -16,9 +17,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly int _itemId;
 
         // Конструктор для добавления данных
-        public EditColor()
+        public EditModelCountry()
         {
             InitializeComponent();
+            Init();
             _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
@@ -28,12 +30,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditColor(CarsColor item, string button) : this()
+        public EditModelCountry(MmModelCountry item, string button) : this()
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-
-            _itemId = item.ColorId;
-            ItemTextBox.Text = item.ColorName;
+            InitializeComponent();
+            Init();
+            _itemId = item.Id;
+            ComboBoxModel.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            ComboBoxCountry.SelectedItem = DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CountryId);
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -48,8 +51,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 _isDeleteMode = true;
                 Title = "Удаление данных";
                 SaveButton.Content = "Удалить";
-                SaveButton.Icon = SymbolRegular.Delete24;
                 DeleteTextBlock.Visibility = Visibility.Visible;
+                SaveButton.Icon = SymbolRegular.Delete24;
             }
         }
         
@@ -60,10 +63,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 if (!IsValidInput())
                     return;
-
+                
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId) 
-                    : new CarsColor();
+                    ? DbUtils.db.MmModelCountries.FirstOrDefault(x => x.Id == _itemId) 
+                    : new MmModelCountry();
 
                 if (item == null)
                 {
@@ -74,17 +77,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
+                    UpdateItem(item);
                 }
                 // Удаление
                 if (_isDeleteMode){
-                    item.Delete = true; //DbUtils.db.CarsColors.Remove(item);
+                    DbUtils.db.MmModelCountries.Remove(item);
                 }
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
-                    DbUtils.db.CarsColors.Add(item);
+                    UpdateItem(item);
+                    DbUtils.db.MmModelCountries.Add(item);
                 }
                 
                 DbUtils.db.SaveChanges();
@@ -96,36 +99,57 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        
         // Закрытие окна
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
         
+        // Инициализация данных для списков
+        private void Init()
+        {
+            ComboBoxModel.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
+            ComboBoxCountry.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
+        }
+        
         // Валидация данных
         private bool IsValidInput()
         {
-            var item = ItemTextBox.Text.Trim().ToLower();
-
-            if (string.IsNullOrWhiteSpace(item))
+            if (ComboBoxModel.SelectedItem == null)
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана модель авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
-            if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
+            
+            if (ComboBoxCountry.SelectedItem == null)
             {
-                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Не выбрана страна авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            
+            if (DbUtils.db.MmModelCountries.Any(x => 
+                    x.CountryId == (int)ComboBoxCountry.SelectedValue && 
+                    x.ModelId == (int)ComboBoxModel.SelectedValue && 
+                    x.Id != _itemId))
+            {
+                MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
         }
 
+        // Обновление данных объекта
+        private void UpdateItem(MmModelCountry item)
+        {
+            item.ModelId = (ComboBoxModel.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
+            item.CountryId = (ComboBoxCountry.SelectedItem as CarsCountry)?.CountryId ?? item.CountryId;
+        }
+        
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemTextBox.Focus();
+            ComboBoxModel.Focus();
         }
     }
 }
