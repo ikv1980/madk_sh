@@ -93,10 +93,10 @@ namespace Project.Views
             }
         }
 
+        // Нажатие на вкладку "Справочники"
         private void Directoryes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
-            ResetMenu();
         }
 
         private void SubMenuButton_Click(object sender, RoutedEventArgs e)
@@ -114,30 +114,50 @@ namespace Project.Views
         }
 
 
-        // Контекстное меню пользователь
-        private void VisibleUsersButton(object sender, RoutedEventArgs e)
+        // Контекстное меню "Автомобили"
+        private void VisibleCarButton(object sender, RoutedEventArgs e)
         {
-            CollapsedButton.Visibility = Visibility.Visible;
-            VisibleButton.Visibility = Visibility.Collapsed;
-            UserDepartmentButton.Visibility = Visibility.Visible;
-            UserFunctionButton.Visibility = Visibility.Visible;
-            UserStatusButton.Visibility = Visibility.Visible;
+            ToggleMenuVisibility(CarMenuGroup, true);
+        }
+
+        private void CollapsedCarButton(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuVisibility(CarMenuGroup, false);
+        }
+
+        // Контекстное меню "Пользователь"
+        private void VisibleUserButton(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuVisibility(UserMenuGroup, true);
         }
 
         private void CollapsedUserButton(object sender, RoutedEventArgs e)
         {
-            ResetMenu();
+            ToggleMenuVisibility(UserMenuGroup, false);
         }
 
-        // Свернуть контекстные меню
-        private void ResetMenu()
+        private void ToggleMenuVisibility(StackPanel group, bool isVisible)
         {
-            // Меню "Пользователь"
-            CollapsedButton.Visibility = Visibility.Collapsed;
-            VisibleButton.Visibility = Visibility.Visible;
-            UserDepartmentButton.Visibility = Visibility.Collapsed;
-            UserFunctionButton.Visibility = Visibility.Collapsed;
-            UserStatusButton.Visibility = Visibility.Collapsed;
+            foreach (var child in group.Children)
+            {
+                if (child is Button button)
+                {
+                    switch (button.Name)
+                    {
+                        case nameof(UserVisible):
+                        case nameof(CarVisible):
+                            button.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
+                            break;
+                        case nameof(UserCollapse):
+                        case nameof(CarCollapse):
+                            button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+                            break;
+                        default:
+                            button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+                            break;
+                    }
+                }
+            }
         }
     }
 }

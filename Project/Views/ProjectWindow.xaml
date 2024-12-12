@@ -99,80 +99,98 @@
                                 Background="White"
                                 Width="{Binding ActualWidth, ElementName=Directoryes}">
                                 <Button
-                                    Content="Цвета"
-                                    Tag="{x:Type direct:CarsColorPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Страны"
-                                    Tag="{x:Type direct:CarsCountryPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Марки"
-                                    Tag="{x:Type direct:CarsMarkPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Модели"
-                                    Tag="{x:Type direct:CarsModelPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Типы кузова"
-                                    Tag="{x:Type direct:CarsTypePage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Модели и Марки"
-                                    Tag="{x:Type direct:MmMarkModelPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Страны и Модели"
-                                    Tag="{x:Type direct:MmModelCountryPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
                                     Content="Клиенты"
                                     Tag="{x:Type direct:OrdersClientPage}"
                                     Click="SubMenuButton_Click"
                                     Style="{StaticResource SubMenuButtonStyle}" />
+                                <!-- Кнопка "Автомобили" с вложенными кнопками -->
+                                <StackPanel x:Name="CarMenuGroup">
+                                    <Button
+                                        Content="➕ Автомобили"
+                                        x:Name="CarVisible"
+                                        Click="VisibleCarButton"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button 
+                                        Content="➖ Автомобили"
+                                        x:Name="CarCollapse"
+                                        Click="CollapsedCarButton"
+                                        Visibility="Collapsed"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Страны"
+                                        Tag="{x:Type direct:CarsCountryPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Марки"
+                                        Tag="{x:Type direct:CarsMarkPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Модели"
+                                        Tag="{x:Type direct:CarsModelPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Модели и Марки"
+                                        Tag="{x:Type direct:MmMarkModelPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Страны и Модели"
+                                        Tag="{x:Type direct:MmModelCountryPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Типы кузова"
+                                        Tag="{x:Type direct:CarsTypePage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Цвета"
+                                        Tag="{x:Type direct:CarsColorPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                </StackPanel>
                                 <!-- Кнопка "Пользователь" с вложенными кнопками -->
-                                <Button
-                                    Content="🔽Пользователь"
-                                    Tag="{x:Type direct:OrdersClientPage}"
-                                    Click="VisibleUsersButton"
-                                    x:Name="VisibleButton"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="🔼Пользователь"
-                                    Tag="{x:Type direct:OrdersClientPage}"
-                                    Click="CollapsedUserButton"
-                                    x:Name="CollapsedButton"
-                                    Visibility="Collapsed"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Отдел"
-                                    Tag="{x:Type direct:UsersDepartmentPage}"
-                                    x:Name="UserDepartmentButton"
-                                    Visibility="Collapsed"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Должность"
-                                    Tag="{x:Type direct:UsersFunctionPage}"
-                                    x:Name="UserFunctionButton"
-                                    Visibility="Collapsed"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Button
-                                    Content="Статус"
-                                    Tag="{x:Type direct:UsersStatusPage}"
-                                    x:Name="UserStatusButton"
-                                    Visibility="Collapsed"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
+                                <StackPanel x:Name="UserMenuGroup">
+                                    <Button
+                                        Content="➕ Пользователь"
+                                        x:Name="UserVisible"
+                                        Click="VisibleUserButton"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="➖ Пользователь"
+                                        x:Name="UserCollapse"
+                                        Click="CollapsedUserButton"
+                                        Visibility="Collapsed"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Отдел"
+                                        Tag="{x:Type direct:UsersDepartmentPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Должность"
+                                        Tag="{x:Type direct:UsersFunctionPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Статус"
+                                        Tag="{x:Type direct:UsersStatusPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </Popup>
