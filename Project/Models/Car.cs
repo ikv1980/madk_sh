@@ -60,7 +60,7 @@ public partial class Car
     public float CarPrice { get; set; }
 
     /// <summary>
-    /// Блок
+    /// Блок(резерв)
     /// </summary>
     public bool CarBlock { get; set; }
 

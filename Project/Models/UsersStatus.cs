@@ -11,7 +11,7 @@ public partial class UsersStatus
 
     public string StatusName { get; set; }
 
-    public sbyte Delete { get; set; }
+    public bool Delete { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

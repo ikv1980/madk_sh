@@ -109,7 +109,7 @@ public partial class Db : DbContext
                 .HasColumnType("int(10)")
                 .HasColumnName("car_id");
             entity.Property(e => e.CarBlock)
-                .HasComment("Блок")
+                .HasComment("Блок(резерв)")
                 .HasColumnName("car_block");
             entity.Property(e => e.CarColor)
                 .HasComment("Цвет")
@@ -831,9 +831,7 @@ public partial class Db : DbContext
             entity.Property(e => e.StatusId)
                 .HasColumnType("int(4)")
                 .HasColumnName("status_id");
-            entity.Property(e => e.Delete)
-                .HasColumnType("tinyint(4)")
-                .HasColumnName("delete");
+            entity.Property(e => e.Delete).HasColumnName("delete");
             entity.Property(e => e.StatusName)
                 .IsRequired()
                 .HasMaxLength(30)

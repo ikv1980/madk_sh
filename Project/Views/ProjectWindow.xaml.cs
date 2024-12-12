@@ -93,15 +93,10 @@ namespace Project.Views
             }
         }
 
-
-        private void Directoryes_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen; // Переключение видимости подменю
-        }
-
         private void Directoryes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
+            ResetMenu();
         }
 
         private void SubMenuButton_Click(object sender, RoutedEventArgs e)
@@ -116,6 +111,33 @@ namespace Project.Views
                     MainContent.Content = (System.Windows.Controls.Page)Activator.CreateInstance(pageType);
                 }
             }
+        }
+
+
+        // Контекстное меню пользователь
+        private void VisibleUsersButton(object sender, RoutedEventArgs e)
+        {
+            CollapsedButton.Visibility = Visibility.Visible;
+            VisibleButton.Visibility = Visibility.Collapsed;
+            UserDepartmentButton.Visibility = Visibility.Visible;
+            UserFunctionButton.Visibility = Visibility.Visible;
+            UserStatusButton.Visibility = Visibility.Visible;
+        }
+
+        private void CollapsedUserButton(object sender, RoutedEventArgs e)
+        {
+            ResetMenu();
+        }
+
+        // Свернуть контекстные меню
+        private void ResetMenu()
+        {
+            // Меню "Пользователь"
+            CollapsedButton.Visibility = Visibility.Collapsed;
+            VisibleButton.Visibility = Visibility.Visible;
+            UserDepartmentButton.Visibility = Visibility.Collapsed;
+            UserFunctionButton.Visibility = Visibility.Collapsed;
+            UserStatusButton.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -138,6 +138,41 @@
                                     Tag="{x:Type direct:OrdersClientPage}"
                                     Click="SubMenuButton_Click"
                                     Style="{StaticResource SubMenuButtonStyle}" />
+                                <!-- Кнопка "Пользователь" с вложенными кнопками -->
+                                <Button
+                                    Content="🔽Пользователь"
+                                    Tag="{x:Type direct:OrdersClientPage}"
+                                    Click="VisibleUsersButton"
+                                    x:Name="VisibleButton"
+                                    Style="{StaticResource SubMenuButtonStyle}" />
+                                <Button
+                                    Content="🔼Пользователь"
+                                    Tag="{x:Type direct:OrdersClientPage}"
+                                    Click="CollapsedUserButton"
+                                    x:Name="CollapsedButton"
+                                    Visibility="Collapsed"
+                                    Style="{StaticResource SubMenuButtonStyle}" />
+                                <Button
+                                    Content="Отдел"
+                                    Tag="{x:Type direct:UsersDepartmentPage}"
+                                    x:Name="UserDepartmentButton"
+                                    Visibility="Collapsed"
+                                    Click="SubMenuButton_Click"
+                                    Style="{StaticResource SubMenuButtonStyle}" />
+                                <Button
+                                    Content="Должность"
+                                    Tag="{x:Type direct:UsersFunctionPage}"
+                                    x:Name="UserFunctionButton"
+                                    Visibility="Collapsed"
+                                    Click="SubMenuButton_Click"
+                                    Style="{StaticResource SubMenuButtonStyle}" />
+                                <Button
+                                    Content="Статус"
+                                    Tag="{x:Type direct:UsersStatusPage}"
+                                    x:Name="UserStatusButton"
+                                    Visibility="Collapsed"
+                                    Click="SubMenuButton_Click"
+                                    Style="{StaticResource SubMenuButtonStyle}" />
                             </StackPanel>
                         </Border>
                     </Popup>
