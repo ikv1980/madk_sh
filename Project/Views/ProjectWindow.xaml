@@ -167,10 +167,16 @@
                                         Click="VisibleUserButton"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="➖ Пользователь"
+                                        Content="➖ Пользователи"
                                         x:Name="UserCollapse"
                                         Click="CollapsedUserButton"
                                         Visibility="Collapsed"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Пользователь"
+                                        Tag="{x:Type direct:UsersPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
                                         Content="Отдел"

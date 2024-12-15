@@ -67,12 +67,12 @@ public partial class User
     /// <summary>
     /// Дата рождения
     /// </summary>
-    public DateOnly UsersBirthday { get; set; }
+    public DateOnly? UsersBirthday { get; set; }
 
     /// <summary>
     /// Дата устройства на работу
     /// </summary>
-    public DateOnly UsersStartWork { get; set; }
+    public DateOnly? UsersStartWork { get; set; }
 
     /// <summary>
     /// Разрешения

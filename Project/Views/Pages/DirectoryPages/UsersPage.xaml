@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.OrdersClientPage"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.UsersPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
       xmlns:props="clr-namespace:Project.Tools"
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      Title="OrdersClientPage">
+      Title="UseraPage">
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
         <!-- Стили для заголовков колонок -->
@@ -81,7 +81,7 @@
                               Tag="Add"
                               Height="35"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                              CommandParameter="{x:Type wind:EditOrdersClient}" />
+                              CommandParameter="{x:Type wind:EditUser}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
@@ -90,7 +90,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditOrdersClient}" />
+                                <Binding Source="{x:Type wind:EditUser}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -102,7 +102,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditOrdersClient}" />
+                                <Binding Source="{x:Type wind:EditUser}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -124,8 +124,12 @@
                             <Setter Property="Background" Value="LightSkyBlue" />
                         </Trigger>
                         <!-- Цвет выделения для ClientStatus = false -->
-                        <DataTrigger Binding="{Binding ClientStatus}" Value="False">
-                            <Setter Property="Background" Value="LightPink" />
+                        <DataTrigger Binding="{Binding UsersStatus}" Value="1">
+                            <Setter Property="Background" Value="Yellow" />
+                            <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding UsersStatus}" Value="3">
+                            <Setter Property="Background" Value="Pink" />
                             <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
                         </DataTrigger>
                     </Style.Triggers>
@@ -134,13 +138,18 @@
 
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Логин" Binding="{Binding ClientLogin}" />
-                <DataGridTextColumn Header="Наименование" Binding="{Binding ClientName}" />
-                <DataGridTextColumn Header="Телефон" Binding="{Binding ClientPhone}" />
-                <DataGridTextColumn Header="E-mail" Binding="{Binding ClientMail}" />
-                <DataGridTextColumn Header="Регистрация"
-                                    Binding="{Binding ClientDateRegistration, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Доп. информация" Binding="{Binding ClientAddData}" />
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
+                <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
+                <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
+                <DataGridTextColumn Header="Дата рождения"
+                                    Binding="{Binding UsersBirthday, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Отдел" Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
+                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
+                <DataGridTextColumn Header="Дата приема"
+                                    Binding="{Binding UsersStartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Телефон" Binding="{Binding UsersPhone}" />
+                <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding UsersStatusNavigation.StatusName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

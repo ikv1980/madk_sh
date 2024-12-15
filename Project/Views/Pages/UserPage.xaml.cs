@@ -1,4 +1,5 @@
-﻿using Project.Models;
+﻿using System.Globalization;
+using Project.Models;
 using System.Windows;
 using System.Windows.Controls;
 using Project.Tools;
@@ -48,8 +49,8 @@ namespace Project.Views.Pages
                 UsersLogin = user.UsersLogin;
                 UsersEmail = user.UsersMail;
                 UsersPhone = user.UsersPhone;
-                UsersBirthday = user.UsersBirthday.ToString("dd.MM.yyyy");
-                UsersStartWork = user.UsersStartWork.ToString("dd.MM.yyyy");
+                UsersBirthday = user.UsersBirthday?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ?? string.Empty;
+                UsersStartWork = user.UsersStartWork?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ?? string.Empty;
                 UsersStatus = $"{user.UsersStatusNavigation.StatusName} (с {user.UsersStatusChange:dd.MM.yyyy})";
                 UsersDepartment = user.UsersDepartmentNavigation.DepartmentName;
                 UsersFunction = user.UsersFunctionNavigation.FunctionName;

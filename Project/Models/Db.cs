@@ -635,9 +635,6 @@ public partial class Db : DbContext
             entity.Property(e => e.PageId)
                 .HasColumnType("int(11)")
                 .HasColumnName("page_id");
-            entity.Property(e => e.Delete)
-                .HasColumnType("tinyint(4)")
-                .HasColumnName("delete");
             entity.Property(e => e.PageIcon)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -651,8 +648,9 @@ public partial class Db : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("page_name_rus");
             entity.Property(e => e.PageNumber)
-                .HasColumnType("int(11)")
+                .HasColumnType("int(4)")
                 .HasColumnName("page_number");
+            entity.Property(e => e.PageShow).HasColumnName("page_show");
         });
 
         modelBuilder.Entity<User>(entity =>

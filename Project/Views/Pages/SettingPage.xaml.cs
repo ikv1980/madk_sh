@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
 using ModernWpf.Controls;
@@ -65,7 +61,7 @@ namespace Project.Views.Pages
                 PageNameEng = "New Page",
                 PageNameRus = "Новая Страница",
                 PageIcon = "default.png",
-                Delete = 1
+                PageShow = true,
             };
 
             _dbContext.SitePages.Add(newPage);
