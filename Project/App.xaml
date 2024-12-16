@@ -1,10 +1,12 @@
 ﻿<Application x:Class="Project.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Project"
              StartupUri="/Views/ConnectionDB.xaml"
              xmlns:modern="http://schemas.modernwpf.com/2019"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+<!--
+StartupUri="/Views/Pages/DirectoryPages/UsersPage.xaml"
+-->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -42,7 +42,7 @@ public partial class User
     /// <summary>
     /// Дата смены статуса
     /// </summary>
-    public DateOnly UsersStatusChange { get; set; }
+    public DateOnly? UsersStatusChange { get; set; }
 
     /// <summary>
     /// Имя
@@ -82,7 +82,7 @@ public partial class User
     /// <summary>
     /// Метка удаления
     /// </summary>
-    public bool? Delete { get; set; }
+    public bool Delete { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 

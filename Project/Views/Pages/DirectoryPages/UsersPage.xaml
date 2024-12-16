@@ -150,6 +150,8 @@
                 <DataGridTextColumn Header="Телефон" Binding="{Binding UsersPhone}" />
                 <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
                 <DataGridTextColumn Header="Статус" Binding="{Binding UsersStatusNavigation.StatusName}" />
+                <DataGridTextColumn Header="Дата статуса"
+                                    Binding="{Binding UsersStatusChange, StringFormat='{}{0:dd.MM.yyyy}'}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

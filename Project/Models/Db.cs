@@ -675,7 +675,6 @@ public partial class Db : DbContext
                 .HasColumnType("int(10)")
                 .HasColumnName("users_id");
             entity.Property(e => e.Delete)
-                .HasDefaultValueSql("'0'")
                 .HasComment("Метка удаления")
                 .HasColumnName("delete");
             entity.Property(e => e.UsersBirthday)
@@ -736,7 +735,6 @@ public partial class Db : DbContext
                 .HasColumnType("int(4)")
                 .HasColumnName("users_status");
             entity.Property(e => e.UsersStatusChange)
-                .HasDefaultValueSql("current_timestamp()")
                 .HasComment("Дата смены статуса")
                 .HasColumnName("users_status_change");
             entity.Property(e => e.UsersSurname)
