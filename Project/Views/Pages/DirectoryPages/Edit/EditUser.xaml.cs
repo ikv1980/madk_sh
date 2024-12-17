@@ -111,7 +111,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 }
                 else
                 {
-                    if (!ValidateInputs())
+                    if (!IsValidInput())
                         return;
                 }
 
@@ -153,7 +153,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Валидация данных
-        private bool ValidateInputs()
+        private bool IsValidInput()
         {
             if (string.IsNullOrWhiteSpace(EditUsersName.Text) || string.IsNullOrWhiteSpace(EditUsersSurname.Text))
             {

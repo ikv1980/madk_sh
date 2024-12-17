@@ -17,13 +17,20 @@
                                  VerticalAlignment="Center"
                                  Spacing="30"
                                  Margin="20, 40, 20, 20">
+            <ComboBox FontSize="17"
+                      SelectedValuePath="MarkId"
+                      DisplayMemberPath="MarkName"
+                      Width="300"
+                      modern:ControlHelper.PlaceholderText="Выберите марку"
+                      BorderBrush="DimGray" 
+                      x:Name="EditMark"/>
             <ui:TextBox FontSize="17"
                         Width="300"
-                        PlaceholderText="Введите данные"
+                        PlaceholderText="Введите модель"
                         modern:ControlHelper.CornerRadius="5"
                         Icon="Save24"
                         IconFilled="False"
-                        x:Name="ItemTextBox"/>
+                        x:Name="EditModelName"/>
             <TextBlock Text="Вы уверены, что хотите удалить данные?"
                        FontSize="17" FontWeight="SemiBold" 
                        VerticalAlignment="Center"
