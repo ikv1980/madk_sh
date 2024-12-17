@@ -32,7 +32,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             _itemId = item.MarkId;
-            ItemTextBox.Text = item.MarkName;
+            EditMarkName.Text = item.MarkName;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -73,7 +73,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.MarkName = ItemTextBox.Text.Trim();
+                    item.MarkName = EditMarkName.Text.Trim();
                 }
                 // Удаление
                 if (_isDeleteMode){
@@ -82,7 +82,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.MarkName = ItemTextBox.Text.Trim();
+                    item.MarkName = EditMarkName.Text.Trim();
                     DbUtils.db.CarsMarks.Add(item);
                 }
                 
@@ -105,7 +105,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Валидация данных
         private bool IsValidInput()
         {
-            var item = ItemTextBox.Text.Trim().ToLower();
+            var item = EditMarkName.Text.Trim().ToLower();
 
             if (string.IsNullOrWhiteSpace(item))
             {
@@ -115,7 +115,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (DbUtils.db.CarsMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.MarkId != _itemId))
             {
-                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{EditMarkName.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
@@ -124,7 +124,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemTextBox.Focus();
+            EditMarkName.Focus();
         }
     }
 }

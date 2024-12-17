@@ -28,8 +28,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
-            ClientLoginTextBlock.Visibility = Visibility.Collapsed;
-            ClientLoginTextBox.Visibility = Visibility.Visible;
+            ShowClientLogin.Visibility = Visibility.Collapsed;
+            EditClientLogin.Visibility = Visibility.Visible;
             _validator = new ValidateField();
         }
 
@@ -40,16 +40,16 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             _oldPassword = item.ClientPassword;
             _itemId = item.ClientId;
-            ClientNameTextBox.Text = item.ClientName;
-            ClientPhoneTextBox.Text = item.ClientPhone;
-            ClientMailTextBox.Text = item.ClientMail;
-            ClientAddDataTextBox.Text = item.ClientAddData;
+            EditClientName.Text = item.ClientName;
+            EditClientPhone.Text = item.ClientPhone;
+            EditClientMail.Text = item.ClientMail;
+            EditClientAddData.Text = item.ClientAddData;
             ClientDateRegistrationTextBlock.Text = item.ClientDateRegistration.ToString("dd.MM.yyyy");
-            StatusComboBox.SelectedItem = StatusComboBox.Items
+            EditClientStatus.SelectedItem = EditClientStatus.Items
                 .Cast<ComboBoxItem>()
                 .FirstOrDefault(i => i.Tag.ToString() == (item.ClientStatus == true ? "1" : "0"));
-            ClientLoginTextBlock.Text = item.ClientLogin;
-            ClientLoginTextBox.Text = item.ClientLogin;
+            ShowClientLogin.Text = item.ClientLogin;
+            EditClientLogin.Text = item.ClientLogin;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -58,8 +58,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
-                ClientLoginTextBlock.Visibility = Visibility.Visible;
-                ClientLoginTextBox.Visibility = Visibility.Collapsed;
+                ShowClientLogin.Visibility = Visibility.Visible;
+                EditClientLogin.Visibility = Visibility.Collapsed;
             }
 
             if (button == "Delete")
@@ -101,7 +101,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.ClientLogin = ClientLoginTextBox.Text.Trim();
+                    item.ClientLogin = EditClientLogin.Text.Trim();
                     UpdateItem(item);
                     DbUtils.db.OrdersClients.Add(item);
                 }
@@ -126,21 +126,21 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Валидация данных
         private bool ValidateInputs()
         {
-            if (string.IsNullOrWhiteSpace(ClientNameTextBox.Text))
+            if (string.IsNullOrWhiteSpace(EditClientName.Text))
             {
                 MessageBox.Show("Имя клиента не может быть пустым.", "Ошибка", MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return false;
             }
 
-            if (!_validator.IsValid(ClientPhoneTextBox.Text, "phone"))
+            if (!_validator.IsValid(EditClientPhone.Text, "phone"))
             {
                 MessageBox.Show("Некорректный телефон. В номере телефона допускаются цифры и знак +.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (!_validator.IsValid(ClientMailTextBox.Text, "email"))
+            if (!_validator.IsValid(EditClientMail.Text, "email"))
             {
                 MessageBox.Show("Некорректный e-mail.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -148,7 +148,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (!_isEditMode && !_isDeleteMode)
             {
-                var clientLogin = ClientLoginTextBox.Text.Trim();
+                var clientLogin = EditClientLogin.Text.Trim();
 
                 if (string.IsNullOrWhiteSpace(clientLogin))
                 {
@@ -164,7 +164,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     return false;
                 }
                 
-                if (!_validator.IsValid(ClientPasswordBox.Password, "password"))
+                if (!_validator.IsValid(EditClientPassword.Password, "password"))
                 {
                     MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK,
                         MessageBoxImage.Warning);
@@ -172,8 +172,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(ClientPasswordBox.Password.Trim()) &&
-                !_validator.IsValid(ClientPasswordBox.Password, "password"))
+            if (!string.IsNullOrWhiteSpace(EditClientPassword.Password.Trim()) &&
+                !_validator.IsValid(EditClientPassword.Password, "password"))
             {
                 MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK,
                     MessageBoxImage.Warning);
@@ -186,16 +186,16 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(OrdersClient item)
         {
-            item.ClientName = ClientNameTextBox.Text.Trim();
-            item.ClientPhone = ClientPhoneTextBox.Text.Trim();
-            item.ClientMail = ClientMailTextBox.Text.Trim();
-            item.ClientAddData = ClientAddDataTextBox.Text.Trim();
-            item.ClientStatus = ((ComboBoxItem)StatusComboBox.SelectedItem)?.Tag.ToString() == "1";
+            item.ClientName = EditClientName.Text.Trim();
+            item.ClientPhone = EditClientPhone.Text.Trim();
+            item.ClientMail = EditClientMail.Text.Trim();
+            item.ClientAddData = EditClientAddData.Text.Trim();
+            item.ClientStatus = ((ComboBoxItem)EditClientStatus.SelectedItem)?.Tag.ToString() == "1";
 
-            if (!string.IsNullOrWhiteSpace(ClientPasswordBox.Password))
+            if (!string.IsNullOrWhiteSpace(EditClientPassword.Password))
             {
                 Helpers helper = new Helpers();
-                item.ClientPassword = helper.HashPassword(ClientPasswordBox.Password);
+                item.ClientPassword = helper.HashPassword(EditClientPassword.Password);
             }
             else
             {
@@ -206,7 +206,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Фокус на элементе
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ClientNameTextBox.Focus();
+            EditClientName.Focus();
         }
     }
 }

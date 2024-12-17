@@ -60,7 +60,7 @@
                                 Icon="Person24"
                                 FontSize="17"
                                 IconFilled="True"
-                                x:Name="ClientNameTextBox" />
+                                x:Name="EditClientName" />
                 </Grid> <!--строка 1-->
                 <Grid Grid.Row="2" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
@@ -75,7 +75,7 @@
                                 FontSize="17"
                                 Icon="PersonCall24"
                                 IconFilled="True"
-                                x:Name="ClientPhoneTextBox" />
+                                x:Name="EditClientPhone" />
                 </Grid> <!--строка 2-->
                 <Grid Grid.Row="3" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
@@ -90,7 +90,7 @@
                                 FontSize="17"
                                 Icon="PersonMail24"
                                 IconFilled="True"
-                                x:Name="ClientMailTextBox" />
+                                x:Name="EditClientMail" />
                 </Grid> <!--строка 3-->
                 <Grid Grid.Row="4" Margin="0,10,0,0">
                     <TextBlock Text="Дополнительная информация:"
@@ -107,7 +107,7 @@
                         FontSize="17"
                         Icon="PersonAdd24"
                         IconFilled="True"
-                        x:Name="ClientAddDataTextBox" />
+                        x:Name="EditClientAddData" />
                 </Grid> <!--строка 5-->
                 <Grid Grid.Row="6" Margin="0,10,0,10">
                     <Grid.ColumnDefinitions>
@@ -133,11 +133,12 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <ComboBox Grid.Column="1"
-                              BorderBrush="DarkGray"
-                              HorizontalAlignment="Stretch"
+                              FontSize="17"
+                              modern:ControlHelper.CornerRadius="5"
                               modern:ControlHelper.PlaceholderText="Выберите статус"
-                              x:Name="StatusComboBox"
-                              FontSize="17">
+                              x:Name="EditClientStatus"
+                              HorizontalAlignment="Stretch"
+                              BorderBrush="DarkGray">
                         <ComboBoxItem Content="не активный" Tag="0" />
                         <ComboBoxItem Content="активный" Tag="1" />
                     </ComboBox>
@@ -158,13 +159,13 @@
                                VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1"
                                FontSize="17"
-                               x:Name="ClientLoginTextBlock" />
+                               x:Name="ShowClientLogin" />
                     <ui:TextBox Grid.Column="1"
                                 FontSize="17"
                                 Icon="PersonMail24"
                                 IconFilled="True"
                                 Visibility="Collapsed"
-                                x:Name="ClientLoginTextBox" />
+                                x:Name="EditClientLogin" />
                 </Grid> <!--строка 9-->
                 <Grid Grid.Row="10" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
@@ -183,7 +184,7 @@
                         IconFilled="True"
                         PasswordChar="•"
                         ClearButtonEnabled="False"
-                        x:Name="ClientPasswordBox" />
+                        x:Name="EditClientPassword" />
                 </Grid> <!--строка 10-->
                 <Grid Grid.Row="11" Margin="0,10,0,0">
                     <TextBlock Text="Вы уверены, что хотите удалить клиента?"

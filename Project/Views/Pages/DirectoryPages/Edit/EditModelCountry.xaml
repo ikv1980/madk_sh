@@ -19,19 +19,19 @@
                                  Margin="20, 40, 20, 20">
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      x:Name="ComboBoxModel"
+                      modern:ControlHelper.PlaceholderText="Выберите модель"
+                      x:Name="EditModelName"
                       SelectedValuePath="ModelId"
                       DisplayMemberPath="ModelName"
                       Width="300"
-                      modern:ControlHelper.PlaceholderText="Выберите модель"
                       BorderBrush="DimGray" />
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      x:Name="ComboBoxCountry"
+                      modern:ControlHelper.PlaceholderText="Выберите страну"
+                      x:Name="EditCountryName"
                       SelectedValuePath="CountryId"
                       DisplayMemberPath="CountryName"
                       Width="300"
-                      modern:ControlHelper.PlaceholderText="Выберите страну"
                       BorderBrush="DimGray" />
 
             <TextBlock Text="Вы уверены, что хотите удалить данные?"

@@ -23,7 +23,7 @@
                         modern:ControlHelper.CornerRadius="5"
                         Icon="Save24"
                         IconFilled="False"
-                        x:Name="ItemTextBox"/>
+                        x:Name="EditCountryName"/>
             <TextBlock Text="Вы уверены, что хотите удалить данные?"
                        FontSize="17" FontWeight="SemiBold" 
                        VerticalAlignment="Center"

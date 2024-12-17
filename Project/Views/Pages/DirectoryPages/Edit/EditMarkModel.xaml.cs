@@ -34,8 +34,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             InitializeComponent();
             Init();
             _itemId = item.Id;
-            ComboBoxMark.SelectedItem = DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
-            ComboBoxModel.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            EditMarkName.SelectedItem = DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
+            EditModelName.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -108,28 +108,28 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            ComboBoxMark.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
-            ComboBoxModel.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
+            EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
+            EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
         }
         
         // Валидация данных
         private bool IsValidInput()
         {
-            if (ComboBoxMark.SelectedItem == null)
+            if (EditMarkName.SelectedItem == null)
             {
                 MessageBox.Show("Не выбрана марка авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
-            if (ComboBoxModel.SelectedItem == null)
+            if (EditModelName.SelectedItem == null)
             {
                 MessageBox.Show("Не выбрана модель авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
             if (DbUtils.db.MmMarkModels.Any(x => 
-                    x.MarkId == (int)ComboBoxMark.SelectedValue && 
-                    x.ModelId == (int)ComboBoxModel.SelectedValue && 
+                    x.MarkId == (int)EditMarkName.SelectedValue && 
+                    x.ModelId == (int)EditModelName.SelectedValue && 
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -141,14 +141,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(MmMarkModel item)
         {
-            item.MarkId = (ComboBoxMark.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
-            item.ModelId = (ComboBoxModel.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
+            item.MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
+            item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
         }
         
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ComboBoxModel.Focus();
+            EditModelName.Focus();
         }
     }
 }

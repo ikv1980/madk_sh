@@ -174,11 +174,11 @@
                     <ComboBox Grid.Column="1"
                               FontSize="17"
                               modern:ControlHelper.CornerRadius="5"
+                              modern:ControlHelper.PlaceholderText="Выберите отдел"
                               x:Name="EditUsersDepartment"
                               SelectedValuePath="DepartmentId"
                               DisplayMemberPath="DepartmentName"
                               Width="350"
-                              modern:ControlHelper.PlaceholderText="Выберите отдел"
                               BorderBrush="DimGray" />
                 </Grid>
                 <Grid Grid.Row="9" Margin="0,10,0,0">
@@ -194,11 +194,11 @@
                     <ComboBox Grid.Column="1"
                               FontSize="17"
                               modern:ControlHelper.CornerRadius="5"
+                              modern:ControlHelper.PlaceholderText="Выберите должность"
                               x:Name="EditUsersFunction"
                               SelectedValuePath="FunctionId"
                               DisplayMemberPath="FunctionName"
                               Width="350"
-                              modern:ControlHelper.PlaceholderText="Выберите должность"
                               BorderBrush="DimGray" />
                 </Grid>
                 <Grid Grid.Row="10" Margin="0,10,0,0">
@@ -230,11 +230,11 @@
                     <ComboBox Grid.Column="1"
                               FontSize="17"
                               modern:ControlHelper.CornerRadius="5"
+                              modern:ControlHelper.PlaceholderText="Выберите статус"
                               x:Name="EditUsersStatus"
                               SelectedValuePath="StatusId"
                               DisplayMemberPath="StatusName"
                               Width="200"
-                              modern:ControlHelper.PlaceholderText="Выберите статус"
                               BorderBrush="DimGray" />
                     <DatePicker Grid.Column="2"
                                 FontSize="17"

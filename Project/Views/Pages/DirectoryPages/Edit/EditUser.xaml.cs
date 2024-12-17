@@ -85,6 +85,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Content = "Удалить";
                 SaveButton.Icon = SymbolRegular.Delete24;
                 EditUsersLogin.Visibility = Visibility.Collapsed;
+                DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
 

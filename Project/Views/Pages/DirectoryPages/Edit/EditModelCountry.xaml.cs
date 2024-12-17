@@ -35,8 +35,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             InitializeComponent();
             Init();
             _itemId = item.Id;
-            ComboBoxModel.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
-            ComboBoxCountry.SelectedItem = DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CountryId);
+            EditModelName.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            EditCountryName.SelectedItem = DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CountryId);
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -109,28 +109,28 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            ComboBoxModel.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
-            ComboBoxCountry.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
+            EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
+            EditCountryName.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
         }
         
         // Валидация данных
         private bool IsValidInput()
         {
-            if (ComboBoxModel.SelectedItem == null)
+            if (EditModelName.SelectedItem == null)
             {
                 MessageBox.Show("Не выбрана модель авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
-            if (ComboBoxCountry.SelectedItem == null)
+            if (EditCountryName.SelectedItem == null)
             {
                 MessageBox.Show("Не выбрана страна авто", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             
             if (DbUtils.db.MmModelCountries.Any(x => 
-                    x.CountryId == (int)ComboBoxCountry.SelectedValue && 
-                    x.ModelId == (int)ComboBoxModel.SelectedValue && 
+                    x.CountryId == (int)EditCountryName.SelectedValue && 
+                    x.ModelId == (int)EditModelName.SelectedValue && 
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -142,14 +142,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(MmModelCountry item)
         {
-            item.ModelId = (ComboBoxModel.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
-            item.CountryId = (ComboBoxCountry.SelectedItem as CarsCountry)?.CountryId ?? item.CountryId;
+            item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
+            item.CountryId = (EditCountryName.SelectedItem as CarsCountry)?.CountryId ?? item.CountryId;
         }
         
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ComboBoxModel.Focus();
+            EditModelName.Focus();
         }
     }
 }

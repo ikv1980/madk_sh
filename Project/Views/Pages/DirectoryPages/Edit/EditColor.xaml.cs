@@ -33,7 +33,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             _itemId = item.ColorId;
-            ItemTextBox.Text = item.ColorName;
+            EditColorName.Text = item.ColorName;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -74,7 +74,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Изменение
                 if (_isEditMode)
                 {
-                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
+                    item.ColorName = EditColorName.Text.Trim().ToLower();
                 }
                 // Удаление
                 if (_isDeleteMode){
@@ -83,7 +83,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.ColorName = ItemTextBox.Text.Trim().ToLower();
+                    item.ColorName = EditColorName.Text.Trim().ToLower();
                     DbUtils.db.CarsColors.Add(item);
                 }
                 
@@ -106,7 +106,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Валидация данных
         private bool IsValidInput()
         {
-            var item = ItemTextBox.Text.Trim().ToLower();
+            var item = EditColorName.Text.Trim().ToLower();
 
             if (string.IsNullOrWhiteSpace(item))
             {
@@ -116,7 +116,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
             {
-                MessageBox.Show($"Запись '{ItemTextBox.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{EditColorName.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             return true;
@@ -125,7 +125,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemTextBox.Focus();
+            EditColorName.Focus();
         }
     }
 }

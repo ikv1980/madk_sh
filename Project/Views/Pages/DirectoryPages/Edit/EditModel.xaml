@@ -18,26 +18,27 @@
                                  Spacing="30"
                                  Margin="20, 40, 20, 20">
             <ComboBox FontSize="17"
+                      modern:ControlHelper.CornerRadius="5"
+                      modern:ControlHelper.PlaceholderText="Выберите марку"
+                      x:Name="EditMarkName"
                       SelectedValuePath="MarkId"
                       DisplayMemberPath="MarkName"
                       Width="300"
-                      modern:ControlHelper.PlaceholderText="Выберите марку"
-                      BorderBrush="DimGray" 
-                      x:Name="EditMark"/>
+                      BorderBrush="DimGray" />
             <ui:TextBox FontSize="17"
                         Width="300"
                         PlaceholderText="Введите модель"
                         modern:ControlHelper.CornerRadius="5"
                         Icon="Save24"
                         IconFilled="False"
-                        x:Name="EditModelName"/>
+                        x:Name="EditModelName" />
             <TextBlock Text="Вы уверены, что хотите удалить данные?"
-                       FontSize="17" FontWeight="SemiBold" 
+                       FontSize="17" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="Red"
                        x:Name="DeleteTextBlock"
-                       Visibility="Collapsed"/>
+                       Visibility="Collapsed" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ui:Button FontSize="18"
                            Background="#FF2395FF"
@@ -47,7 +48,7 @@
                            Appearance="Primary"
                            x:Name="SaveButton"
                            Margin="10"
-                           Click="SaveButton_Click"/>
+                           Click="SaveButton_Click" />
                 <ui:Button FontSize="18"
                            Background="#FF2395FF"
                            Content="Отмена"
@@ -56,7 +57,7 @@
                            modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            Margin="10"
-                           Click="CancelButton_Click"/>
+                           Click="CancelButton_Click" />
             </StackPanel>
         </modern:SimpleStackPanel>
     </Grid>

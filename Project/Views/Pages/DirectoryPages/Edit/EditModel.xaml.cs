@@ -45,7 +45,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 .FirstOrDefault();
             if (selectedMark != null)
             {
-                EditMark.SelectedItem = selectedMark;
+                EditMarkName.SelectedItem = selectedMark;
             }
 
             // Устанавливаем параметры в зависимости от нажатой кнопки
@@ -110,7 +110,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         var mmMarkModel = new MmMarkModel
                         {
                             ModelId = item.ModelId,
-                            MarkId = (EditMark.SelectedItem as CarsMark)?.MarkId ?? -1
+                            MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? -1
                         };
                         DbUtils.db.MmMarkModels.Add(mmMarkModel);
                     }
@@ -147,7 +147,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
 
             // Проверка на наличие выбранной марки
-            if (EditMark.SelectedItem == null)
+            if (EditMarkName.SelectedItem == null)
             {
                 MessageBox.Show("Пожалуйста, выберите марку для модели.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -155,7 +155,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
 
             // Проверка на уникальность связки модель - марка
-            var selectedMark = EditMark.SelectedItem as CarsMark;
+            var selectedMark = EditMarkName.SelectedItem as CarsMark;
 
             if (DbUtils.db.CarsModels.Any(m => m.ModelName.Trim().ToLower() == item) &&
                 DbUtils.db.MmMarkModels.Any(mm => mm.MarkId == selectedMark.MarkId))
@@ -171,14 +171,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            EditMark.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
+            EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
         }
 
         // Обновление данных объекта
         private void UpdateItem(CarsModel item)
         {
             // Обновляем идентификатор марки на основе выбранного элемента
-            var selectedMark = EditMark.SelectedItem as CarsMark;
+            var selectedMark = EditMarkName.SelectedItem as CarsMark;
             if (selectedMark != null)
             {
                 var mmMarkModel = DbUtils.db.MmMarkModels
@@ -193,7 +193,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            EditMark.Focus();
+            EditMarkName.Focus();
         }
     }
 }
