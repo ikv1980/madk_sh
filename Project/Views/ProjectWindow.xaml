@@ -4,11 +4,9 @@
         xmlns:modern="http://schemas.modernwpf.com/2019"
         xmlns:direct="clr-namespace:Project.Views.Pages.DirectoryPages"
         Title="Автосалон"
-        Height="1000" Width="1400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="LightSkyBlue">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
@@ -110,7 +108,7 @@
                                         x:Name="CarVisible"
                                         Click="VisibleCarButton"
                                         Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button 
+                                    <Button
                                         Content="➖ Автомобили"
                                         x:Name="CarCollapse"
                                         Click="CollapsedCarButton"

@@ -84,7 +84,7 @@ namespace Project.Views
         {
             if (SystemParameters.PrimaryScreenHeight > 1000)
             {
-                this.Width = 1200;
+                this.Width = 1250;
                 this.Height = 960;
             }
             else
@@ -97,6 +97,7 @@ namespace Project.Views
         private void Directoryes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
+            CollapsedMenu();
         }
 
         private void SubMenuButton_Click(object sender, RoutedEventArgs e)
@@ -158,6 +159,13 @@ namespace Project.Views
                     }
                 }
             }
+        }
+
+        // Свернуть все меню
+        private void CollapsedMenu()
+        {
+            ToggleMenuVisibility(CarMenuGroup, false);
+            ToggleMenuVisibility(UserMenuGroup, false);
         }
     }
 }
