@@ -58,7 +58,7 @@
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
                                 Icon="Person24"
-                                FontSize="16"
+                                FontSize="17"
                                 IconFilled="True"
                                 x:Name="ClientNameTextBox" />
                 </Grid> <!--строка 1-->
@@ -72,7 +72,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Icon="PersonCall24"
                                 IconFilled="True"
                                 x:Name="ClientPhoneTextBox" />
@@ -87,7 +87,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Icon="PersonMail24"
                                 IconFilled="True"
                                 x:Name="ClientMailTextBox" />
@@ -104,7 +104,7 @@
                         MinHeight="60"
                         VerticalAlignment="Top"
                         TextWrapping="Wrap"
-                        FontSize="16"
+                        FontSize="17"
                         Icon="PersonAdd24"
                         IconFilled="True"
                         x:Name="ClientAddDataTextBox" />
@@ -135,8 +135,9 @@
                     <ComboBox Grid.Column="1"
                               BorderBrush="DarkGray"
                               HorizontalAlignment="Stretch"
+                              modern:ControlHelper.PlaceholderText="Выберите статус"
                               x:Name="StatusComboBox"
-                              FontSize="16">
+                              FontSize="17">
                         <ComboBoxItem Content="не активный" Tag="0" />
                         <ComboBoxItem Content="активный" Tag="1" />
                     </ComboBox>
@@ -156,10 +157,10 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1"
-                               FontSize="16"
+                               FontSize="17"
                                x:Name="ClientLoginTextBlock" />
                     <ui:TextBox Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Icon="PersonMail24"
                                 IconFilled="True"
                                 Visibility="Collapsed"
@@ -177,7 +178,7 @@
                     <ui:PasswordBox
                         Grid.Column="1"
                         PlaceholderText="Введите новый пароль"
-                        FontSize="16"
+                        FontSize="17"
                         Icon="LockClosed16"
                         IconFilled="True"
                         PasswordChar="•"

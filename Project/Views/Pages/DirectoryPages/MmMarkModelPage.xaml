@@ -41,18 +41,6 @@
         <modern:SimpleStackPanel Orientation="Vertical"
                                  Margin="5 5"
                                  Spacing="20">
-            <!--
-            <modern:AutoSuggestBox x:Name="SearchTextBox"
-                                   VerticalAlignment="Center"
-                                   PlaceholderText="Поиск"
-                                   FontSize="17"
-                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
-                                   Text="{Binding SearchingText, Mode=TwoWay}"
-                                   BorderBrush="Gray"
-                                   modern:ControlHelper.CornerRadius="5"
-                                   QueryIcon="Find">
-            </modern:AutoSuggestBox>
-            -->
             <ui:Button FontSize="18"
                        Content="Обновить"
                        Background="#FF2395FF"

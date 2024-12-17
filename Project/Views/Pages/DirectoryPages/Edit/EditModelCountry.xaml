@@ -19,7 +19,6 @@
                                  Margin="20, 40, 20, 20">
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.Header="Модель авто"
                       x:Name="ComboBoxModel"
                       SelectedValuePath="ModelId"
                       DisplayMemberPath="ModelName"
@@ -28,7 +27,6 @@
                       BorderBrush="DimGray" />
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.Header="Страна"
                       x:Name="ComboBoxCountry"
                       SelectedValuePath="CountryId"
                       DisplayMemberPath="CountryName"

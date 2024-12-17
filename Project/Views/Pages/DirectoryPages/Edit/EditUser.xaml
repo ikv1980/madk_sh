@@ -63,7 +63,7 @@
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
                                 Icon="Person24"
-                                FontSize="16"
+                                FontSize="17"
                                 IconFilled="True"
                                 x:Name="EditUsersSurname" />
                 </Grid>
@@ -79,7 +79,7 @@
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
                                 Icon="Person24"
-                                FontSize="16"
+                                FontSize="17"
                                 IconFilled="True"
                                 x:Name="EditUsersName" />
                 </Grid>
@@ -95,7 +95,7 @@
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
                                 Icon="Person24"
-                                FontSize="16"
+                                FontSize="17"
                                 IconFilled="True"
                                 x:Name="EditUsersPatronymic" />
                 </Grid>
@@ -109,7 +109,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <DatePicker Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Width="150"
                                 x:Name="EditUsersBirthday"
                                 SelectedDateFormat="Short" />
@@ -134,7 +134,7 @@
                         </Border.Effect>
                         <xctk:MaskedTextBox Grid.Column="1"
                                             Mask="+70000000000"
-                                            FontSize="16"
+                                            FontSize="17"
                                             BorderThickness="0"
                                             Padding="5"
                                             x:Name="EditUsersPhone"
@@ -151,7 +151,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <ui:TextBox Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Icon="PersonMail24"
                                 IconFilled="True"
                                 x:Name="EditUsersMail" />
@@ -211,7 +211,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <DatePicker Grid.Column="1"
-                                FontSize="16"
+                                FontSize="17"
                                 Width="150"
                                 x:Name="EditUsersStartWork"
                                 SelectedDateFormat="Short" />
@@ -237,7 +237,7 @@
                               modern:ControlHelper.PlaceholderText="Выберите статус"
                               BorderBrush="DimGray" />
                     <DatePicker Grid.Column="2"
-                                FontSize="16"
+                                FontSize="17"
                                 x:Name="EditUsersStatusChange"
                                 Margin="10,0,0,0"
                                 SelectedDateFormat="Short" />
@@ -257,7 +257,7 @@
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1"
-                               FontSize="16"
+                               FontSize="17"
                                x:Name="ShowUsersLogin" />
                     <ui:TextBox Grid.Column="1"
                                 FontSize="16"
@@ -278,7 +278,7 @@
                     <ui:PasswordBox
                         Grid.Column="1"
                         PlaceholderText="Введите новый пароль"
-                        FontSize="16"
+                        FontSize="17"
                         Icon="LockClosed16"
                         IconFilled="True"
                         PasswordChar="•"

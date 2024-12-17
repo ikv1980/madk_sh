@@ -19,7 +19,6 @@
                                  Margin="20, 40, 20, 20">
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.Header="Марка авто"
                       x:Name="ComboBoxMark"
                       SelectedValuePath="MarkId"
                       DisplayMemberPath="MarkName"
@@ -28,7 +27,6 @@
                       BorderBrush="DimGray" />
             <ComboBox FontSize="17"
                       modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.Header="Модель авто"
                       x:Name="ComboBoxModel"
                       SelectedValuePath="ModelId"
                       DisplayMemberPath="ModelName"
@@ -48,7 +46,7 @@
                            Background="#FF2395FF"
                            Content="Действие"
                            HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="5"
+                           modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            x:Name="SaveButton"
                            Margin="10"
@@ -58,7 +56,7 @@
                            Content="Отмена"
                            Icon="Dismiss24"
                            HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="5"
+                           modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            Margin="10"
                            Click="CancelButton_Click" />

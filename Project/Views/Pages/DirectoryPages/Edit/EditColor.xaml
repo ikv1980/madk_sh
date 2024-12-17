@@ -19,7 +19,7 @@
                                  Margin="20, 40, 20, 20">
             <ui:TextBox FontSize="17"
                         Width="300"
-                        PlaceholderText="Введите данные"
+                        PlaceholderText="Введите цвет"
                         modern:ControlHelper.CornerRadius="5"
                         Icon="Save24"
                         IconFilled="False"
@@ -36,7 +36,7 @@
                            Background="#FF2395FF"
                            Content="Действие"
                            HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="5"
+                           modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            x:Name="SaveButton"
                            Margin="10"
@@ -46,7 +46,7 @@
                            Content="Отмена"
                            Icon="Dismiss24"
                            HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="5"
+                           modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            Margin="10"
                            Click="CancelButton_Click"/>
