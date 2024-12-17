@@ -14,7 +14,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
-        
+
         // Конструктор для добавления данных
         public EditType()
         {
@@ -34,7 +34,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             _itemId = item.TypeId;
             EditTypeName.Text = item.TypeName;
-            
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -43,7 +43,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
             }
-            if (button == "Delete")
+            else if (button == "Delete")
             {
                 _isDeleteMode = true;
                 Title = "Удаление данных";
@@ -52,48 +52,50 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
-        
+
         // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!IsValidInput())
-                    return;
-
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsTypes.FirstOrDefault(x => x.TypeId == _itemId) 
+                    ? DbUtils.db.CarsTypes.FirstOrDefault(x => x.TypeId == _itemId)
                     : new Models.CarsType();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                
-                // Изменение
-                if (_isEditMode)
-                {
-                    item.TypeName = EditTypeName.Text.Trim();
-                }
+
                 // Удаление
-                if (_isDeleteMode){
+                if (_isDeleteMode)
+                {
                     item.Delete = true; //DbUtils.db.CarsTypes.Remove(item);
                 }
-                // Добавление
-                if (!_isEditMode && !_isDeleteMode)
+                else
                 {
+                    if (!IsValidInput())
+                        return;
+
+                    // Изменение или добавление
                     item.TypeName = EditTypeName.Text.Trim();
-                    DbUtils.db.CarsTypes.Add(item);
+
+                    if (!_isEditMode)
+                    {
+                        DbUtils.db.CarsTypes.Add(item);
+                    }
                 }
-                
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -102,7 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             this.Close();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
@@ -110,15 +112,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (DbUtils.db.CarsTypes.Any(x => x.TypeName.Trim().ToLower() == item && x.TypeId != _itemId))
             {
-                MessageBox.Show($"Запись '{EditTypeName.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{EditTypeName.Text}' уже существует в базе.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+
             return true;
         }
 

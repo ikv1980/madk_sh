@@ -34,7 +34,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             _itemId = item.ColorId;
             EditColorName.Text = item.ColorName;
-            
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -43,7 +43,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
             }
-            if (button == "Delete")
+            else if (button == "Delete")
             {
                 _isDeleteMode = true;
                 Title = "Удаление данных";
@@ -52,48 +52,50 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
-        
+
         // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!IsValidInput())
-                    return;
-
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId) 
+                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId)
                     : new CarsColor();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                
-                // Изменение
-                if (_isEditMode)
-                {
-                    item.ColorName = EditColorName.Text.Trim().ToLower();
-                }
+
                 // Удаление
-                if (_isDeleteMode){
-                    item.Delete = true; //DbUtils.db.CarsColors.Remove(item);
-                }
-                // Добавление
-                if (!_isEditMode && !_isDeleteMode)
+                if (_isDeleteMode)
                 {
-                    item.ColorName = EditColorName.Text.Trim().ToLower();
-                    DbUtils.db.CarsColors.Add(item);
+                    item.Delete = true; //DbUtils.db.CarsColors.Remove(item);   
                 }
-                
+                else
+                {
+                    if (!IsValidInput())
+                        return;
+
+                    // Изменение или добавление
+                    item.ColorName = EditColorName.Text.Trim().ToLower();
+
+                    if (!_isEditMode)
+                    {
+                        DbUtils.db.CarsColors.Add(item);
+                    }
+                }
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -102,7 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             this.Close();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
@@ -110,15 +112,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
             {
-                MessageBox.Show($"Запись '{EditColorName.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{EditColorName.Text}' уже существует в базе.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+
             return true;
         }
 

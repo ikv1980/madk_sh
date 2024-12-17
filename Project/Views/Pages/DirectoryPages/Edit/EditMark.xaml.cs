@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Project.Interfaces;
+using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -13,7 +14,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
-        
+
         // Конструктор для добавления данных
         public EditMark()
         {
@@ -27,13 +28,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMark(Models.CarsMark item, string button) : this()
+        public EditMark(CarsMark item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             _itemId = item.MarkId;
             EditMarkName.Text = item.MarkName;
-            
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -42,7 +43,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
             }
-            if (button == "Delete")
+            else if (button == "Delete")
             {
                 _isDeleteMode = true;
                 Title = "Удаление данных";
@@ -51,48 +52,50 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
-        
+
         // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!IsValidInput())
-                    return;
-
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsMarks.FirstOrDefault(x => x.MarkId == _itemId) 
-                    : new Models.CarsMark();
+                    ? DbUtils.db.CarsMarks.FirstOrDefault(x => x.MarkId == _itemId)
+                    : new CarsMark();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                
-                // Изменение
-                if (_isEditMode)
-                {
-                    item.MarkName = EditMarkName.Text.Trim();
-                }
+
                 // Удаление
-                if (_isDeleteMode){
+                if (_isDeleteMode)
+                {
                     item.Delete = true; //DbUtils.db.CarsMarks.Remove(item);
                 }
-                // Добавление
-                if (!_isEditMode && !_isDeleteMode)
+                else
                 {
+                    if (!IsValidInput())
+                        return;
+
+                    // Изменение или добавление
                     item.MarkName = EditMarkName.Text.Trim();
-                    DbUtils.db.CarsMarks.Add(item);
+
+                    if (!_isEditMode)
+                    {
+                        DbUtils.db.CarsMarks.Add(item);
+                    }
                 }
-                
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -101,7 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             this.Close();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
@@ -109,15 +112,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (DbUtils.db.CarsMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.MarkId != _itemId))
             {
-                MessageBox.Show($"Запись '{EditMarkName.Text}' уже существует в базе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Запись '{EditMarkName.Text}' уже существует в базе.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+
             return true;
         }
 

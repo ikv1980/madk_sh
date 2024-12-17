@@ -71,7 +71,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             try
             {
-                // Получаем элемент для редактирования или создания нового
                 var item = (_isEditMode || _isDeleteMode)
                     ? DbUtils.db.CarsModels.FirstOrDefault(x => x.ModelId == _itemId)
                     : new Models.CarsModel();
