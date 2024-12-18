@@ -38,7 +38,9 @@
                     </TabItem.Header>
                 </TabItem>
                 <!-- Вкладка Пользователь -->
-                <TabItem x:Name="UserPage" Tag="Project.Views.Pages.UserPage">
+                <TabItem x:Name="UserPage"
+                         Tag="Project.Views.Pages.UserPage"
+                         FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="/Resources/ico/user.png" Width="30" Height="30" />
@@ -47,7 +49,9 @@
                     </TabItem.Header>
                 </TabItem>
                 <!-- Вкладка Заказы -->
-                <TabItem x:Name="OrderPage" Tag="Project.Views.Pages.OrderPage">
+                <TabItem x:Name="OrderPage"
+                         Tag="Project.Views.Pages.OrderPage"
+                         FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="/Resources/ico/orders.png" Width="30" Height="30" />
@@ -56,7 +60,9 @@
                     </TabItem.Header>
                 </TabItem>
                 <!-- Вкладка Отчеты -->
-                <TabItem x:Name="ReportPage" Tag="Project.Views.Pages.ReportPage">
+                <TabItem x:Name="ReportPage"
+                         Tag="Project.Views.Pages.ReportPage"
+                         FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="/Resources/ico/report.png" Width="30" Height="30" />
@@ -65,7 +71,9 @@
                     </TabItem.Header>
                 </TabItem>
                 <!-- Вкладка Настройки -->
-                <TabItem x:Name="SettingTab" Tag="Project.Views.Pages.SettingPage">
+                <TabItem x:Name="SettingTab"
+                         Tag="Project.Views.Pages.SettingPage"
+                         FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="/Resources/ico/settings.png" Width="30" Height="30" />
@@ -74,14 +82,16 @@
                     </TabItem.Header>
                 </TabItem>
             </TabControl>
-            <TabControl x:Name="TabControl"
+            <TabControl x:Name="SecondTabControl"
                         FontSize="15"
                         VerticalAlignment="Stretch"
                         SelectionChanged="TabControl_Select"
                         Margin="0, 0,5,0"
                         Grid.Column="1">
-                <!-- Вкладка Настройки -->
-                <TabItem x:Name="Directoryes" MouseUp="Directoryes_MouseUp">
+                <!-- Вкладка Справочники -->
+                <TabItem x:Name="Directoryes"
+                         MouseUp="Directoryes_MouseUp"
+                         FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="/Resources/ico/dictionary.png" Width="30" Height="30" />

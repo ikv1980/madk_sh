@@ -137,20 +137,21 @@
 
             <!-- Основной контент -->
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
                 <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
                 <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
                 <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
                 <DataGridTextColumn Header="Отдел" Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
-                                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
-                                <DataGridTextColumn Header="Дата приема"
-                                                    Binding="{Binding UsersStartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
+                <DataGridTextColumn Header="Дата приема"
+                                    Binding="{Binding UsersStartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding UsersPhone}" />
-                                <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
+                <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
                 <DataGridTextColumn Header="Дата рождения"
                                     Binding="{Binding UsersBirthday, StringFormat='{}{0:dd.MM.yyyy}'}" />
                 <DataGridTextColumn Header="Статус" Binding="{Binding UsersStatusNavigation.StatusName}" />
                 <DataGridTextColumn Header="Дата статуса"
-                                    Binding="{Binding UsersStatusChange, StringFormat='{}{0:dd.MM.yyyy}'}" />                
+                                    Binding="{Binding UsersStatusChange, StringFormat='{}{0:dd.MM.yyyy}'}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

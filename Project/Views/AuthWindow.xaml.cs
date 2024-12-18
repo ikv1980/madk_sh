@@ -29,11 +29,11 @@ namespace Project.Views
         // Авторизация пользователя 
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginTextBox.Text;
-            string enteredPassword = _helper.HashPassword(PasswordBox.Password);
+            //string login = LoginTextBox.Text;
+            //string enteredPassword = _helper.HashPassword(PasswordBox.Password);
 
-            //string login = "admin";
-            //string enteredPassword = _helper.HashPassword("Kostik80");
+            string login = "admin";
+            string enteredPassword = _helper.HashPassword("Kostik80");
 
             var user = await DbUtils.db.Users
                 .Where(u => u.UsersLogin == login)
@@ -47,9 +47,12 @@ namespace Project.Views
                 // Проверяем статус пользователя
                 if (user.UsersStatus == 1 || user.UsersStatus == 3)
                 {
-                    MessageBox.Show($"Ваш аккаунт заблокирован.\nСтатус в системе [{user.UsersStatusNavigation.StatusName}].\nОбратитесь к администратору.", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(
+                        $"Ваш аккаунт заблокирован.\nСтатус в системе [{user.UsersStatusNavigation.StatusName}].\nОбратитесь к администратору.",
+                        "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+
                 // Запуск рабочего окна проекта
                 new ProjectWindow(user).Show();
                 Close();
@@ -64,7 +67,8 @@ namespace Project.Views
                 }
                 else
                 {
-                    MessageBox.Show("Логин или пароль введены неверно.\nПроверьте введенные данные", "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Логин или пароль введены неверно.\nПроверьте введенные данные",
+                        "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -77,22 +81,26 @@ namespace Project.Views
             string surename = SurnameTextBox.Text;
             string password = _helper.HashPassword(RegisterPasswordBox.Password);
 
-            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surename))
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password) ||
+                string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surename))
             {
-                MessageBox.Show("Необходимо заполнить все поля.", "Ошибка регистрации", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Необходимо заполнить все поля.", "Ошибка регистрации", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return;
             }
 
             _validator = new ValidateField();
             if (!_validator.IsValid(RegisterPasswordBox.Password, "password"))
             {
-                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return;
             }
 
             if (DbUtils.db.Users.Any(u => u.UsersLogin == login))
             {
-                MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return;
             }
 
@@ -109,12 +117,14 @@ namespace Project.Views
                 UsersPermissions = "3",
             };
 
-            await Task.Run(() => { 
+            await Task.Run(() =>
+            {
                 DbUtils.db.Users.Add(newUser);
-                DbUtils.db.SaveChanges();                
+                DbUtils.db.SaveChanges();
             });
 
-            MessageBox.Show("Вы успешно зарегистрированы.\nДоступ будет разрешен, после подтверждения администратором.", "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Вы успешно зарегистрированы.\nДоступ будет разрешен, после подтверждения администратором.",
+                "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);
             RegisterLoginTextBox.Text = string.Empty;
             RegisterPasswordBox.Clear();
             MainTabControl.SelectedIndex = 0;

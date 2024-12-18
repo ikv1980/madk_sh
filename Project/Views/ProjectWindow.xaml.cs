@@ -17,6 +17,7 @@ namespace Project.Views
             Global.CurrentUser = user;
             this.Loaded += change_Screeen;
             MainTabControl.SelectedIndex = 1;
+            SecondTabControl.SelectedIndex = -1;
             MainContent.Content = new UserPage();
             SetAccess(user);
         }
@@ -40,6 +41,14 @@ namespace Project.Views
         // Выбор вкладки
         private void TabControl_Select(object sender, SelectionChangedEventArgs e)
         {
+            if (sender is TabControl tabControl)
+            {
+                if (tabControl == MainTabControl)
+                {
+                    SecondTabControl.SelectedIndex = -1;
+                }
+            }
+
             TabItem selectedItem = MainTabControl.SelectedItem as TabItem;
             if (selectedItem != null)
             {
@@ -79,24 +88,12 @@ namespace Project.Views
             }
         }
 
-        // Изменение размера рабочего экрана
-        private void change_Screeen(object sender, RoutedEventArgs e)
-        {
-            if (SystemParameters.PrimaryScreenHeight > 1000)
-            {
-                this.Width = 1250;
-                this.Height = 960;
-            }
-            else
-            {
-                this.WindowState = WindowState.Maximized;
-            }
-        }
-
         // Нажатие на вкладку "Справочники"
         private void Directoryes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
+            MainTabControl.SelectedIndex = -1;
+            SecondTabControl.SelectedIndex = 0;
             CollapsedMenu();
         }
 
@@ -113,7 +110,6 @@ namespace Project.Views
                 }
             }
         }
-
 
         // Контекстное меню "Автомобили"
         private void VisibleCarButton(object sender, RoutedEventArgs e)
@@ -166,6 +162,20 @@ namespace Project.Views
         {
             ToggleMenuVisibility(CarMenuGroup, false);
             ToggleMenuVisibility(UserMenuGroup, false);
+        }
+
+        // Изменение размера рабочего экрана
+        private void change_Screeen(object sender, RoutedEventArgs e)
+        {
+            if (SystemParameters.PrimaryScreenHeight > 1000)
+            {
+                this.Width = 1250;
+                this.Height = 960;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
         }
     }
 }
