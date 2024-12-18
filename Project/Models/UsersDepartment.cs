@@ -29,5 +29,7 @@ public partial class UsersDepartment
     /// </summary>
     public bool Delete { get; set; }
 
+    public virtual ICollection<MmDepartmentFunction> MmDepartmentFunctions { get; set; } = new List<MmDepartmentFunction>();
+
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

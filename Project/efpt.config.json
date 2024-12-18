@@ -39,6 +39,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "mm_department_function",
+         "ObjectType": 0
+      },
+      {
          "Name": "mm_mark_model",
          "ObjectType": 0
       },

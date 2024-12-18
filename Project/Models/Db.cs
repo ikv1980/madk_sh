@@ -31,6 +31,8 @@ public partial class Db : DbContext
 
     public virtual DbSet<CarsType> CarsTypes { get; set; }
 
+    public virtual DbSet<MmDepartmentFunction> MmDepartmentFunctions { get; set; }
+
     public virtual DbSet<MmMarkModel> MmMarkModels { get; set; }
 
     public virtual DbSet<MmModelCountry> MmModelCountries { get; set; }
@@ -295,6 +297,37 @@ public partial class Db : DbContext
                 .HasComment("Наименование")
                 .HasColumnName("type_name")
                 .HasCharSet("utf8mb3");
+        });
+
+        modelBuilder.Entity<MmDepartmentFunction>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("mm_department_function");
+
+            entity.HasIndex(e => new { e.DepartmentId, e.FunctionId }, "department_id");
+
+            entity.HasIndex(e => e.FunctionId, "function_id");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(10)")
+                .HasColumnName("id");
+            entity.Property(e => e.DepartmentId)
+                .HasColumnType("int(10)")
+                .HasColumnName("department_id");
+            entity.Property(e => e.FunctionId)
+                .HasColumnType("int(10)")
+                .HasColumnName("function_id");
+
+            entity.HasOne(d => d.Department).WithMany(p => p.MmDepartmentFunctions)
+                .HasForeignKey(d => d.DepartmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("mm_department_function_ibfk_2");
+
+            entity.HasOne(d => d.Function).WithMany(p => p.MmDepartmentFunctions)
+                .HasForeignKey(d => d.FunctionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("mm_department_function_ibfk_1");
         });
 
         modelBuilder.Entity<MmMarkModel>(entity =>
@@ -794,8 +827,6 @@ public partial class Db : DbContext
             entity.HasKey(e => e.FunctionId).HasName("PRIMARY");
 
             entity.ToTable("users_function");
-
-            entity.HasIndex(e => e.FunctionName, "function_name").IsUnique();
 
             entity.Property(e => e.FunctionId)
                 .HasColumnType("int(4)")
