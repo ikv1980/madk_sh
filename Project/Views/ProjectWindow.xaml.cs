@@ -17,7 +17,7 @@ namespace Project.Views
             Global.CurrentUser = user;
             this.Loaded += change_Screeen;
             MainTabControl.SelectedIndex = 1;
-            SecondTabControl.SelectedIndex = -1;
+            SecondTabControl.SelectedIndex = 0;
             MainContent.Content = new UserPage();
             SetAccess(user);
         }
@@ -45,7 +45,7 @@ namespace Project.Views
             {
                 if (tabControl == MainTabControl)
                 {
-                    SecondTabControl.SelectedIndex = -1;
+                    SecondTabControl.SelectedIndex = 0;
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Project.Views
         {
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
             MainTabControl.SelectedIndex = -1;
-            SecondTabControl.SelectedIndex = 0;
+            SecondTabControl.SelectedIndex = 1;
             CollapsedMenu();
         }
 

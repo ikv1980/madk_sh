@@ -38,7 +38,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             _itemId = item.FunctionId;
             EditFunctionName.Text = item.FunctionName;
 
-            // Получаем марку, связанную с моделью
+            // Получаем отдел, связанный с должностью
             var selectedDepartment = DbUtils.db.MmDepartmentFunctions
                 .Where(mm => mm.FunctionId == item.FunctionId)
                 .Select(mm => mm.Department)
@@ -184,7 +184,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(UsersFunction item)
         {
-            // Обновляем идентификатор марки на основе выбранного элемента
+            // Обновляем идентификатор отдела на основе выбранной должности
             var selectedDepartment = EditDepartmentName.SelectedItem as UsersDepartment;
             if (selectedDepartment != null)
             {

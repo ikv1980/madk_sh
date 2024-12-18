@@ -179,6 +179,7 @@
                               SelectedValuePath="DepartmentId"
                               DisplayMemberPath="DepartmentName"
                               Width="350"
+                              SelectionChanged="SelectionDepartment"
                               BorderBrush="DimGray" />
                 </Grid>
                 <Grid Grid.Row="9" Margin="0,10,0,0">
@@ -199,6 +200,7 @@
                               SelectedValuePath="FunctionId"
                               DisplayMemberPath="FunctionName"
                               Width="350"
+                              IsEnabled ="False"
                               BorderBrush="DimGray" />
                 </Grid>
                 <Grid Grid.Row="10" Margin="0,10,0,0">

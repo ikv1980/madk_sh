@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
@@ -100,7 +101,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", 
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
@@ -235,12 +236,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             item.UsersDepartment = (EditUsersDepartment.SelectedItem as UsersDepartment)?.DepartmentId ??
                                    item.UsersDepartment;
             item.UsersFunction = (EditUsersFunction.SelectedItem as UsersFunction)?.FunctionId ?? item.UsersFunction;
-            item.UsersStartWork = EditUsersStartWork.SelectedDate.HasValue 
-                ? DateOnly.FromDateTime(EditUsersStartWork.SelectedDate.Value) 
+            item.UsersStartWork = EditUsersStartWork.SelectedDate.HasValue
+                ? DateOnly.FromDateTime(EditUsersStartWork.SelectedDate.Value)
                 : DateOnly.FromDateTime(DateTime.Now);
-            item.UsersStatus = (EditUsersStatus.SelectedItem as UsersStatus)?.StatusId ?? item.UsersStatus;            
-            item.UsersStatusChange = EditUsersStatusChange.SelectedDate.HasValue 
-                ? DateOnly.FromDateTime(EditUsersStatusChange.SelectedDate.Value) 
+            item.UsersStatus = (EditUsersStatus.SelectedItem as UsersStatus)?.StatusId ?? item.UsersStatus;
+            item.UsersStatusChange = EditUsersStatusChange.SelectedDate.HasValue
+                ? DateOnly.FromDateTime(EditUsersStatusChange.SelectedDate.Value)
                 : DateOnly.FromDateTime(DateTime.Now);
 
             if (!string.IsNullOrWhiteSpace(EditUsersPassword.Password))
@@ -258,6 +259,23 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
             EditUsersSurname.Focus();
+        }
+
+        private void SelectionDepartment(object sender, SelectionChangedEventArgs e)
+        {
+            EditUsersFunction.IsEnabled = true;
+            var selectDepartment = EditUsersDepartment.SelectedItem as UsersDepartment;
+            if (selectDepartment != null)
+            {
+                EditUsersFunction.ItemsSource = DbUtils.db.MmDepartmentFunctions
+                    .Where(x => x.DepartmentId == selectDepartment.DepartmentId)
+                    .Select(x => x.Function) // Используйте Function для получения списка должностей
+                    .ToList();
+            }
+            else
+            {
+                EditUsersFunction.ItemsSource = null;
+            }
         }
     }
 }
