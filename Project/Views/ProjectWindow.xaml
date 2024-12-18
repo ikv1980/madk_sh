@@ -101,6 +101,7 @@
                                     Tag="{x:Type direct:OrdersClientPage}"
                                     Click="SubMenuButton_Click"
                                     Style="{StaticResource SubMenuButtonStyle}" />
+                                <Separator Background="Gainsboro" />
                                 <!-- Кнопка "Автомобили" с вложенными кнопками -->
                                 <StackPanel x:Name="CarMenuGroup">
                                     <Button
@@ -133,18 +134,6 @@
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="Модели и Марки"
-                                        Tag="{x:Type direct:MmMarkModelPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
-                                        Content="Страны и Модели"
-                                        Tag="{x:Type direct:MmModelCountryPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
                                         Content="Типы кузова"
                                         Tag="{x:Type direct:CarsTypePage}"
                                         Visibility="Collapsed"
@@ -153,6 +142,19 @@
                                     <Button
                                         Content="Цвета"
                                         Tag="{x:Type direct:CarsColorPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Separator Background="Gainsboro" Tag="{x:Type direct:MmMarkModelPage}" />
+                                    <Button
+                                        Content="Марка - Модель"
+                                        Tag="{x:Type direct:MmMarkModelPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Страна - Модель"
+                                        Tag="{x:Type direct:MmModelCountryPage}"
                                         Visibility="Collapsed"
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
@@ -165,32 +167,39 @@
                                         Click="VisibleUserButton"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="➖ Пользователи"
+                                        Content="➖ Сотрудники"
                                         x:Name="UserCollapse"
                                         Click="CollapsedUserButton"
                                         Visibility="Collapsed"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="Пользователь"
+                                        Content="Пользователи"
                                         Tag="{x:Type direct:UsersPage}"
                                         Visibility="Collapsed"
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="Отдел"
+                                        Content="Отделы"
                                         Tag="{x:Type direct:UsersDepartmentPage}"
                                         Visibility="Collapsed"
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="Должность"
+                                        Content="Должности"
                                         Tag="{x:Type direct:UsersFunctionPage}"
                                         Visibility="Collapsed"
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
-                                        Content="Статус"
+                                        Content="Статусы"
                                         Tag="{x:Type direct:UsersStatusPage}"
+                                        Visibility="Collapsed"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Separator Background="Gainsboro" Tag="{x:Type direct:MmDepartmentFunctionPage}" />
+                                    <Button
+                                        Content="Отдел - Должность"
+                                        Tag="{x:Type direct:MmDepartmentFunctionPage}"
                                         Visibility="Collapsed"
                                         Click="SubMenuButton_Click"
                                         Style="{StaticResource SubMenuButtonStyle}" />

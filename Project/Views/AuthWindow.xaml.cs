@@ -29,11 +29,11 @@ namespace Project.Views
         // Авторизация пользователя 
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            //string login = LoginTextBox.Text;
-            //string enteredPassword = helper.HashPassword(PasswordBox.Password);
+            string login = LoginTextBox.Text;
+            string enteredPassword = _helper.HashPassword(PasswordBox.Password);
 
-            string login = "admin";
-            string enteredPassword = _helper.HashPassword("Kostik80");
+            //string login = "admin";
+            //string enteredPassword = _helper.HashPassword("Kostik80");
 
             var user = await DbUtils.db.Users
                 .Where(u => u.UsersLogin == login)
