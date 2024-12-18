@@ -114,6 +114,7 @@
 
                     <ui:PasswordBox Grid.Row="2" Margin="0 10"
                                     PlaceholderText="Введите пароль"
+                                    ToolTip="Пароль должен содержать не менее 6 символов"
                                     FontSize="16"
                                     x:Name="RegisterPasswordBox"
                                     IconFilled="True"

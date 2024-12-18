@@ -10,6 +10,7 @@ namespace Project.ViewModels
     internal class SomePagesViewModel<TTable> : ViewModelBase where TTable : class
     {
         #region fields
+
         private ObservableCollection<TTable> _tableValue;
         private string _searchingText;
         private int _currentPage;   // текущая страница
@@ -18,6 +19,7 @@ namespace Project.ViewModels
         #endregion
 
         #region props
+
         public ObservableCollection<TTable> TableValue
         {
             get => _tableValue;
@@ -60,9 +62,11 @@ namespace Project.ViewModels
             _currentPage = 1;
             Refresh();
         }
+
         #endregion
 
         #region Commands
+
         public RelayCommand SearchCommand => new RelayCommand(obj => SearchData(SearchingText));
 
         public RelayCommand AddDialogButton => new RelayCommand(obj => AddDialog(obj));
@@ -76,9 +80,11 @@ namespace Project.ViewModels
         public RelayCommand PreviousPageCommand => new RelayCommand(obj => ChangePage(CurrentPage - 1));
 
         public RelayCommand NextPageCommand => new RelayCommand(obj => ChangePage(CurrentPage + 1));
+
         #endregion
 
         #region Methods
+
         protected virtual void Refresh()
         {
             try
@@ -93,8 +99,20 @@ namespace Project.ViewModels
                 TableValue = new ObservableCollection<TTable>(
                     values.Where(item =>
                     {
+                        // 1. Проверка свойства "Delete" на True(1)
                         var deleteProperty = item.GetType().GetProperty("Delete");
-                        return deleteProperty == null || !(bool)deleteProperty.GetValue(item);
+                        bool isNotDeleted = deleteProperty == null || !(bool)deleteProperty.GetValue(item);
+                        
+                        // 2. Проверка всех свойств объекта на значение "не определено"
+                        bool noUndefinedProperties = item.GetType().GetProperties()
+                            .All(prop =>
+                            {
+                                var value = prop.GetValue(item)?.ToString();
+                                return value != "Не определен";
+                            });
+
+                        // 3. Возвращаем только элементы, которые соответствуют обоим условиям
+                        return isNotDeleted && noUndefinedProperties;
                     }));
 
                 // Выводим данные в консоль
@@ -113,7 +131,8 @@ namespace Project.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -126,7 +145,8 @@ namespace Project.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка запроса к серверу:\n {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -142,7 +162,8 @@ namespace Project.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при открытии страницы:\n {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Ошибка при открытии страницы:\n {ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -163,7 +184,8 @@ namespace Project.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show($"Ошибка при открытии страницы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Ошибка при открытии страницы.", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -182,7 +204,7 @@ namespace Project.ViewModels
                     {
                         if (contextMenu.PlacementTarget is DataGridRow row)
                         {
-                            sourceName = menuItem.Tag.ToString();
+                            sourceName = menuItem.Tag?.ToString() ?? string.Empty;
                             dataContext = row.DataContext;
                         }
                     }
@@ -194,16 +216,19 @@ namespace Project.ViewModels
                         {
                             TTable value = (TTable)dataContext;
                             var window = (Window)constructor.Invoke(new object[] { value, sourceName });
+                            if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
                             window.ShowDialog();
                         }
                         else
                         {
-                            MessageBox.Show($"Ошибка при открытии страницы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show($"Ошибка при открытии страницы.", "Ошибка",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else
                     {
-                        MessageBox.Show($"Не удалось определить источник вызова.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Не удалось определить источник вызова.", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -215,6 +240,7 @@ namespace Project.ViewModels
             CurrentPage = newPage;
             Refresh();
         }
+
         #endregion
     }
 }

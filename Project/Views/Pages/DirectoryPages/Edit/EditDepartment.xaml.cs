@@ -8,7 +8,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditMarkModel : UiWindow, IRefresh
+    public partial class EditDepartment : UiWindow, IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
@@ -16,10 +16,9 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly int _itemId;
 
         // Конструктор для добавления данных
-        public EditMarkModel()
+        public EditDepartment()
         {
             InitializeComponent();
-            Init();
             _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
@@ -29,14 +28,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMarkModel(MmMarkModel item, string button) : this()
+        public EditDepartment(UsersDepartment item, string button) : this()
         {
-            InitializeComponent();
-            Init();
-            _itemId = item.Id;
-            EditMarkName.SelectedItem = DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
-            EditModelName.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
-            
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
+            _itemId = item.DepartmentId;
+            EditDepartmentName.Text = item.DepartmentName;
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -50,31 +48,31 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 _isDeleteMode = true;
                 Title = "Удаление данных";
                 SaveButton.Content = "Удалить";
-                DeleteTextBlock.Visibility = Visibility.Visible;
                 SaveButton.Icon = SymbolRegular.Delete24;
+                DeleteTextBlock.Visibility = Visibility.Visible;
             }
         }
-        
+
         // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId) 
-                    : new MmMarkModel();
+                    ? DbUtils.db.UsersDepartments.FirstOrDefault(x => x.DepartmentId == _itemId)
+                    : new UsersDepartment();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", 
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
-                }                
-                
+                }
+
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    DbUtils.db.MmMarkModels.Remove(item);
+                    item.Delete = true; //DbUtils.db.UsersDepartments.Remove(item);   
                 }
                 else
                 {
@@ -82,78 +80,57 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         return;
 
                     // Изменение или добавление
-                    UpdateItem(item);
+                    item.DepartmentName = EditDepartmentName.Text.Trim();
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.MmMarkModels.Add(item);
+                        DbUtils.db.UsersDepartments.Add(item);
                     }
                 }
-                
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", 
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         // Закрытие окна
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        
-        // Инициализация данных для списков
-        private void Init()
-        {
-            EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
-            EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
-        }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
-            if (EditMarkName.SelectedItem == null)
+            var item = EditDepartmentName.Text.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Не выбрана марка авто", "Ошибка", 
+                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
-            if (EditModelName.SelectedItem == null)
+
+            if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
             {
-                MessageBox.Show("Не выбрана модель авто", "Ошибка", 
+                MessageBox.Show($"Запись '{EditDepartmentName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
-            if (DbUtils.db.MmMarkModels.Any(x => 
-                    x.MarkId == (int)EditMarkName.SelectedValue && 
-                    x.ModelId == (int)EditModelName.SelectedValue && 
-                    x.Id != _itemId))
-            {
-                MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
+
             return true;
         }
 
-        // Обновление данных объекта
-        private void UpdateItem(MmMarkModel item)
-        {
-            item.MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
-            item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
-        }
-        
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            EditModelName.Focus();
+            EditDepartmentName.Focus();
         }
     }
 }
