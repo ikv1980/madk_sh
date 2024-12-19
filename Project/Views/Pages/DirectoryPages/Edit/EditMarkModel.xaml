@@ -17,25 +17,50 @@
                                  VerticalAlignment="Center"
                                  Spacing="30"
                                  Margin="20, 40, 20, 20">
-            <ComboBox FontSize="17"
-                      modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.PlaceholderText="Выберите марку"
-                      x:Name="EditMarkName"
-                      SelectedValuePath="MarkId"
-                      DisplayMemberPath="MarkName"
-                      Width="300"
-                      BorderBrush="DimGray" />
-            <ComboBox FontSize="17"
-                      modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.PlaceholderText="Выберите модель"
-                      x:Name="EditModelName"
-                      SelectedValuePath="ModelId"
-                      DisplayMemberPath="ModelName"
-                      Width="300"
-                      BorderBrush="DimGray" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox FontSize="17"
+                          modern:ControlHelper.CornerRadius="5"
+                          modern:ControlHelper.PlaceholderText="Выберите марку"
+                          x:Name="EditMarkName"
+                          SelectedValuePath="MarkId"
+                          DisplayMemberPath="MarkName"
+                          Width="300"
+                          BorderBrush="DimGray" />
+                <ui:Button Width="35"
+                           Height="35"
+                           Margin="5,0"
+                           Padding="0"
+                           ToolTip="Добавление новой марки"
+                           x:Name="ButtonAddMark"
+                           Visibility="Collapsed"
+                           Click="AddMark_Click">
+                    <Image Source="/Resources/ico/plus.png" Width="30" Height="30" />
+                </ui:Button>
+            </StackPanel>
 
-            <TextBlock Text="Вы уверены, что хотите удалить данные?"
-                       FontSize="17" FontWeight="SemiBold"
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox FontSize="17"
+                          modern:ControlHelper.CornerRadius="5"
+                          modern:ControlHelper.PlaceholderText="Выберите модель"
+                          x:Name="EditModelName"
+                          SelectedValuePath="ModelId"
+                          DisplayMemberPath="ModelName"
+                          Width="300"
+                          BorderBrush="DimGray" />
+                <ui:Button Width="35"
+                           Height="35"
+                           Margin="5,0"
+                           Padding="0"
+                           ToolTip="Добавление новой модели"
+                           x:Name="ButtonAddModel"
+                           Visibility="Collapsed"
+                           Click="AddModel_Click">
+                    <Image Source="/Resources/ico/plus.png" Width="30" Height="30" />
+                </ui:Button>
+            </StackPanel>
+            
+            <TextBlock Text="Подтверждаете удаление данных?"
+                       FontSize="16" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="Red"

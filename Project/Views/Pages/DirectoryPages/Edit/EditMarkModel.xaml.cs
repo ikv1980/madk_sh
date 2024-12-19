@@ -26,6 +26,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
+            EditModelName.Width = 255;
+            EditMarkName.Width = 255;
+            ButtonAddModel.Visibility = Visibility.Visible;
+            ButtonAddMark.Visibility = Visibility.Visible;
         }
 
         // Конструктор для изменения (удаления) данных
@@ -34,8 +38,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             InitializeComponent();
             Init();
             _itemId = item.Id;
-            EditMarkName.SelectedItem = DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
-            EditModelName.SelectedItem = DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            EditMarkName.SelectedItem = 
+                DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
+            EditModelName.SelectedItem = 
+                DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            EditModelName.Width = 300;
+            EditMarkName.Width = 300;
+            ButtonAddModel.Visibility = Visibility.Collapsed;
+            ButtonAddMark.Visibility = Visibility.Collapsed;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -54,23 +64,23 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Icon = SymbolRegular.Delete24;
             }
         }
-        
-        // Изменение данных
+
+        // Обработка нажатия кнопки "Сохранить"
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId) 
+                    ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId)
                     : new MmMarkModel();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", 
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
-                }                
-                
+                }
+
                 // Удаление
                 if (_isDeleteMode)
                 {
@@ -89,57 +99,58 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         DbUtils.db.MmMarkModels.Add(item);
                     }
                 }
-                
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", 
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         // Закрытие окна
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        
+
         // Инициализация данных для списков
         private void Init()
         {
             EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
             EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
             if (EditMarkName.SelectedItem == null)
             {
-                MessageBox.Show("Не выбрана марка авто", "Ошибка", 
+                MessageBox.Show("Не выбрана марка авто", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
+
             if (EditModelName.SelectedItem == null)
             {
-                MessageBox.Show("Не выбрана модель авто", "Ошибка", 
+                MessageBox.Show("Не выбрана модель авто", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
-            if (DbUtils.db.MmMarkModels.Any(x => 
-                    x.MarkId == (int)EditMarkName.SelectedValue && 
-                    x.ModelId == (int)EditModelName.SelectedValue && 
+
+            if (DbUtils.db.MmMarkModels.Any(x =>
+                    x.MarkId == (int)EditMarkName.SelectedValue &&
+                    x.ModelId == (int)EditModelName.SelectedValue &&
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+
             return true;
         }
 
@@ -149,11 +160,25 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             item.MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
             item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
         }
-        
+
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
             EditModelName.Focus();
+        }
+        
+        private void AddModel_Click(object sender, RoutedEventArgs e)
+        {
+            var addModel = new EditModel();
+            this.Close();
+            addModel.ShowDialog();
+        }
+
+        private void AddMark_Click(object sender, RoutedEventArgs e)
+        {
+            var addMark = new EditMark();
+            this.Close();
+            addMark.ShowDialog();
         }
     }
 }

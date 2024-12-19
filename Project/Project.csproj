@@ -35,7 +35,12 @@
     <Resource Include="Resources\ico\exit.png" />
     <None Remove="Resources\ico\ikv.png" />
     <None Remove="Resources\ico\plus.png" />
+    <None Remove="Resources\ico\plus01.png" />
+    <None Remove="Resources\ico\plus02.png" />
+    <None Remove="Resources\ico\plus03.png" />
+    <None Remove="Resources\ico\plus04.png" />
     <Resource Include="Resources\ico\plus.png" />
+    <None Remove="Resources\ico\plus05.png" />
   </ItemGroup>
 
   <ItemGroup>

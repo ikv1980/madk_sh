@@ -65,7 +65,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
         }
 
-        // Изменение данных
+        // Обработка нажатия кнопки "Сохранить"
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try

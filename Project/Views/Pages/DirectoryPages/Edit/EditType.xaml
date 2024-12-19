@@ -24,8 +24,8 @@
                         Icon="Save24"
                         IconFilled="False"
                         x:Name="EditTypeName"/>
-            <TextBlock Text="Вы уверены, что хотите удалить данные?"
-                       FontSize="17" FontWeight="SemiBold" 
+            <TextBlock Text="Подтверждаете удаление данных?"
+                       FontSize="16" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="Red"

@@ -288,9 +288,9 @@
                         x:Name="EditUsersPassword" />
                 </Grid>
                 <Grid Grid.Row="15" Margin="0,10,0,0">
-                    <TextBlock Text="Вы уверены, что хотите удалить клиента?"
+                    <TextBlock Text="Подтверждаете удаление данных?"
                                Grid.Column="0"
-                               FontSize="17" FontWeight="SemiBold"
+                               FontSize="16" FontWeight="SemiBold"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                x:Name="DeleteTextBlock"

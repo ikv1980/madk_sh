@@ -19,7 +19,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public EditModel()
         {
             InitializeComponent();
-            Init();
             _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
@@ -32,23 +31,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public EditModel(CarsModel item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            InitializeComponent();
-            Init();
+            
             _itemId = item.ModelId;
             EditModelName.Text = item.ModelName;
 
-            // Получаем марку, связанную с моделью
-            var selectedMark = DbUtils.db.MmMarkModels
-                .Where(mm => mm.ModelId == item.ModelId)
-                .Select(mm => mm.Mark)
-                .FirstOrDefault();
-            if (selectedMark != null)
-            {
-                EditMarkName.SelectedItem = selectedMark;
-            }
-
-            // Устанавливаем параметры в зависимости от нажатой кнопки
+            // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
                 _isEditMode = true;
@@ -92,29 +79,15 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     if (!IsValidInput())
                         return;
 
-                    // Изменение данных
-                    if (_isEditMode)
-                    {
-                        item.ModelName = EditModelName.Text.Trim();
-                        // Обновление марки для модели
-                        UpdateItem(item);
-                    }
-                    else
-                    {
-                        item.ModelName = EditModelName.Text.Trim();
-                        DbUtils.db.CarsModels.Add(item);
-                        DbUtils.db.SaveChanges();
+                    // Изменение или добавление
+                    item.ModelName = EditModelName.Text.Trim();
 
-                        // Получаем новый MarkId из выбранной марки и создаем новую связь
-                        var mmMarkModel = new MmMarkModel
-                        {
-                            ModelId = item.ModelId,
-                            MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? -1
-                        };
-                        DbUtils.db.MmMarkModels.Add(mmMarkModel);
+                    if (!_isEditMode)
+                    {
+                        DbUtils.db.CarsModels.Add(item);
                     }
                 }
-
+                
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
@@ -137,62 +110,27 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             var item = EditModelName.Text.Trim().ToLower();
 
-            // Проверка на заполнение модели
             if (string.IsNullOrWhiteSpace(item))
             {
-                MessageBox.Show("Поле 'Название модели' не должно быть пустым.", "Ошибка",
+                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
-            // Проверка на наличие выбранной марки
-            if (EditMarkName.SelectedItem == null)
+            
+            if (DbUtils.db.CarsModels.Any(x => x.ModelName.Trim().ToLower() == item && x.ModelId != _itemId))
             {
-                MessageBox.Show("Пожалуйста, выберите марку для модели.", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-
-            // Проверка на уникальность связки модель - марка
-            var selectedMark = EditMarkName.SelectedItem as CarsMark;
-
-            if (DbUtils.db.CarsModels.Any(m => m.ModelName.Trim().ToLower() == item) &&
-                DbUtils.db.MmMarkModels.Any(mm => mm.MarkId == selectedMark.MarkId))
-            {
-                MessageBox.Show($"У марки '{selectedMark.MarkName}' уже есть такая модель.", "Ошибка",
+                MessageBox.Show($"Запись '{EditModelName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             return true;
         }
-
-        // Инициализация данных для списков
-        private void Init()
-        {
-            EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
-        }
-
-        // Обновление данных объекта
-        private void UpdateItem(CarsModel item)
-        {
-            // Обновляем идентификатор марки на основе выбранного элемента
-            var selectedMark = EditMarkName.SelectedItem as CarsMark;
-            if (selectedMark != null)
-            {
-                var mmMarkModel = DbUtils.db.MmMarkModels
-                    .FirstOrDefault(mm => mm.ModelId == item.ModelId);
-                if (mmMarkModel != null)
-                {
-                    mmMarkModel.MarkId = selectedMark.MarkId;
-                }
-            }
-        }
-
+        
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            EditMarkName.Focus();
+            EditModelName.Focus();
         }
     }
 }

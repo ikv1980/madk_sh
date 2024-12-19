@@ -34,7 +34,7 @@
                            x:Name="ButtonAddDepartment"
                            Visibility="Collapsed"
                            Click="AddDepartment_Click">
-                    <Image Source="/Resources/ico/plus.png" Width="26" Height="26" />
+                    <Image Source="/Resources/ico/plus.png" Width="30" Height="30" />
                 </ui:Button>
             </StackPanel>
 
@@ -55,12 +55,12 @@
                            x:Name="ButtonAddFunction"
                            Visibility="Collapsed"
                            Click="AddFunction_Click">
-                    <Image Source="/Resources/ico/plus.png" Width="26" Height="26" />
+                    <Image Source="/Resources/ico/plus.png" Width="30" Height="30" />
                 </ui:Button>
             </StackPanel>
 
-            <TextBlock Text="Удаляем данные?"
-                       FontSize="17" FontWeight="SemiBold"
+            <TextBlock Text="Подтверждаете удаление данных?"
+                       FontSize="16" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="Red"
