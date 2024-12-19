@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\DefaultUserPhoto.png" />
     <Resource Include="Resources\ico\dictionary.png" />
     <Resource Include="Resources\ico\orders.png" />
     <Resource Include="Resources\ico\settings.png" />
@@ -35,6 +34,8 @@
     <None Remove="Resources\ico\exit.png" />
     <Resource Include="Resources\ico\exit.png" />
     <None Remove="Resources\ico\ikv.png" />
+    <None Remove="Resources\ico\plus.png" />
+    <Resource Include="Resources\ico\plus.png" />
   </ItemGroup>
 
   <ItemGroup>

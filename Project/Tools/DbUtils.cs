@@ -19,7 +19,7 @@ namespace Project.Tools
             }
             catch (Exception e)
             {
-                MessageBox.Show("Ошибка подключения к БД\n${e}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка подключения к БД\n{e}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         

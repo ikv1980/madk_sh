@@ -26,6 +26,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
+            EditFunctionName.Width = 255;
+            EditDepartmentName.Width = 255;
+            ButtonAddFunction.Visibility = Visibility.Visible;
+            ButtonAddDepartment.Visibility = Visibility.Visible;
         }
 
         // Конструктор для изменения (удаления) данных
@@ -34,9 +38,15 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             InitializeComponent();
             Init();
             _itemId = item.Id;
-            EditDepartmentName.SelectedItem = DbUtils.db.UsersDepartments.FirstOrDefault(m => m.DepartmentId == item.DepartmentId);
-            EditFunctionName.SelectedItem = DbUtils.db.UsersFunctions.FirstOrDefault(m => m.FunctionId == item.FunctionId);
-            
+            EditDepartmentName.SelectedItem =
+                DbUtils.db.UsersDepartments.FirstOrDefault(m => m.DepartmentId == item.DepartmentId);
+            EditFunctionName.SelectedItem =
+                DbUtils.db.UsersFunctions.FirstOrDefault(m => m.FunctionId == item.FunctionId);
+            EditFunctionName.Width = 300;
+            EditDepartmentName.Width = 300;
+            ButtonAddFunction.Visibility = Visibility.Collapsed;
+            ButtonAddDepartment.Visibility = Visibility.Collapsed;
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -54,23 +64,23 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 SaveButton.Icon = SymbolRegular.Delete24;
             }
         }
-        
+
         // Изменение данных
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.MmDepartmentFunctions.FirstOrDefault(x => x.Id == _itemId) 
+                    ? DbUtils.db.MmDepartmentFunctions.FirstOrDefault(x => x.Id == _itemId)
                     : new MmDepartmentFunction();
 
                 if (item == null)
                 {
-                    MessageBox.Show("Данные не найдены.", "Ошибка", 
+                    MessageBox.Show("Данные не найдены.", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
-                }                
-                
+                }
+
                 // Удаление
                 if (_isDeleteMode)
                 {
@@ -89,57 +99,58 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         DbUtils.db.MmDepartmentFunctions.Add(item);
                     }
                 }
-                
+
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", 
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         // Закрытие окна
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        
+
         // Инициализация данных для списков
         private void Init()
         {
             EditDepartmentName.ItemsSource = DbUtils.db.UsersDepartments.Where(x => !x.Delete).ToList();
             EditFunctionName.ItemsSource = DbUtils.db.UsersFunctions.Where(x => !x.Delete).ToList();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
             if (EditDepartmentName.SelectedItem == null)
             {
-                MessageBox.Show("Не выбран отдел", "Ошибка", 
+                MessageBox.Show("Не выбран отдел", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
+
             if (EditFunctionName.SelectedItem == null)
             {
-                MessageBox.Show("Не выбрана должность", "Ошибка", 
+                MessageBox.Show("Не выбрана должность", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
-            if (DbUtils.db.MmDepartmentFunctions.Any(x => 
-                    x.DepartmentId == (int)EditDepartmentName.SelectedValue && 
-                    x.FunctionId == (int)EditFunctionName.SelectedValue && 
+
+            if (DbUtils.db.MmDepartmentFunctions.Any(x =>
+                    x.DepartmentId == (int)EditDepartmentName.SelectedValue &&
+                    x.FunctionId == (int)EditFunctionName.SelectedValue &&
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+
             return true;
         }
 
@@ -149,11 +160,25 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             item.DepartmentId = (EditDepartmentName.SelectedItem as UsersDepartment)?.DepartmentId ?? item.DepartmentId;
             item.FunctionId = (EditFunctionName.SelectedItem as UsersFunction)?.FunctionId ?? item.FunctionId;
         }
-        
+
         // События после загрузки окна
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
             EditFunctionName.Focus();
+        }
+
+        private void AddFunction_Click(object sender, RoutedEventArgs e)
+        {
+            var addFunction = new EditFunction();
+            this.Close();
+            addFunction.ShowDialog();
+        }
+
+        private void AddDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            var addDepartment = new EditDepartment();
+            this.Close();
+            addDepartment.ShowDialog();
         }
     }
 }

@@ -23,14 +23,14 @@
                         modern:ControlHelper.CornerRadius="5"
                         Icon="Save24"
                         IconFilled="False"
-                        x:Name="EditCountryName"/>
+                        x:Name="EditCountryName" />
             <TextBlock Text="Вы уверены, что хотите удалить данные?"
-                       FontSize="17" FontWeight="SemiBold" 
+                       FontSize="17" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="Red"
                        x:Name="DeleteTextBlock"
-                       Visibility="Collapsed"/>
+                       Visibility="Collapsed" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ui:Button FontSize="18"
                            Background="#FF2395FF"
@@ -40,7 +40,7 @@
                            Appearance="Primary"
                            x:Name="SaveButton"
                            Margin="10"
-                           Click="SaveButton_Click"/>
+                           Click="SaveButton_Click" />
                 <ui:Button FontSize="18"
                            Background="#FF2395FF"
                            Content="Отмена"
@@ -49,7 +49,7 @@
                            modern:ControlHelper.CornerRadius="10"
                            Appearance="Primary"
                            Margin="10"
-                           Click="CancelButton_Click"/>
+                           Click="CancelButton_Click" />
             </StackPanel>
         </modern:SimpleStackPanel>
     </Grid>

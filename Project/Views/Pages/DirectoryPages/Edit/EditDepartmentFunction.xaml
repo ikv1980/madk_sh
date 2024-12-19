@@ -17,24 +17,49 @@
                                  VerticalAlignment="Center"
                                  Spacing="30"
                                  Margin="20, 40, 20, 20">
-            <ComboBox FontSize="17"
-                      modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.PlaceholderText="Выберите отдел"
-                      x:Name="EditDepartmentName"
-                      SelectedValuePath="DepartmentId"
-                      DisplayMemberPath="DepartmentName"
-                      Width="300"
-                      BorderBrush="DimGray" />
-            <ComboBox FontSize="17"
-                      modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.PlaceholderText="Выберите должность"
-                      x:Name="EditFunctionName"
-                      SelectedValuePath="FunctionId"
-                      DisplayMemberPath="FunctionName"
-                      Width="300"
-                      BorderBrush="DimGray" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox FontSize="17"
+                          modern:ControlHelper.CornerRadius="5"
+                          modern:ControlHelper.PlaceholderText="Выберите отдел"
+                          x:Name="EditDepartmentName"
+                          SelectedValuePath="DepartmentId"
+                          DisplayMemberPath="DepartmentName"
+                          Width="300"
+                          BorderBrush="DimGray" />
+                <ui:Button Width="35"
+                           Height="35"
+                           Margin="5,0"
+                           Padding="0"
+                           ToolTip="Добавление нового отдела"
+                           x:Name="ButtonAddDepartment"
+                           Visibility="Collapsed"
+                           Click="AddDepartment_Click">
+                    <Image Source="/Resources/ico/plus.png" Width="26" Height="26" />
+                </ui:Button>
+            </StackPanel>
 
-            <TextBlock Text="Вы уверены, что хотите удалить данные?"
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox FontSize="17"
+                          modern:ControlHelper.CornerRadius="5"
+                          modern:ControlHelper.PlaceholderText="Выберите должность"
+                          x:Name="EditFunctionName"
+                          SelectedValuePath="FunctionId"
+                          DisplayMemberPath="FunctionName"
+                          Width="300"
+                          BorderBrush="DimGray" />
+                <ui:Button Width="35"
+                           Height="35"
+                           Margin="5,0"
+                           Padding="0"
+                           ToolTip="Добавление новой должности"
+                           x:Name="ButtonAddFunction"
+                           Visibility="Collapsed"
+                           Click="AddFunction_Click">
+                    <Image Source="/Resources/ico/plus.png" Width="26" Height="26" />
+                </ui:Button>
+            </StackPanel>
+
+            <TextBlock Text="Удаляем данные?"
                        FontSize="17" FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"

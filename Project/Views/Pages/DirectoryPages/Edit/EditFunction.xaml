@@ -17,14 +17,6 @@
                                  VerticalAlignment="Center"
                                  Spacing="30"
                                  Margin="20, 40, 20, 20">
-            <ComboBox FontSize="17"
-                      modern:ControlHelper.CornerRadius="5"
-                      modern:ControlHelper.PlaceholderText="Выберите отдел"
-                      x:Name="EditDepartmentName"
-                      SelectedValuePath="DepartmentId"
-                      DisplayMemberPath="DepartmentName"
-                      Width="300"
-                      BorderBrush="DimGray" />
             <ui:TextBox FontSize="17"
                         Width="300"
                         PlaceholderText="Введите должность"
