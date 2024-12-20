@@ -14,4 +14,7 @@ public partial class UsersStatus
     public bool Delete { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+    
+    // Поле сортировки по умолчанию
+    public static string DefaultSortProperty => nameof(StatusName);
 }

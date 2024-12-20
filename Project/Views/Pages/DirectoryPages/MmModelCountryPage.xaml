@@ -122,8 +122,8 @@
 
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
                 <DataGridTextColumn Header="Страна" Binding="{Binding Country.CountryName}" />
+                <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

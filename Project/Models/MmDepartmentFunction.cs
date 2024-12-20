@@ -16,4 +16,7 @@ public partial class MmDepartmentFunction
     public virtual UsersDepartment Department { get; set; }
 
     public virtual UsersFunction Function { get; set; }
+    
+    // Поле сортировки по умолчанию
+    public static string DefaultSortProperty => nameof(Department);
 }

@@ -20,4 +20,7 @@ public partial class CarsType
     public bool Delete { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
+    
+    // Поле сортировки по умолчанию
+    public static string DefaultSortProperty => nameof(TypeName);
 }
