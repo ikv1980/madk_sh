@@ -108,22 +108,55 @@
                             <StackPanel
                                 Background="White"
                                 Width="{Binding ActualWidth, ElementName=Directoryes}">
-                                <Button
-                                    Content="Клиенты"
-                                    Tag="{x:Type direct:OrdersClientPage}"
-                                    Click="SubMenuButton_Click"
-                                    Style="{StaticResource SubMenuButtonStyle}" />
-                                <Separator Background="Gainsboro" />
+                                <!-- Кнопка "Заказы.Справочники" с вложенными кнопками -->
+                                <StackPanel x:Name="OrderMenuGroup">
+                                    <Button
+                                        Content="➕ Заказы"
+                                        x:Name="OrderVisible"
+                                        Background="LightBlue"
+                                        Click="VisibleOrderButton"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="➖ Заказы"
+                                        x:Name="OrderCollapse"
+                                        Background="LightBlue"
+                                        Click="CollapsedOrderButton"
+                                        Visibility="Collapsed"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Клиенты"
+                                        Tag="{x:Type direct:OrdersClientPage}"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Типы доставки"
+                                        Tag="{x:Type direct:OrdersDeliveryPage}"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Типы оплаты"
+                                        Tag="{x:Type direct:OrdersPaymentPage}"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                    <Button
+                                        Content="Статусы заказа"
+                                        Tag="{x:Type direct:OrdersStatusPage}"
+                                        Click="SubMenuButton_Click"
+                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                </StackPanel>
+                                <Separator Background="Gainsboro" Tag="{x:Type direct:MmMarkModelPage}" />
                                 <!-- Кнопка "Автомобили" с вложенными кнопками -->
                                 <StackPanel x:Name="CarMenuGroup">
                                     <Button
                                         Content="➕ Автомобили"
                                         x:Name="CarVisible"
+                                        Background="LightBlue"
                                         Click="VisibleCarButton"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
                                         Content="➖ Автомобили"
                                         x:Name="CarCollapse"
+                                        Background="LightBlue"
                                         Click="CollapsedCarButton"
                                         Visibility="Collapsed"
                                         Style="{StaticResource SubMenuButtonStyle}" />
@@ -176,11 +209,13 @@
                                     <Button
                                         Content="➕ Пользователь"
                                         x:Name="UserVisible"
+                                        Background="LightBlue"
                                         Click="VisibleUserButton"
                                         Style="{StaticResource SubMenuButtonStyle}" />
                                     <Button
                                         Content="➖ Сотрудники"
                                         x:Name="UserCollapse"
+                                        Background="LightBlue"
                                         Click="CollapsedUserButton"
                                         Visibility="Collapsed"
                                         Style="{StaticResource SubMenuButtonStyle}" />

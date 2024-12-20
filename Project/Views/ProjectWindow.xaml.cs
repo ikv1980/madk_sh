@@ -111,6 +111,17 @@ namespace Project.Views
             }
         }
 
+        // Контекстное меню "Заказы"
+        private void VisibleOrderButton(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuVisibility(OrderMenuGroup, true);
+        }
+
+        private void CollapsedOrderButton(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuVisibility(OrderMenuGroup, false);
+        }
+
         // Контекстное меню "Автомобили"
         private void VisibleCarButton(object sender, RoutedEventArgs e)
         {
@@ -141,12 +152,14 @@ namespace Project.Views
                 {
                     switch (button.Name)
                     {
-                        case nameof(UserVisible):
+                        case nameof(OrderVisible):
                         case nameof(CarVisible):
+                        case nameof(UserVisible):    
                             button.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
                             break;
-                        case nameof(UserCollapse):
+                        case nameof(OrderCollapse):
                         case nameof(CarCollapse):
+                        case nameof(UserCollapse):    
                             button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
                             break;
                         default:
@@ -160,6 +173,7 @@ namespace Project.Views
         // Свернуть все меню
         private void CollapsedMenu()
         {
+            ToggleMenuVisibility(OrderMenuGroup, false);
             ToggleMenuVisibility(CarMenuGroup, false);
             ToggleMenuVisibility(UserMenuGroup, false);
         }
