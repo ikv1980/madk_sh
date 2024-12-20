@@ -55,11 +55,15 @@ namespace Project.ViewModels
 
         public string CurrentPageText => $"{CurrentPage} из {TotalPages}";
 
+        // Имя поля для сортировки (берется из модели).
+        public string SortPropertyName { get; }
+
         public SomePagesViewModel()
         {
             TableValue = new ObservableCollection<TTable>();
             _itemsPerPage = 100;
             _currentPage = 1;
+            SortPropertyName = GetDefaultSortProperty();
             Refresh();
         }
 
@@ -93,7 +97,7 @@ namespace Project.ViewModels
                 _totalItems = DbUtils.GetTableCount<TTable>();
 
                 // Получаем элементы для текущей страницы с автоматической загрузкой навигационных свойств
-                var values = DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage);
+                var values = DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage, SortPropertyName);
 
                 // Фильтрация записей по полю Delete
                 TableValue = new ObservableCollection<TTable>(
@@ -102,7 +106,7 @@ namespace Project.ViewModels
                         // 1. Проверка свойства "Delete" на True(1)
                         var deleteProperty = item.GetType().GetProperty("Delete");
                         bool isNotDeleted = deleteProperty == null || !(bool)deleteProperty.GetValue(item);
-                        
+
                         // 2. Проверка всех свойств объекта на значение "не определено"
                         bool noUndefinedProperties = item.GetType().GetProperties()
                             .All(prop =>
@@ -239,6 +243,12 @@ namespace Project.ViewModels
             if (newPage < 1 || newPage > TotalPages) return; // Проверка на валидность страницы
             CurrentPage = newPage;
             Refresh();
+        }
+
+        private string GetDefaultSortProperty()
+        {
+            var property = typeof(TTable).GetProperty("DefaultSortProperty", BindingFlags.Static | BindingFlags.Public);
+            return property?.GetValue(null)?.ToString();
         }
 
         #endregion

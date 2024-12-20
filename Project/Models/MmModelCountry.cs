@@ -22,4 +22,6 @@ public partial class MmModelCountry
     public virtual CarsCountry Country { get; set; }
 
     public virtual CarsModel Model { get; set; }
+    
+    public static string DefaultSortProperty => nameof(Country);
 }

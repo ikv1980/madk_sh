@@ -76,7 +76,7 @@ namespace Project.Tools
         }
         
         // Получение данных из БД
-        public static List<TTable> GetTablePagedValuesWithIncludes<TTable>(int page, int pageSize) where TTable : class
+        public static List<TTable> GetTablePagedValuesWithIncludes<TTable>(int page, int pageSize, string sortPropertyName = null) where TTable : class
         {
             using (var context = new Db())
             {
@@ -92,6 +92,16 @@ namespace Project.Tools
                 foreach (var property in navigationProperties)
                 {
                     query = query.Include(property);
+                }
+
+                // Применяем сортировку, если указано поле
+                if (!string.IsNullOrEmpty(sortPropertyName))
+                {
+                    var sortProperty = typeof(TTable).GetProperty(sortPropertyName);
+                    if (sortProperty != null)
+                    {
+                        query = query.OrderBy(e => EF.Property<object>(e, sortPropertyName));
+                    }
                 }
 
                 return query
