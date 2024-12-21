@@ -15,26 +15,69 @@ namespace Project.Views
         {
             InitializeComponent();
             Global.CurrentUser = user;
+            Global.ParsePermissions();
             this.Loaded += change_Screeen;
             MainTabControl.SelectedIndex = 1;
             SecondTabControl.SelectedIndex = 0;
             MainContent.Content = new UserPage();
-            SetAccess(user);
+            SetAccess();
         }
 
-        // Доступ к вкладкам пользователя
-        private void SetAccess(User user)
+        // Доступ к вкладкам и справочникам пользователя
+        private void SetAccess()
         {
-            if (user.UsersPermissions == "3")
+            if (Global.ParsedPermissions?.Tabs == null || Global.ParsedPermissions.Tabs.Count == 0)
             {
-                OrderPage.Visibility = Visibility.Collapsed;
-                ReportPage.Visibility = Visibility.Collapsed;
-                SettingTab.Visibility = Visibility.Collapsed;
+                MessageBox.Show("Разрешения пользователя не определены. Доступ ограничен.", "Информация",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
-            if (user.UsersPermissions == "2")
+            // Доступ к вкладкам
+            foreach (var tabPermission in Global.ParsedPermissions.Tabs)
             {
-                SettingTab.Visibility = Visibility.Collapsed;
+                var visibility = tabPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
+
+                switch (tabPermission.Name.ToLower())
+                {
+                    case "user":
+                        UserPage.Visibility = visibility;
+                        break;
+                    case "order":
+                        OrderPage.Visibility = visibility;
+                        break;
+                    case "report":
+                        ReportPage.Visibility = visibility;
+                        break;
+                    case "setting":
+                        SettingTab.Visibility = visibility;
+                        break;
+                    case "dict":
+                        Directoryes.Visibility = visibility;
+                        break;
+                }
+            }
+
+            // Доступ к справочникам
+            foreach (var directoryPermission in Global.ParsedPermissions.Directoryes)
+            {
+                var visibility = directoryPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
+               
+                switch (directoryPermission.Name.ToLower())
+                {
+                    case "orders":
+                        OrderMenuGroup.Visibility = visibility;
+                        break;
+                    case "cars":
+                        CarMenuGroup.Visibility = visibility;
+                        break;
+                    case "users":
+                        UserMenuGroup.Visibility = visibility;
+                        break;
+                    default:
+                        Console.WriteLine($"Unknown directory: {directoryPermission.Name}");
+                        break;
+                }
             }
         }
 
@@ -154,12 +197,12 @@ namespace Project.Views
                     {
                         case nameof(OrderVisible):
                         case nameof(CarVisible):
-                        case nameof(UserVisible):    
+                        case nameof(UserVisible):
                             button.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
                             break;
                         case nameof(OrderCollapse):
                         case nameof(CarCollapse):
-                        case nameof(UserCollapse):    
+                        case nameof(UserCollapse):
                             button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
                             break;
                         default:
