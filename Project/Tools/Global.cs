@@ -9,6 +9,7 @@ namespace Project.Tools
         public static User CurrentUser { get; set; }
         public static UserPermissions ParsedPermissions { get; private set; }
 
+        // Разбор JSON (поле `users`.`users_permission`)
         public static void ParsePermissions(User user)
         {
             if (user == null)
@@ -58,6 +59,28 @@ namespace Project.Tools
                     Tabs = new List<TabPermission>()
                 };
             }
+        }
+
+        // Проверка прав на запись во вкладке
+        public static bool GetWritePermissionForTab(string tabName)
+        {
+            if (ParsedPermissions == null)
+            {
+                MessageBox.Show("Права пользователя отсутствуют.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            var tabPermission = ParsedPermissions.Tabs.FirstOrDefault(tab => tab.Name == tabName);
+
+            if (tabPermission != null)
+            {
+                return tabPermission.Permissions.Write;
+            }
+
+            MessageBox.Show($"Вкладка с именем \"{tabName}\" не найдена.", "Информация",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return false;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Project.Views.Pages
         private readonly ValidateField _validator;
         private readonly Helpers _helper;
         private bool _showButton;
+        private bool _flagWriter;
 
         public UserPage()
         {
@@ -23,6 +24,7 @@ namespace Project.Views.Pages
             DataContext = _viewModel;
             _validator = new ValidateField();
             _helper = new Helpers();
+            _flagWriter = Global.GetWritePermissionForTab("user");
 
             // Отслеживание изменений
             NewPasswordBox.PasswordChanged += OnFieldChanged;
@@ -49,8 +51,10 @@ namespace Project.Views.Pages
                 UsersLogin = user.UsersLogin;
                 UsersEmail = user.UsersMail;
                 UsersPhone = user.UsersPhone;
-                UsersBirthday = user.UsersBirthday?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ?? string.Empty;
-                UsersStartWork = user.UsersStartWork?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ?? string.Empty;
+                UsersBirthday = user.UsersBirthday?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
+                                string.Empty;
+                UsersStartWork = user.UsersStartWork?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
+                                 string.Empty;
                 UsersStatus = $"{user.UsersStatusNavigation.StatusName} (с {user.UsersStatusChange:dd.MM.yyyy})";
                 UsersDepartment = user.UsersDepartmentNavigation.DepartmentName;
                 UsersFunction = user.UsersFunctionNavigation.FunctionName;
@@ -60,9 +64,9 @@ namespace Project.Views.Pages
         // Отображение кнопки при изменениях в полях
         private void OnFieldChanged(object sender, RoutedEventArgs e)
         {
-            _showButton = !string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
-                          NewEmailTextBox.Text != _viewModel.UsersEmail ||
-                          NewPhoneTextBox.Text != _viewModel.UsersPhone;
+            _showButton = _flagWriter && (!string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
+                                          NewEmailTextBox.Text != _viewModel.UsersEmail ||
+                                          NewPhoneTextBox.Text != _viewModel.UsersPhone);
             UpdateButton.Visibility = _showButton ? Visibility.Visible : Visibility.Hidden;
         }
 
@@ -86,7 +90,8 @@ namespace Project.Views.Pages
 
             try
             {
-                var currentUser = await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
+                var currentUser =
+                    await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
 
                 if (currentUser != null)
                 {
@@ -100,24 +105,27 @@ namespace Project.Views.Pages
 
                     await DbUtils.db.SaveChangesAsync();
 
-                    MessageBox.Show("Данные успешно обновлены.", "Сохранение данных", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Данные успешно обновлены.", "Сохранение данных", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                     UpdateButton.Visibility = Visibility.Hidden;
                     _showButton = false;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка обновления данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка обновления данных: {ex.Message}", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
-        
+
         // Валидация полей
         private bool ValidateInputs()
         {
-            if (!string.IsNullOrWhiteSpace(NewPasswordBox.Password) && 
+            if (!string.IsNullOrWhiteSpace(NewPasswordBox.Password) &&
                 !_validator.IsValid(NewPasswordBox.Password, "password"))
             {
-                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка данных", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка данных", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return false;
             }
 
@@ -129,7 +137,8 @@ namespace Project.Views.Pages
 
             if (!_validator.IsValid(NewPhoneTextBox.Text, "phone"))
             {
-                MessageBox.Show("Некорректный телефон. В номере телефона допускаются цифры и знак +.", "Ошибка данных", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Некорректный телефон. В номере телефона допускаются цифры и знак +.", "Ошибка данных",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
