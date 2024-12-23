@@ -78,11 +78,11 @@ namespace Project.Views
         {
             string login = RegisterLoginTextBox.Text;
             string name = NameTextBox.Text;
-            string surename = SurnameTextBox.Text;
+            string surname = SurnameTextBox.Text;
             string password = _helper.HashPassword(RegisterPasswordBox.Password);
 
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surename))
+                string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surname))
             {
                 MessageBox.Show("Необходимо заполнить все поля.", "Ошибка регистрации", MessageBoxButton.OK,
                     MessageBoxImage.Warning);
@@ -110,11 +110,11 @@ namespace Project.Views
                 UsersLogin = login,
                 UsersPassword = password,
                 UsersName = name,
-                UsersSurname = surename,
+                UsersSurname = surname,
                 UsersDepartment = 1,
                 UsersFunction = 1,
                 UsersStatus = 1,
-                UsersPermissions = "3",
+                UsersPermissions = DefaultPermissions.User,
             };
 
             await Task.Run(() =>

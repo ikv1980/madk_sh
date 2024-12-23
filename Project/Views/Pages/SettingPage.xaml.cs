@@ -26,7 +26,10 @@ namespace Project.Views.Pages
         private async Task LoadUsersAsync()
         {
             await using var dbContext = new Db();
-            UserPermissionsTable.ItemsSource = await dbContext.Users.ToListAsync();
+            UserPermissionsTable.ItemsSource = await dbContext.Users
+                .Include(u => u.UsersDepartmentNavigation)
+                .Include(u => u.UsersFunctionNavigation)
+                .ToListAsync();
         }
 
         // Изменение прав доступа пользователя

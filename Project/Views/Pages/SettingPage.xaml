@@ -104,10 +104,12 @@
                                 <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
                                 <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
                                 <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
+                                <DataGridTextColumn Header="Отдел" Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
+                                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
                                 <DataGridTemplateColumn Header="">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="🔐"
+                                            <Button Content="🔑"
                                                     Click="EditPermissions_Click"
                                                     Tag="{Binding}" />
                                         </DataTemplate>
