@@ -9,13 +9,20 @@ namespace Project.Tools
         public static User CurrentUser { get; set; }
         public static UserPermissions ParsedPermissions { get; private set; }
 
-        public static void ParsePermissions()
+        public static void ParsePermissions(User user)
         {
-            if (!string.IsNullOrWhiteSpace(CurrentUser?.UsersPermissions))
+            if (user == null)
+            {
+                MessageBox.Show("Пользователь не указан.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.UsersPermissions))
             {
                 try
                 {
-                    ParsedPermissions = JsonSerializer.Deserialize<UserPermissions>(CurrentUser.UsersPermissions);
+                    ParsedPermissions = JsonSerializer.Deserialize<UserPermissions>(user.UsersPermissions);
 
                     // Проверка на наличие вкладок
                     if (ParsedPermissions?.Tabs == null || ParsedPermissions.Tabs.Count == 0)
@@ -38,7 +45,7 @@ namespace Project.Tools
                         Tabs = new List<TabPermission>(),
                         Directoryes = new List<DirectoryPermission>()
                     };
-                    MessageBox.Show($"Ошибка парсинга JSON: {ex.Message}\nJSON: {CurrentUser.UsersPermissions}",
+                    MessageBox.Show($"Ошибка парсинга JSON: {ex.Message}\nJSON: {user.UsersPermissions}",
                         "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }

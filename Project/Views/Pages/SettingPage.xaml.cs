@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
 using ModernWpf.Controls;
 using Project.Models;
@@ -18,11 +19,34 @@ namespace Project.Views.Pages
         public SettingPage()
         {
             InitializeComponent();
-            LoadDataAsync();
+            LoadPageAsync();
+            LoadUsersAsync();
         }
 
+        private async Task LoadUsersAsync()
+        {
+            await using var dbContext = new Db();
+            UserPermissionsTable.ItemsSource = await dbContext.Users.ToListAsync();
+        }
+
+        // Изменение прав доступа пользователя
+        private async void EditPermissions_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is User user)
+            {
+                // Создаем окно EditPermission, передавая только объект User
+                var permissionWindow = new EditPermission(user);
+                var result = permissionWindow.ShowDialog();
+
+                if (result == true)
+                {
+                    await LoadUsersAsync();
+                }
+            }
+        }
+        
         // Получение данных из БД
-        private async Task LoadDataAsync()
+        private async Task LoadPageAsync()
         {
             DataTable.ItemsSource = await _dbContext.SitePages.ToListAsync();
         }
@@ -57,7 +81,7 @@ namespace Project.Views.Pages
         {
             var newPage = new SitePage
             {
-                PageNumber = 0, 
+                PageNumber = 0,
                 PageNameEng = "New Page",
                 PageNameRus = "Новая Страница",
                 PageIcon = "default.png",
@@ -66,7 +90,7 @@ namespace Project.Views.Pages
 
             _dbContext.SitePages.Add(newPage);
             await _dbContext.SaveChangesAsync();
-            await LoadDataAsync();
+            await LoadPageAsync();
         }
 
         // Удаление записи
@@ -76,7 +100,7 @@ namespace Project.Views.Pages
             {
                 _dbContext.SitePages.Remove(selectedPage);
                 await _dbContext.SaveChangesAsync();
-                await LoadDataAsync();
+                await LoadPageAsync();
             }
         }
     }

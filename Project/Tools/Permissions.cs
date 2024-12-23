@@ -11,12 +11,14 @@ namespace Project.Tools
     public class TabPermission
     {
         public string Name { get; set; }
+        public string RusName { get; set; }
         public Permission Permissions { get; set; }
     }
 
     public class DirectoryPermission
     {
         public string Name { get; set; }
+        public string RusName { get; set; }
         public Permission Permissions { get; set; }
     }
 

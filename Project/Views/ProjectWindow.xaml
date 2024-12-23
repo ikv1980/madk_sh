@@ -4,6 +4,7 @@
         xmlns:modern="http://schemas.modernwpf.com/2019"
         xmlns:direct="clr-namespace:Project.Views.Pages.DirectoryPages"
         Title="Автосалон"
+        Width="1250" Height="960"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="LightSkyBlue">

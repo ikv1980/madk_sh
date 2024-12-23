@@ -15,7 +15,7 @@ namespace Project.Views
         {
             InitializeComponent();
             Global.CurrentUser = user;
-            Global.ParsePermissions();
+            Global.ParsePermissions(user);
             this.Loaded += change_Screeen;
             MainTabControl.SelectedIndex = 1;
             SecondTabControl.SelectedIndex = 0;
@@ -108,7 +108,6 @@ namespace Project.Views
                 }
                 else
                 {
-                    new AuthWindow().Show();
                     this.Close();
                 }
             }
@@ -125,8 +124,6 @@ namespace Project.Views
             }
             else if (item.Tag != null)
             {
-                AuthWindow window = new AuthWindow();
-                window.Show();
                 this.Close();
             }
         }
