@@ -19,10 +19,17 @@ namespace Project.Views.Pages
         public SettingPage()
         {
             InitializeComponent();
-            LoadPageAsync();
-            LoadUsersAsync();
+            InitializeDataAsync();
         }
 
+        // Инициализация данных страницы
+        private async void InitializeDataAsync()
+        {
+            await LoadPageAsync();
+            await LoadUsersAsync();
+        }
+
+        // Загрузка пользователей из базы данных
         private async Task LoadUsersAsync()
         {
             await using var dbContext = new Db();
@@ -32,33 +39,30 @@ namespace Project.Views.Pages
                 .ToListAsync();
         }
 
+        // Загрузка страниц из базы данных
+        private async Task LoadPageAsync()
+        {
+            await using var dbContext = new Db();
+            DataTable.ItemsSource = await dbContext.SitePages.ToListAsync();
+        }
+        
         // Изменение прав доступа пользователя
         private async void EditPermissions_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is User user)
+            if (sender is Button { Tag: User user })
             {
-                // Создаем окно EditPermission, передавая только объект User
                 var permissionWindow = new EditPermission(user);
-                var result = permissionWindow.ShowDialog();
-
-                if (result == true)
+                if (permissionWindow.ShowDialog() == true)
                 {
                     await LoadUsersAsync();
                 }
             }
         }
-        
-        // Получение данных из БД
-        private async Task LoadPageAsync()
-        {
-            DataTable.ItemsSource = await _dbContext.SitePages.ToListAsync();
-        }
 
         // Обработка редактирования (вкл/выкл)
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            var toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
+            if (sender is ToggleSwitch toggleSwitch)
             {
                 _isEditMode = toggleSwitch.IsOn;
                 saveButton.IsEnabled = _isEditMode;

@@ -9,11 +9,10 @@
 
     <Grid>
         <StackPanel Margin="15">
-            <Expander Header="Видимость вкладок"
-                      IsExpanded="False">
+            <Expander IsExpanded="False">
                 <Expander.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="Видимость вкладок" FontWeight="SemiBold" FontSize="20" />
+                        <TextBlock Text="Видимость вкладок" FontWeight="SemiBold" FontSize="20" Padding="0,10" />
                     </DataTemplate>
                 </Expander.HeaderTemplate>
 
@@ -77,11 +76,10 @@
                     </StackPanel>
                 </StackPanel>
             </Expander>
-
-            <Expander Header="Права пользователей" IsExpanded="False">
+            <Expander IsExpanded="False">
                 <Expander.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="Права пользователей" FontWeight="SemiBold" FontSize="20" />
+                        <TextBlock Text="Права пользователей" FontWeight="SemiBold" FontSize="20" Padding="0,10" />
                     </DataTemplate>
                 </Expander.HeaderTemplate>
 
@@ -134,18 +132,16 @@
                     </DataGrid>
                 </StackPanel>
             </Expander>
-
-            <Expander Header="Дополнительно"
-                      IsExpanded="False">
+            <Expander IsExpanded="False">
                 <Expander.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="Дополнительно" FontWeight="SemiBold" FontSize="20" />
+                        <TextBlock Text="Дополнительно" FontWeight="SemiBold" FontSize="20" Padding="0,10" />
                     </DataTemplate>
                 </Expander.HeaderTemplate>
 
-                <StackPanel Margin="10">
-                    <TextBlock Text="Здесь находятся ваши данные для пункта 3." />
-                    <TextBlock Text="Вы можете добавить больше информации." />
+                <StackPanel Margin="10" >
+                    <TextBlock FontWeight="SemiBold" FontSize="16" Text="Здесь находятся ваши данные для пункта 3." />
+                    <TextBlock FontWeight="SemiBold" FontSize="16" Text="Вы можете добавить больше информации." />
                 </StackPanel>
             </Expander>
         </StackPanel>
