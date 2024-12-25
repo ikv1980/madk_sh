@@ -57,28 +57,96 @@ namespace Project.Views
                         break;
                 }
             }
-
+            
             // Доступ к справочникам
-            foreach (var directoryPermission in Global.ParsedPermissions.Directoryes)
+            foreach (var directoryesPermission in Global.ParsedPermissions.Directoryes)
             {
-                var visibility = directoryPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
-               
-                switch (directoryPermission.Name.ToLower())
+                var visibility = directoryesPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
+
+                switch (directoryesPermission.Name.ToLower())
                 {
-                    case "orders":
-                        OrderMenuGroup.Visibility = visibility;
+                    // для Заказов
+                    case "ordersclient":
+                        OrdersClientButton.Visibility = visibility;
                         break;
-                    case "cars":
-                        CarMenuGroup.Visibility = visibility;
+                    case "ordersdelivery":
+                        OrdersDeliveryButton.Visibility = visibility;
                         break;
+                    case "orderspayment":
+                        OrdersPaymentButton.Visibility = visibility;
+                        break;
+                    case "ordersstatus":
+                        OrdersStatusButton.Visibility = visibility;
+                        break;
+                    // для Автомобилей
+                    case "carscountry":
+                        CarsCountryButton.Visibility = visibility;
+                        break;
+                    case "carsmark":
+                        CarsMarkButton.Visibility = visibility;
+                        break;
+                    case "carsmodel":
+                        CarsModelButton.Visibility = visibility;
+                        break;
+                    case "carstype":
+                        CarsTypeButton.Visibility = visibility;
+                        break;
+                    case "carscolor":
+                        CarsColorButton.Visibility = visibility;
+                        break;
+                    case "mmmarkmodel":
+                        MmMarkModelButton.Visibility = visibility;
+                        break;
+                    case "mmmodelcountry":
+                        MmModelCountryButton.Visibility = visibility;
+                        break;
+                    // для Пользователей
                     case "users":
-                        UserMenuGroup.Visibility = visibility;
+                        UsersButton.Visibility = visibility;
                         break;
+                    case "usersdepartment":
+                        UsersDepartmentButton.Visibility = visibility;
+                        break;
+                    case "usersfunction":
+                        UsersFunctionButton.Visibility = visibility;
+                        break;
+                    case "usersstatus":
+                        UsersStatusButton.Visibility = visibility;
+                        break;
+                    case "mmdepartmentfunction":
+                        MmDepartmentFunctionButton.Visibility = visibility;
+                        break;
+                    
+                    
+                    
+                    // по умолчанию
                     default:
-                        Console.WriteLine($"Unknown directory: {directoryPermission.Name}");
+                        Console.WriteLine($"Unknown directory: {directoryesPermission.Name}");
                         break;
                 }
             }
+            
+            // Обновление видимости всех Expander
+            UpdateExpanderVisibility(OrdersButtonPanel, OrdersExpander);
+            UpdateExpanderVisibility(CarsButtonPanel, CarsExpander);
+            UpdateExpanderVisibility(UsersButtonPanel, UsersExpander);
+        }
+
+        // Скратие панелей с кнопками
+        private void UpdateExpanderVisibility(StackPanel buttonPanel, Expander expander)
+        {
+            bool allButtonsCollapsed = true;
+
+            foreach (var child in buttonPanel.Children)
+            {
+                if (child is Button button && button.Visibility == Visibility.Visible)
+                {
+                    allButtonsCollapsed = false;
+                    break;
+                }
+            }
+
+            expander.Visibility = allButtonsCollapsed ? Visibility.Collapsed : Visibility.Visible;
         }
 
         // Выбор вкладки
@@ -134,7 +202,6 @@ namespace Project.Views
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
             MainTabControl.SelectedIndex = -1;
             SecondTabControl.SelectedIndex = 1;
-            CollapsedMenu();
         }
 
         private void SubMenuButton_Click(object sender, RoutedEventArgs e)
@@ -149,73 +216,6 @@ namespace Project.Views
                     MainContent.Content = (System.Windows.Controls.Page)Activator.CreateInstance(pageType);
                 }
             }
-        }
-
-        // Контекстное меню "Заказы"
-        private void VisibleOrderButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(OrderMenuGroup, true);
-        }
-
-        private void CollapsedOrderButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(OrderMenuGroup, false);
-        }
-
-        // Контекстное меню "Автомобили"
-        private void VisibleCarButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(CarMenuGroup, true);
-        }
-
-        private void CollapsedCarButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(CarMenuGroup, false);
-        }
-
-        // Контекстное меню "Пользователь"
-        private void VisibleUserButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(UserMenuGroup, true);
-        }
-
-        private void CollapsedUserButton(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuVisibility(UserMenuGroup, false);
-        }
-
-        private void ToggleMenuVisibility(StackPanel group, bool isVisible)
-        {
-            foreach (var child in group.Children)
-            {
-                if (child is Button button)
-                {
-                    switch (button.Name)
-                    {
-                        case nameof(OrderVisible):
-                        case nameof(CarVisible):
-                        case nameof(UserVisible):
-                            button.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
-                            break;
-                        case nameof(OrderCollapse):
-                        case nameof(CarCollapse):
-                        case nameof(UserCollapse):
-                            button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-                            break;
-                        default:
-                            button.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-                            break;
-                    }
-                }
-            }
-        }
-
-        // Свернуть все меню
-        private void CollapsedMenu()
-        {
-            ToggleMenuVisibility(OrderMenuGroup, false);
-            ToggleMenuVisibility(CarMenuGroup, false);
-            ToggleMenuVisibility(UserMenuGroup, false);
         }
 
         // Изменение размера рабочего экрана

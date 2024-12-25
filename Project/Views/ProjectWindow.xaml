@@ -8,6 +8,24 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="LightSkyBlue">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightGray" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
@@ -101,159 +119,148 @@
                             <TextBlock Text="Справочники" Margin="5" />
                         </StackPanel>
                     </TabItem.Header>
-                    <Popup x:Name="SubMenuPopup" PlacementTarget="{Binding ElementName=Directoryes}" StaysOpen="False">
-                        <Border
-                            BorderBrush="LightSkyBlue"
-                            BorderThickness="1"
-                            Background="LightSkyBlue">
-                            <StackPanel
-                                Background="White"
-                                Width="{Binding ActualWidth, ElementName=Directoryes}">
-                                <!-- Кнопка "Заказы.Справочники" с вложенными кнопками -->
-                                <StackPanel x:Name="OrderMenuGroup">
+                    <Popup x:Name="SubMenuPopup"
+                           PlacementTarget="{Binding ElementName=Directoryes}" StaysOpen="False">
+                        <StackPanel
+                            Background="White"
+                            Width="{Binding ActualWidth, ElementName=Directoryes}">
+                            <!-- Кнопка "Заказы" с вложенными кнопками -->
+                            <Expander
+                                x:Name="OrdersExpander"
+                                IsExpanded="False"
+                                Background="LightBlue">
+                                <Expander.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="Заказы"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="16"
+                                                       Padding="0,10" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Expander.HeaderTemplate>
+                                <StackPanel x:Name="OrdersButtonPanel">
                                     <Button
-                                        Content="➕ Заказы"
-                                        x:Name="OrderVisible"
-                                        Background="LightBlue"
-                                        Click="VisibleOrderButton"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
-                                        Content="➖ Заказы"
-                                        x:Name="OrderCollapse"
-                                        Background="LightBlue"
-                                        Click="CollapsedOrderButton"
-                                        Visibility="Collapsed"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
+                                        x:Name="OrdersClientButton"
                                         Content="Клиенты"
                                         Tag="{x:Type direct:OrdersClientPage}"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="OrdersDeliveryButton"
                                         Content="Типы доставки"
                                         Tag="{x:Type direct:OrdersDeliveryPage}"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="OrdersPaymentButton"
                                         Content="Типы оплаты"
                                         Tag="{x:Type direct:OrdersPaymentPage}"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="OrdersStatusButton"
                                         Content="Статусы заказа"
                                         Tag="{x:Type direct:OrdersStatusPage}"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                 </StackPanel>
-                                <Separator Background="Gainsboro" Tag="{x:Type direct:MmMarkModelPage}" />
-                                <!-- Кнопка "Автомобили" с вложенными кнопками -->
-                                <StackPanel x:Name="CarMenuGroup">
+                            </Expander>
+                            <!-- Кнопка "Автомобили" с вложенными кнопками -->
+                            <Expander
+                                x:Name="CarsExpander"
+                                IsExpanded="False"
+                                Background="LightBlue">
+                                <Expander.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="Автомобили"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="16"
+                                                       Padding="0,10" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Expander.HeaderTemplate>
+                                <StackPanel x:Name="CarsButtonPanel">
                                     <Button
-                                        Content="➕ Автомобили"
-                                        x:Name="CarVisible"
-                                        Background="LightBlue"
-                                        Click="VisibleCarButton"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
-                                        Content="➖ Автомобили"
-                                        x:Name="CarCollapse"
-                                        Background="LightBlue"
-                                        Click="CollapsedCarButton"
-                                        Visibility="Collapsed"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
+                                        x:Name="CarsCountryButton"
                                         Content="Страны"
                                         Tag="{x:Type direct:CarsCountryPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="CarsMarkButton"
                                         Content="Марки"
                                         Tag="{x:Type direct:CarsMarkPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="CarsModelButton"
                                         Content="Модели"
                                         Tag="{x:Type direct:CarsModelPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="CarsTypeButton"
                                         Content="Типы кузова"
                                         Tag="{x:Type direct:CarsTypePage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="CarsColorButton"
                                         Content="Цвета"
                                         Tag="{x:Type direct:CarsColorPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Separator Background="Gainsboro" Tag="{x:Type direct:MmMarkModelPage}" />
+                                        Click="SubMenuButton_Click" />
+                                    <Separator Background="Gainsboro"/>
                                     <Button
+                                        x:Name="MmMarkModelButton"
                                         Content="Марка - Модель"
                                         Tag="{x:Type direct:MmMarkModelPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="MmModelCountryButton"
                                         Content="Страна - Модель"
                                         Tag="{x:Type direct:MmModelCountryPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                 </StackPanel>
-                                <!-- Кнопка "Пользователь" с вложенными кнопками -->
-                                <StackPanel x:Name="UserMenuGroup">
+                            </Expander>
+                            <!-- Кнопка "Пользователь" с вложенными кнопками -->
+                            <Expander
+                                x:Name="UsersExpander"
+                                IsExpanded="False"
+                                Background="LightBlue">
+                                <Expander.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="Пользователи"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="16"
+                                                       Padding="0,10" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Expander.HeaderTemplate>
+                                <StackPanel x:Name="UsersButtonPanel">
                                     <Button
-                                        Content="➕ Пользователи"
-                                        x:Name="UserVisible"
-                                        Background="LightBlue"
-                                        Click="VisibleUserButton"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
-                                        Content="➖ Пользователи"
-                                        x:Name="UserCollapse"
-                                        Background="LightBlue"
-                                        Click="CollapsedUserButton"
-                                        Visibility="Collapsed"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Button
+                                        x:Name="UsersButton"
                                         Content="Сотрудники"
                                         Tag="{x:Type direct:UsersPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="UsersDepartmentButton"
                                         Content="Отделы"
                                         Tag="{x:Type direct:UsersDepartmentPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="UsersFunctionButton"
                                         Content="Должности"
                                         Tag="{x:Type direct:UsersFunctionPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                     <Button
+                                        x:Name="UsersStatusButton"
                                         Content="Статусы"
                                         Tag="{x:Type direct:UsersStatusPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
-                                    <Separator Background="Gainsboro" Tag="{x:Type direct:MmDepartmentFunctionPage}" />
+                                        Click="SubMenuButton_Click" />
+                                    <Separator Background="Gainsboro"/>
                                     <Button
+                                        x:Name="MmDepartmentFunctionButton"
                                         Content="Отдел - Должность"
                                         Tag="{x:Type direct:MmDepartmentFunctionPage}"
-                                        Visibility="Collapsed"
-                                        Click="SubMenuButton_Click"
-                                        Style="{StaticResource SubMenuButtonStyle}" />
+                                        Click="SubMenuButton_Click" />
                                 </StackPanel>
-                            </StackPanel>
-                        </Border>
+                            </Expander>
+                        </StackPanel>
                     </Popup>
                 </TabItem>
             </TabControl>

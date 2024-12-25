@@ -77,17 +77,31 @@
                   ItemsSource="{Binding TableValue}">
             <DataGrid.Resources>
                 <!-- Контекстное меню -->
-                <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18">
+                <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18" Visibility="{Binding FlagWriterVisibility}">
+                    <MenuItem Header="Просмотр"
+                              Icon="👁️"
+                              Tag="Show"
+                              Height="35"
+                              Command="{Binding DataContext.ShowDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" />
+                                <Binding Source="{x:Type wind:EditModel}" />
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
                     <MenuItem Header="Добавить"
                               Icon="➕"
                               Tag="Add"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               CommandParameter="{x:Type wind:EditModel}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
@@ -100,6 +114,7 @@
                               Icon="❌"
                               Tag="Delete"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">

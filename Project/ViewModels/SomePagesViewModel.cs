@@ -13,9 +13,10 @@ namespace Project.ViewModels
 
         private ObservableCollection<TTable> _tableValue;
         private string _searchingText;
-        private int _currentPage;   // текущая страница
-        private int _itemsPerPage;  // количество элементов на странице
-        private int _totalItems;    // всего элементов
+        private int _currentPage;       // текущая страница
+        private int _itemsPerPage;      // количество элементов на странице
+        private int _totalItems;        // всего элементов
+        private bool _flagWriter;       // флаг записи
         #endregion
 
         #region props
@@ -55,6 +56,9 @@ namespace Project.ViewModels
 
         public string CurrentPageText => $"{CurrentPage} из {TotalPages}";
 
+        // переключение видимости
+        public Visibility FlagWriterVisibility => _flagWriter ? Visibility.Visible : Visibility.Collapsed;
+        
         // Имя поля для сортировки (берется из модели).
         public string SortPropertyName { get; }
 
@@ -64,6 +68,8 @@ namespace Project.ViewModels
             _itemsPerPage = 100;
             _currentPage = 1;
             SortPropertyName = GetDefaultSortProperty();
+            // Получаем значение _flagWriter справочника
+            _flagWriter = Global.GetWritePermissionForDict(typeof(TTable).Name);
             Refresh();
         }
 
@@ -78,6 +84,8 @@ namespace Project.ViewModels
         public RelayCommand ChangeDialogButton => new RelayCommand(obj => ChangeDialogBtn(obj));
 
         public RelayCommand ChangeDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
+        
+        public RelayCommand ShowDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
 
         public RelayCommand RefreshCommand => new RelayCommand(obj => Refresh());
 
@@ -93,6 +101,9 @@ namespace Project.ViewModels
         {
             try
             {
+                // Обновить флаг записи
+                // UpdateFlagWriter();
+                
                 // Получаем общее количество элементов
                 _totalItems = DbUtils.GetTableCount<TTable>();
 
@@ -251,6 +262,12 @@ namespace Project.ViewModels
             return property?.GetValue(null)?.ToString();
         }
 
+        private void UpdateFlagWriter()
+        {
+            _flagWriter = Global.GetWritePermissionForDict(typeof(TTable).Name);
+            OnPropertyChanged(nameof(FlagWriterVisibility));
+        }
+        
         #endregion
     }
 }

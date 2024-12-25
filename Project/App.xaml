@@ -4,9 +4,6 @@
              StartupUri="/Views/ConnectionDB.xaml"
              xmlns:modern="http://schemas.modernwpf.com/2019"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
-<!--
-StartupUri="/Views/Pages/DirectoryPages/UsersPage.xaml"
--->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -15,38 +12,6 @@ StartupUri="/Views/Pages/DirectoryPages/UsersPage.xaml"
                 <modern:ThemeResources RequestedTheme="Light" />
                 <modern:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--Стиль кнопок-->
-            <Style x:Key="SubMenuButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                <Setter Property="Padding" Value="10,5"/>
-                <Setter Property="FontSize" Value="15"/>
-                <Setter Property="Height" Value="40"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
-                                <ContentPresenter 
-                                    Content="{TemplateBinding Content}" 
-                                    ContentTemplate="{TemplateBinding ContentTemplate}" 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                    Margin="{TemplateBinding Padding}"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Background" Value="SkyBlue"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

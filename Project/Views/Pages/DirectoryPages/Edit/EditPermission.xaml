@@ -12,25 +12,25 @@
              ResizeMode="NoResize">
     <Grid>
         <StackPanel Margin="0">
-            <TextBlock Text="Вкладки" 
-                       FontWeight="SemiBold" 
+            <TextBlock Text="Вкладки"
+                       FontWeight="SemiBold"
                        FontSize="18"
                        Padding="3,5"
                        Background="LightBlue"
-                       Margin="5"/>
+                       Margin="5" />
             <ItemsControl x:Name="TabsList" />
             
-            <TextBlock Text="Справочники" 
-                       FontWeight="SemiBold" 
+            <TextBlock Text="Справочники"
+                       FontWeight="SemiBold"
                        FontSize="18"
                        Padding="3,5"
                        Background="LightBlue"
-                       Margin="5"/>
+                       Margin="5" />
             <ItemsControl x:Name="DirectoriesList" />
-            
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-                <Button Content="Сохранить" Click="SaveButton_Click" Margin="5"/>
-                <Button Content="Отмена" Click="CancelButton_Click" Margin="5"/>
+                <Button Content="Сохранить" Click="SaveButton_Click" Margin="5" />
+                <Button Content="Отмена" Click="CancelButton_Click" Margin="5" />
             </StackPanel>
         </StackPanel>
     </Grid>

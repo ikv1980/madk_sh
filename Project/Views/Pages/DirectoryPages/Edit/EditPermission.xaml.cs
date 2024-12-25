@@ -61,7 +61,7 @@ namespace Project.Views
                     Text = directory.RusName, 
                     Margin = new Thickness(5, 0, 5, 0),
                     FontSize = 16, 
-                    Width = 120,
+                    Width = 150,
                     VerticalAlignment = VerticalAlignment.Center,
                 };
                 var checkBoxRead = new CheckBox { Content = $"чтение", IsChecked = directory.Permissions.Read };

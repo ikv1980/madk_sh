@@ -102,7 +102,6 @@
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
                             <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
                             <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
                             <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
@@ -110,6 +109,7 @@
                                                 Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
                             <DataGridTextColumn Header="Должность"
                                                 Binding="{Binding UsersFunctionNavigation.FunctionName}" />
+                            <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
                             <DataGridTemplateColumn Header="">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

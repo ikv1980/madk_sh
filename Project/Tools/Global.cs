@@ -28,14 +28,16 @@ namespace Project.Tools
                     // Проверка на наличие вкладок
                     if (ParsedPermissions?.Tabs == null || ParsedPermissions.Tabs.Count == 0)
                     {
-                        MessageBox.Show("JSON разобран, но вкладки отсутствуют.", "Отладка", MessageBoxButton.OK,
+                        MessageBox.Show("JSON разобран, но вкладки отсутствуют.", "Отладка",
+                            MessageBoxButton.OK,
                             MessageBoxImage.Warning);
                     }
 
                     // Проверка на наличие справочников
                     if (ParsedPermissions?.Directoryes == null || ParsedPermissions.Directoryes.Count == 0)
                     {
-                        MessageBox.Show("JSON разобран, но справочники отсутствуют.", "Отладка", MessageBoxButton.OK,
+                        MessageBox.Show("JSON разобран, но справочники отсутствуют.", "Отладка",
+                            MessageBoxButton.OK,
                             MessageBoxImage.Warning);
                     }
                 }
@@ -61,7 +63,7 @@ namespace Project.Tools
             }
         }
 
-        // Проверка прав на запись во вкладке
+        // Вкладки - проверка прав на запись 
         public static bool GetWritePermissionForTab(string tabName)
         {
             if (ParsedPermissions == null)
@@ -79,6 +81,28 @@ namespace Project.Tools
             }
 
             MessageBox.Show($"Вкладка с именем \"{tabName}\" не найдена.", "Информация",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return false;
+        }
+
+        // Справочники - проверка прав на запись
+        public static bool GetWritePermissionForDict(string dictName)
+        {
+            if (ParsedPermissions == null)
+            {
+                MessageBox.Show("Права пользователя отсутствуют.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            var tabPermission = ParsedPermissions.Directoryes.FirstOrDefault(dict => dict.Name == dictName);
+
+            if (tabPermission != null)
+            {
+                return tabPermission.Permissions.Write;
+            }
+
+            MessageBox.Show($"Справочник с именем \"{dictName}\" не найден.", "Информация",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return false;
         }
