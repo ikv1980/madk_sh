@@ -101,7 +101,7 @@ namespace Project.Views
                         MmModelCountryButton.Visibility = visibility;
                         break;
                     // для Пользователей
-                    case "users":
+                    case "user":
                         UsersButton.Visibility = visibility;
                         break;
                     case "usersdepartment":

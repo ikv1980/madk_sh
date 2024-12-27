@@ -7,24 +7,6 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="LightSkyBlue">
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="BorderBrush" Value="LightGray" />
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="LightGray" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
@@ -45,6 +27,7 @@
                         FontSize="15"
                         VerticalAlignment="Stretch"
                         SelectionChanged="TabControl_Select"
+                        Background="LightSkyBlue"
                         Grid.Column="0">
                 <!-- Первый Grid -->
                 <!-- Вкладка Выход -->
@@ -104,7 +87,8 @@
                         FontSize="15"
                         VerticalAlignment="Stretch"
                         SelectionChanged="TabControl_Select"
-                        Margin="0, 0,2,0"
+                        Margin="0, 0,5,0"
+                        Background="LightSkyBlue"
                         Grid.Column="1">
                 <TabItem Visibility="Collapsed">
                 </TabItem>
@@ -127,7 +111,8 @@
                             <Expander
                                 x:Name="OrdersExpander"
                                 IsExpanded="False"
-                                Background="LightBlue">
+                                Padding="5,0,0,0"
+                                Background="LightSkyBlue">
                                 <Expander.HeaderTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -138,7 +123,7 @@
                                         </StackPanel>
                                     </DataTemplate>
                                 </Expander.HeaderTemplate>
-                                <StackPanel x:Name="OrdersButtonPanel">
+                                <StackPanel x:Name="OrdersButtonPanel" Margin="-5,0,0,0">
                                     <Button
                                         x:Name="OrdersClientButton"
                                         Content="Клиенты"
@@ -165,7 +150,8 @@
                             <Expander
                                 x:Name="CarsExpander"
                                 IsExpanded="False"
-                                Background="LightBlue">
+                                Padding="5,0,0,0"
+                                Background="LightSkyBlue">
                                 <Expander.HeaderTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -176,7 +162,7 @@
                                         </StackPanel>
                                     </DataTemplate>
                                 </Expander.HeaderTemplate>
-                                <StackPanel x:Name="CarsButtonPanel">
+                                <StackPanel x:Name="CarsButtonPanel" Margin="-5,0,0,0">
                                     <Button
                                         x:Name="CarsCountryButton"
                                         Content="Страны"
@@ -219,7 +205,8 @@
                             <Expander
                                 x:Name="UsersExpander"
                                 IsExpanded="False"
-                                Background="LightBlue">
+                                Padding="5,0,0,0"
+                                Background="LightSkyBlue">
                                 <Expander.HeaderTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -230,7 +217,7 @@
                                         </StackPanel>
                                     </DataTemplate>
                                 </Expander.HeaderTemplate>
-                                <StackPanel x:Name="UsersButtonPanel">
+                                <StackPanel x:Name="UsersButtonPanel" Margin="-5,0,0,0">
                                     <Button
                                         x:Name="UsersButton"
                                         Content="Сотрудники"

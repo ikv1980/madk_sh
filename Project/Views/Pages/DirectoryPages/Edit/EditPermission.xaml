@@ -16,7 +16,7 @@
                        FontWeight="SemiBold"
                        FontSize="18"
                        Padding="3,5"
-                       Background="LightBlue"
+                       Background="LightSkyBlue"
                        Margin="5" />
             <ItemsControl x:Name="TabsList" />
             
@@ -24,13 +24,17 @@
                        FontWeight="SemiBold"
                        FontSize="18"
                        Padding="3,5"
-                       Background="LightBlue"
+                       Background="LightSkyBlue"
                        Margin="5" />
             <ItemsControl x:Name="DirectoriesList" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-                <Button Content="Сохранить" Click="SaveButton_Click" Margin="5" />
-                <Button Content="Отмена" Click="CancelButton_Click" Margin="5" />
+                <Button Content="Сохранить" 
+                        Style="{StaticResource PrimaryButton}" 
+                        Click="SaveButton_Click" Margin="5" />
+                <Button Content="Отмена" 
+                        Style="{StaticResource PrimaryButton}" 
+                        Click="CancelButton_Click" Margin="5" />
             </StackPanel>
         </StackPanel>
     </Grid>
