@@ -12,14 +12,16 @@ namespace Project.Views.Pages
 {
     public partial class SettingPage : Page
     {
-        private readonly Db _dbContext = DbUtils.db;
+        private Db _dbContext;
         private bool _isEditMode = false;
         private Dictionary<string, object> _originalValues = new();
 
         public SettingPage()
         {
             InitializeComponent();
+            _dbContext = new Db();
             InitializeDataAsync();
+            this.Unloaded += SettingPage_Unloaded;
         }
 
         // Инициализация данных страницы
@@ -32,8 +34,7 @@ namespace Project.Views.Pages
         // Загрузка пользователей из базы данных
         private async Task LoadUsersAsync()
         {
-            await using var dbContext = new Db();
-            UserPermissionsTable.ItemsSource = await dbContext.Users
+            UserPermissionsTable.ItemsSource = await _dbContext.Users
                 .Include(u => u.UsersDepartmentNavigation)
                 .Include(u => u.UsersFunctionNavigation)
                 .ToListAsync();
@@ -42,8 +43,7 @@ namespace Project.Views.Pages
         // Загрузка страниц из базы данных
         private async Task LoadPageAsync()
         {
-            await using var dbContext = new Db();
-            DataTable.ItemsSource = await dbContext.SitePages.ToListAsync();
+            PagesTable.ItemsSource = await _dbContext.SitePages.ToListAsync();
         }
         
         // Изменение прав доступа пользователя
@@ -66,9 +66,10 @@ namespace Project.Views.Pages
             {
                 _isEditMode = toggleSwitch.IsOn;
                 saveButton.IsEnabled = _isEditMode;
-                DataTable.IsReadOnly = !_isEditMode;
-                DataTable.BorderBrush = _isEditMode ? Brushes.Red : Brushes.Gray;
-                DataTable.BorderThickness = _isEditMode ? new Thickness(2) : new Thickness(1);
+                delButton.IsEnabled = _isEditMode;
+                PagesTable.IsReadOnly = !_isEditMode;
+                PagesTable.BorderBrush = _isEditMode ? Brushes.Red : Brushes.Gray;
+                PagesTable.BorderThickness = _isEditMode ? new Thickness(2) : new Thickness(1);
                 if (!_isEditMode) SaveChangesAsync();
             }
         }
@@ -103,12 +104,18 @@ namespace Project.Views.Pages
         // Удаление записи
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DataTable.SelectedItem is SitePage selectedPage)
+            if (PagesTable.SelectedItem is SitePage selectedPage)
             {
                 _dbContext.SitePages.Remove(selectedPage);
                 await _dbContext.SaveChangesAsync();
                 await LoadPageAsync();
             }
+        }
+        
+        // Освобождение ресурсов при выгрузке страницы
+        private void SettingPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _dbContext.Dispose();
         }
     }
 }

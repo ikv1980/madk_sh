@@ -4,9 +4,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:modern="http://schemas.modernwpf.com/2019"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Title="SettingPage">
-
     <Grid>
         <StackPanel Margin="15">
             <Expander IsExpanded="False">
@@ -22,22 +22,16 @@
                             IsOn="False"
                             Toggled="ToggleSwitch_Toggled"
                             Header="Редактирование" />
-
-                        <!-- Таблица -->
-                        <DataGrid
-                            x:Name="DataTable"
+                        <DataGrid x:Name="PagesTable"
                             AutoGenerateColumns="False"
                             Margin="0,10,0,10"
                             IsReadOnly="True"
-                            CanUserAddRows="False"
                             HeadersVisibility="Column"
-                            GridLinesVisibility="All"
                             BorderBrush="Gray"
                             BorderThickness="1"
-                            AlternatingRowBackground="AliceBlue"
-                            RowBackground="White"
-                            HorizontalAlignment="Stretch">
-
+                            CanUserAddRows="False"
+                            RowHeight="40"
+                            MaxHeight="280">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="№" Binding="{Binding PageNumber}" Width="30" />
                                 <DataGridTextColumn Header="Имя Eng" Binding="{Binding PageNameEng}" />
@@ -45,28 +39,33 @@
                                 <DataGridTextColumn Header="Путь к иконке" Binding="{Binding PageIcon}" />
                                 <DataGridCheckBoxColumn Header="👁️" Binding="{Binding PageShow}" />
                             </DataGrid.Columns>
-
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="LightSkyBlue" />
-                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Height" Value="40" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                    <Setter Property="Padding" Value="10,0" />
+                            <!-- Стиль для строк -->
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="SkyBlue" />
+                                            <Setter Property="Opacity" Value="0.8"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
-                            </DataGrid.ColumnHeaderStyle>
+                            </DataGrid.RowStyle>
                         </DataGrid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button
+                            <ui:Button
                                 Content="Создать"
+                                Style="{StaticResource PrimaryButton}"
                                 HorizontalAlignment="Left"
                                 Click="CreateButton_Click"
                                 x:Name="saveButton"
                                 Margin="20,5,0,0"
                                 IsEnabled="False" />
-                            <Button
+                            <ui:Button
                                 Content="Удалить"
+                                Style="{StaticResource PrimaryButton}"
                                 HorizontalAlignment="Left"
                                 Click="DeleteButton_Click"
                                 x:Name="delButton"
@@ -88,15 +87,12 @@
                               AutoGenerateColumns="False"
                               Margin="0,10,0,10"
                               IsReadOnly="True"
-                              CanUserAddRows="False"
                               HeadersVisibility="Column"
-                              GridLinesVisibility="All"
                               BorderBrush="Gray"
                               BorderThickness="1"
-                              AlternatingRowBackground="AliceBlue"
-                              RowBackground="White"
-                              HorizontalAlignment="Stretch"
-                              MaxHeight="470"
+                              CanUserAddRows="False"
+                              RowHeight="40"
+                              MaxHeight="480"
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
@@ -113,22 +109,26 @@
                                     <DataTemplate>
                                         <Button Content="🔑"
                                                 Click="EditPermissions_Click"
+                                                Background="LightSteelBlue"
                                                 Tag="{Binding}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-
-                        <DataGrid.ColumnHeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="LightSkyBlue" />
-                                <Setter Property="FontWeight" Value="SemiBold" />
-                                <Setter Property="FontSize" Value="15" />
-                                <Setter Property="Height" Value="40" />
-                                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                <Setter Property="Padding" Value="10,0" />
+                        <!-- Стиль для строк -->
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="LightGray" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="SkyBlue" />
+                                        <Setter Property="Opacity" Value="0.8"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
-                        </DataGrid.ColumnHeaderStyle>
+                        </DataGrid.RowStyle>
                     </DataGrid>
                 </StackPanel>
             </Expander>
@@ -139,7 +139,7 @@
                     </DataTemplate>
                 </Expander.HeaderTemplate>
 
-                <StackPanel Margin="10" >
+                <StackPanel Margin="10">
                     <TextBlock FontWeight="SemiBold" FontSize="16" Text="Здесь находятся ваши данные для пункта 3." />
                     <TextBlock FontWeight="SemiBold" FontSize="16" Text="Вы можете добавить больше информации." />
                 </StackPanel>
