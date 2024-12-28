@@ -79,6 +79,9 @@ namespace Project.Views
                         OrdersStatusButton.Visibility = visibility;
                         break;
                     // для Автомобилей
+                    case "car":
+                        CarsButton.Visibility = visibility;
+                        break;
                     case "carscountry":
                         CarsCountryButton.Visibility = visibility;
                         break;

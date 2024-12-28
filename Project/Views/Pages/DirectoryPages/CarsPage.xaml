@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.UsersPage"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,21 +9,21 @@
       xmlns:props="clr-namespace:Project.Tools"
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      Title="UsersPage">
+      Title="CarsPage">
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="📗 Справочник 'Сотрудники'"
+        <TextBlock Grid.Row="0" Text="📗 Справочник 'Автомобили'"
                    FontSize="20"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Top" 
-                   Margin="15,15,0,0"/>
+                   VerticalAlignment="Top"
+                   Margin="15,15,0,0" />
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
@@ -97,35 +97,26 @@
                             <Setter Property="Background" Value="SkyBlue" />
                             <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
-                        <!-- Цвет выделения для ClientStatus = false -->
-                        <DataTrigger Binding="{Binding UsersStatus}" Value="1">
-                            <Setter Property="Background" Value="Yellow" />
-                            <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding UsersStatus}" Value="3">
+                        <!-- Цвет выделения для CarBlock = false -->
+                        <DataTrigger Binding="{Binding CarBlock}" Value="True">
                             <Setter Property="Background" Value="Pink" />
-                            <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
+                            <Setter Property="Foreground" Value="Black" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
-                <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
-                <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
-                <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
-                <DataGridTextColumn Header="Отдел" Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
-                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
-                <DataGridTextColumn Header="Дата приема"
-                                    Binding="{Binding UsersStartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Телефон" Binding="{Binding UsersPhone}" />
-                <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
-                <DataGridTextColumn Header="Дата рождения"
-                                    Binding="{Binding UsersBirthday, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Статус" Binding="{Binding UsersStatusNavigation.StatusName}" />
-                <DataGridTextColumn Header="Дата статуса"
-                                    Binding="{Binding UsersStatusChange, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
+                <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
+                <DataGridTextColumn Header="Страна" Binding="{Binding CarCountryNavigation.CountryName}" />
+                <DataGridTextColumn Header="Тип кузова" Binding="{Binding CarTypeNavigation.TypeName}" />
+                <DataGridTextColumn Header="VIN код" Binding="{Binding CarVin}" />
+                <DataGridTextColumn Header="Номер ПТС" Binding="{Binding CarPts}" />
+                <DataGridTextColumn Header="Дата производства"
+                                    Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
+                <DataGridTextColumn Header="Цена, ₽" Binding="{Binding CarPrice, StringFormat=N2}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

@@ -166,6 +166,11 @@
                                 </Expander.HeaderTemplate>
                                 <StackPanel x:Name="CarsButtonPanel" Margin="-5,0,0,0">
                                     <Button
+                                        x:Name="CarsButton"
+                                        Content="Автомобили"
+                                        Tag="{x:Type direct:CarsPage}"
+                                        Click="SubMenuButton_Click" />
+                                    <Button
                                         x:Name="CarsCountryButton"
                                         Content="Страны"
                                         Tag="{x:Type direct:CarsCountryPage}"

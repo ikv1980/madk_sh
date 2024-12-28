@@ -160,7 +160,6 @@ public partial class Db : DbContext
                 .UseCollation("utf8mb4_uca1400_ai_ci");
             entity.Property(e => e.Delete)
                 .HasComment("Метка удаления")
-                .HasColumnType("tinyint(4)")
                 .HasColumnName("delete");
 
             entity.HasOne(d => d.CarColorNavigation).WithMany(p => p.Cars)
@@ -305,7 +304,7 @@ public partial class Db : DbContext
 
             entity.ToTable("mm_department_function");
 
-            entity.HasIndex(e => new { e.DepartmentId, e.FunctionId }, "department_id");
+            entity.HasIndex(e => new { e.DepartmentId, e.FunctionId }, "department_id").IsUnique();
 
             entity.HasIndex(e => e.FunctionId, "function_id");
 

@@ -100,7 +100,7 @@
                         <!-- Цвет выделения для ClientStatus = false -->
                         <DataTrigger Binding="{Binding ClientStatus}" Value="False">
                             <Setter Property="Background" Value="LightPink" />
-                            <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
+                            <Setter Property="Foreground" Value="Black" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

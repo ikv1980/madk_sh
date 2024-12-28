@@ -67,7 +67,7 @@ public partial class Car
     /// <summary>
     /// Метка удаления
     /// </summary>
-    public sbyte Delete { get; set; }
+    public bool Delete { get; set; }
 
     public virtual CarsColor CarColorNavigation { get; set; }
 
