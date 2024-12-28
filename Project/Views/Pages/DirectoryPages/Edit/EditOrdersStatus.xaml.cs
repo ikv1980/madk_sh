@@ -13,6 +13,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
+        private readonly bool _isShowMode;
         private readonly int _itemId;
 
         // Конструктор для добавления данных
@@ -34,6 +35,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             _itemId = item.OrderStatusId;
             EditStatusName.Text = item.OrderStatusName;
+            EditDescriptionName.Text = item.OrderStatusDescription;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -42,6 +44,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
+            }
+            else if (button == "Show")
+            {
+                _isEditMode = true;
+                Title = "Просмотр данных";
+                SaveButton.Visibility = Visibility.Collapsed;
             }
             else if (button == "Delete")
             {
@@ -80,7 +88,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         return;
 
                     // Изменение или добавление
-                    item.OrderStatusName = EditStatusName.Text.Trim().ToLower();
+                    item.OrderStatusName = EditStatusName.Text.Trim();
+                    item.OrderStatusDescription = EditDescriptionName.Text.Trim();
 
                     if (!_isEditMode)
                     {
@@ -108,16 +117,24 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Валидация данных
         private bool IsValidInput()
         {
-            var item = EditStatusName.Text.Trim().ToLower();
+            var status = EditStatusName.Text.Trim().ToLower();
+            var description = EditDescriptionName.Text.Trim().ToLower();
 
-            if (string.IsNullOrWhiteSpace(item))
+            if (string.IsNullOrWhiteSpace(status))
             {
-                MessageBox.Show("Поле не должно быть пустым.", "Ошибка",
+                MessageBox.Show("Поле [Статус] не должно быть пустым.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                MessageBox.Show("Поле [Описание] не должно быть пустым.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (DbUtils.db.OrdersStatuses.Any(x => x.OrderStatusName == item && x.OrderStatusId != _itemId))
+            if (DbUtils.db.OrdersStatuses.Any(x => x.OrderStatusName == status && x.OrderStatusId != _itemId))
             {
                 MessageBox.Show($"Запись '{EditStatusName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

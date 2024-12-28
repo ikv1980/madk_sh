@@ -13,6 +13,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
+        private readonly bool _isShowMode;
         private readonly int _itemId;
 
         // Конструктор для добавления данных
@@ -54,6 +55,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
+            }
+            else if (button == "Show")
+            {
+                _isEditMode = true;
+                Title = "Просмотр данных";
+                SaveButton.Visibility = Visibility.Collapsed;
             }
             else if (button == "Delete")
             {

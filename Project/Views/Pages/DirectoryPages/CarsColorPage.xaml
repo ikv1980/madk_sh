@@ -13,17 +13,22 @@
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
     </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="📗 Справочник 'Цвета'"
+                   FontSize="20"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top" 
+                   Margin="15,15,0,0"/>
         <!-- Таблица с данными -->
-        <DataGrid Grid.Row="0"
+        <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  Margin="10,20,10,0"
+                  Margin="10,10,10,0"
                   HeadersVisibility="Column"
                   BorderThickness="1"
                   BorderBrush="Gray"
@@ -101,7 +106,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left"
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left"
                     Margin="10">
             <modern:AutoSuggestBox x:Name="SearchTextBox"
                                    Width="300"
@@ -126,7 +131,7 @@
                        x:Name="RefreshButton"
                        Command="{Binding RefreshCommand}" />
         </StackPanel>
-        <StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="2"
                     Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <ui:Button
                 Icon="ArrowPrevious24"

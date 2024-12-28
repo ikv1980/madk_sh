@@ -61,7 +61,7 @@
                                 FontSize="17"
                                 IconFilled="True"
                                 x:Name="EditClientName" />
-                </Grid> <!--строка 1-->
+                </Grid>
                 <Grid Grid.Row="2" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -76,7 +76,7 @@
                                 Icon="PersonCall24"
                                 IconFilled="True"
                                 x:Name="EditClientPhone" />
-                </Grid> <!--строка 2-->
+                </Grid>
                 <Grid Grid.Row="3" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -91,13 +91,13 @@
                                 Icon="PersonMail24"
                                 IconFilled="True"
                                 x:Name="EditClientMail" />
-                </Grid> <!--строка 3-->
+                </Grid>
                 <Grid Grid.Row="4" Margin="0,10,0,0">
                     <TextBlock Text="Дополнительная информация:"
                                Grid.Column="0"
                                FontSize="18" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
-                </Grid> <!--строка 4-->
+                </Grid>
                 <Grid Grid.Row="5" Margin="0,10,0,0">
                     <ui:TextBox
                         AcceptsReturn="True"
@@ -108,7 +108,7 @@
                         Icon="PersonAdd24"
                         IconFilled="True"
                         x:Name="EditClientAddData" />
-                </Grid> <!--строка 5-->
+                </Grid>
                 <Grid Grid.Row="6" Margin="0,10,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -121,7 +121,7 @@
                     <TextBlock Grid.Column="1"
                                FontSize="18"
                                x:Name="ClientDateRegistrationTextBlock" />
-                </Grid> <!--строка 6-->
+                </Grid>
                 <Grid Grid.Row="7" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -142,12 +142,12 @@
                         <ComboBoxItem Content="не активный" Tag="0" />
                         <ComboBoxItem Content="активный" Tag="1" />
                     </ComboBox>
-                </Grid> <!--строка 7-->
+                </Grid>
                 <Grid Grid.Row="8" Margin="0,10,0,0">
                     <Line X1="0" Y1="20" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
                           Y2="20"
                           Stroke="LightGray" StrokeThickness="1" HorizontalAlignment="Stretch" />
-                </Grid> <!--строка 8-->
+                </Grid>
                 <Grid Grid.Row="9" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -166,7 +166,7 @@
                                 IconFilled="True"
                                 Visibility="Collapsed"
                                 x:Name="EditClientLogin" />
-                </Grid> <!--строка 9-->
+                </Grid>
                 <Grid Grid.Row="10" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -185,7 +185,7 @@
                         PasswordChar="•"
                         ClearButtonEnabled="False"
                         x:Name="EditClientPassword" />
-                </Grid> <!--строка 10-->
+                </Grid>
                 <Grid Grid.Row="11" Margin="0,10,0,0">
                     <TextBlock Text="Подтверждаете удаление данных?"
                                Grid.Column="0"
@@ -195,33 +195,27 @@
                                x:Name="DeleteTextBlock"
                                Foreground="Red"
                                Visibility="Collapsed" />
-                </Grid> <!--строка 11-->
+                </Grid>
                 <Grid Grid.Row="12" Margin="0,20,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50*" />
-                        <ColumnDefinition Width="50*" />
-                    </Grid.ColumnDefinitions>
-                    <ui:Button FontSize="18"
-                               Grid.Column="0"
-                               Background="#FF2395FF"
-                               Content="Действие"
-                               HorizontalAlignment="Stretch"
-                               modern:ControlHelper.CornerRadius="5"
-                               Appearance="Primary"
-                               x:Name="SaveButton"
-                               Margin="20,0"
-                               Click="SaveButton_Click" />
-                    <ui:Button FontSize="18"
-                               Grid.Column="1"
-                               Background="#FF2395FF"
-                               Content="Отмена"
-                               Icon="Dismiss24"
-                               HorizontalAlignment="Stretch"
-                               modern:ControlHelper.CornerRadius="5"
-                               Appearance="Primary"
-                               Margin="20,0"
-                               Click="CancelButton_Click" />
-                </Grid> <!--строка 12-->
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <ui:Button FontSize="18"
+                                   Background="DodgerBlue"
+                                   Content="Действие"
+                                   modern:ControlHelper.CornerRadius="5"
+                                   Appearance="Primary"
+                                   x:Name="SaveButton"
+                                   Margin="20,0,0,0"
+                                   Click="SaveButton_Click" />
+                        <ui:Button FontSize="18"
+                                   Background="DodgerBlue"
+                                   Content="Отмена"
+                                   Icon="Dismiss24"
+                                   modern:ControlHelper.CornerRadius="5"
+                                   Appearance="Primary"
+                                   Margin="20,0,0,0"
+                                   Click="CancelButton_Click" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </modern:SimpleStackPanel>
     </Grid>

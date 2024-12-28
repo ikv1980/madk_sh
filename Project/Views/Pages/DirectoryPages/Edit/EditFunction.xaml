@@ -31,24 +31,22 @@
                        Foreground="Red"
                        x:Name="DeleteTextBlock"
                        Visibility="Collapsed" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button FontSize="18"
-                           Background="#FF2395FF"
+                           Background="DodgerBlue"
                            Content="Действие"
-                           HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="10"
+                           modern:ControlHelper.CornerRadius="5"
                            Appearance="Primary"
                            x:Name="SaveButton"
-                           Margin="10"
+                           Margin="20,0,0,0"
                            Click="SaveButton_Click" />
                 <ui:Button FontSize="18"
-                           Background="#FF2395FF"
+                           Background="DodgerBlue"
                            Content="Отмена"
                            Icon="Dismiss24"
-                           HorizontalAlignment="Stretch"
-                           modern:ControlHelper.CornerRadius="10"
+                           modern:ControlHelper.CornerRadius="5"
                            Appearance="Primary"
-                           Margin="10"
+                           Margin="20,0,0,0"
                            Click="CancelButton_Click" />
             </StackPanel>
         </modern:SimpleStackPanel>
