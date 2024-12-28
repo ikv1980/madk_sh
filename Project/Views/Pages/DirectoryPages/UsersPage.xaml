@@ -8,83 +8,55 @@
       mc:Ignorable="d"
       xmlns:props="clr-namespace:Project.Tools"
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
+      d:DesignHeight="450" d:DesignWidth="1100"
       Title="UseraPage">
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
-        <!-- Стили для заголовков колонок -->
-        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-               TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="5, 5, 2, 5" />
-        </Style>
-        <!-- Стили для ScrollBar -->
-        <Style TargetType="ScrollBar">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
     </Page.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="5*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <modern:SimpleStackPanel Orientation="Vertical"
-                                 Margin="5 5"
-                                 Spacing="20">
-            <modern:AutoSuggestBox x:Name="SearchTextBox"
-                                   VerticalAlignment="Center"
-                                   PlaceholderText="Поиск"
-                                   FontSize="17"
-                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
-                                   Text="{Binding SearchingText, Mode=TwoWay}"
-                                   BorderBrush="Gray"
-                                   modern:ControlHelper.CornerRadius="5"
-                                   QueryIcon="Find">
-            </modern:AutoSuggestBox>
-            <ui:Button FontSize="18"
-                       Content="Обновить"
-                       Background="#FF2395FF"
-                       HorizontalAlignment="Stretch"
-                       modern:ControlHelper.CornerRadius="10"
-                       Appearance="Primary"
-                       x:Name="RefreshButton"
-                       Command="{Binding RefreshCommand}" />
-        </modern:SimpleStackPanel>
-
-        <DataGrid Grid.Column="1" Grid.Row="0"
+        <!-- Таблица с данными -->
+        <DataGrid Grid.Row="0"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  Margin="0 5 0 0"
+                  Margin="10,20,10,0"
                   HeadersVisibility="Column"
                   BorderThickness="1"
                   BorderBrush="Gray"
-                  Foreground="Black"
-                  CanUserReorderColumns="False"
-                  CanUserResizeColumns="False"
-                  HorizontalScrollBarVisibility="Auto"
-                  FontSize="18"
-                  AlternationCount="2"
+                  FontSize="16"
                   ItemsSource="{Binding TableValue}">
             <DataGrid.Resources>
                 <!-- Контекстное меню -->
-                <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18">
+                <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18"
+                             Visibility="{Binding FlagWriterVisibility}">
+                    <MenuItem Header="Просмотр"
+                              Icon="👁️"
+                              Tag="Show"
+                              Height="35"
+                              Command="{Binding DataContext.ShowDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" />
+                                <Binding Source="{x:Type wind:EditUser}" />
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
                     <MenuItem Header="Добавить"
                               Icon="➕"
                               Tag="Add"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               CommandParameter="{x:Type wind:EditUser}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
@@ -97,6 +69,7 @@
                               Icon="❌"
                               Tag="Delete"
                               Height="35"
+                              Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.ChangeDialogContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}">
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
@@ -107,20 +80,17 @@
                     </MenuItem>
                 </ContextMenu>
             </DataGrid.Resources>
-
-            <!-- Применение контекстного меню к строкам -->
+            <!-- Стиль для строк -->
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
-                    <Setter Property="Background" Value="White" />
                     <Style.Triggers>
-                        <!-- Цвет при наведении мыши -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightGray" />
                         </Trigger>
-                        <!-- Цвет при выделении строки -->
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="LightSkyBlue" />
+                            <Setter Property="Background" Value="SkyBlue" />
+                            <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
                         <!-- Цвет выделения для ClientStatus = false -->
                         <DataTrigger Binding="{Binding UsersStatus}" Value="1">
@@ -134,7 +104,6 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
-
             <!-- Основной контент -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
@@ -155,15 +124,43 @@
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
-        <StackPanel Grid.Column="1" Grid.Row="1"
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left"
+                    Margin="10">
+            <modern:AutoSuggestBox x:Name="SearchTextBox"
+                                   Width="300"
+                                   VerticalAlignment="Center"
+                                   PlaceholderText="Поиск"
+                                   FontSize="17"
+                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
+                                   Text="{Binding SearchingText, Mode=TwoWay}"
+                                   BorderBrush="Gray"
+                                   modern:ControlHelper.CornerRadius="5"
+                                   QueryIcon="Find">
+            </modern:AutoSuggestBox>
+            <ui:Button FontSize="18"
+                       FontWeight="SemiBold"
+                       Content="Обновить"
+                       Background="DodgerBlue"
+                       Height="35"
+                       Margin="10,0"
+                       Padding="10,0"
+                       modern:ControlHelper.CornerRadius="10"
+                       Appearance="Primary"
+                       x:Name="RefreshButton"
+                       Command="{Binding RefreshCommand}" />
+        </StackPanel>
+        <StackPanel Grid.Row="1"
                     Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <ui:Button
                 Icon="ArrowPrevious24"
-                Background="#FF2395FF"
+                Background="DodgerBlue"
                 Command="{Binding PreviousPageCommand}"
+                Appearance="Primary"
+                FontWeight="Bold"
                 Margin="5, 0"
+                Padding="0"
                 Width="40"
-                Height="30" />
+                Height="35" />
             <TextBlock
                 Text="{Binding CurrentPageText}"
                 VerticalAlignment="Center"
@@ -172,11 +169,14 @@
                 FontSize="16" />
             <ui:Button
                 Icon="ArrowNext24"
-                Background="#FF2395FF"
+                Background="DodgerBlue"
                 Command="{Binding NextPageCommand}"
+                Appearance="Primary"
+                FontWeight="Bold"
                 Margin="5, 0"
+                Padding="0"
                 Width="40"
-                Height="30" />
+                Height="35" />
         </StackPanel>
     </Grid>
 </Page>
