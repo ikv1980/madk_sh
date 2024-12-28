@@ -1,14 +1,15 @@
-﻿using System.Windows.Controls;
+﻿using Project.ViewModels;
+using System.Windows.Controls;
 using Project.Models;
-using Project.ViewModels;
 
-namespace Project.Views.Pages.DirectoryPages;
-
-public partial class CarsTypePage : Page
+namespace Project.Views.Pages.DirectoryPages
 {
-    public CarsTypePage()
+    public partial class CarsTypePage : Page
     {
-        InitializeComponent();
-        this.DataContext = new SomePagesViewModel<CarsType>();
+        public CarsTypePage()
+        {
+            InitializeComponent();
+            this.DataContext = new SomePagesViewModel<CarsType>();
+        }
     }
 }

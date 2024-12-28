@@ -39,7 +39,7 @@ namespace Project.Tools
         {
             var parameter = LinqExpression.Parameter(typeof(T), "e");
             var stringProperties = typeof(T).GetProperties()
-                .Where(p => p.PropertyType == typeof(string));
+                .Where(p => p.PropertyType == typeof(string) && !p.GetGetMethod().IsStatic);
 
             if (!stringProperties.Any())
                 return new List<T>();
