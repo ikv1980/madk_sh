@@ -57,7 +57,7 @@ namespace Project.Views
                         break;
                 }
             }
-            
+
             // Доступ к справочникам
             foreach (var directoryesPermission in Global.ParsedPermissions.Directoryes)
             {
@@ -116,23 +116,20 @@ namespace Project.Views
                     case "mmdepartmentfunction":
                         MmDepartmentFunctionButton.Visibility = visibility;
                         break;
-                    
-                    
-                    
                     // по умолчанию
                     default:
                         Console.WriteLine($"Unknown directory: {directoryesPermission.Name}");
                         break;
                 }
             }
-            
+
             // Обновление видимости всех Expander
             UpdateExpanderVisibility(OrdersButtonPanel, OrdersExpander);
             UpdateExpanderVisibility(CarsButtonPanel, CarsExpander);
             UpdateExpanderVisibility(UsersButtonPanel, UsersExpander);
         }
 
-        // Скратие панелей с кнопками
+        // Скрытие панелей с кнопками
         private void UpdateExpanderVisibility(StackPanel buttonPanel, Expander expander)
         {
             bool allButtonsCollapsed = true;
@@ -202,6 +199,10 @@ namespace Project.Views
             SubMenuPopup.IsOpen = !SubMenuPopup.IsOpen;
             MainTabControl.SelectedIndex = -1;
             SecondTabControl.SelectedIndex = 1;
+            // Сворачивание списков
+            OrdersExpander.IsExpanded = false;
+            CarsExpander.IsExpanded = false;
+            UsersExpander.IsExpanded = false;
         }
 
         private void SubMenuButton_Click(object sender, RoutedEventArgs e)

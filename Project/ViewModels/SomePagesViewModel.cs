@@ -13,10 +13,11 @@ namespace Project.ViewModels
 
         private ObservableCollection<TTable> _tableValue;
         private string _searchingText;
-        private int _currentPage;       // текущая страница
-        private int _itemsPerPage;      // количество элементов на странице
-        private int _totalItems;        // всего элементов
-        private bool _flagWriter;       // флаг записи
+        private int _currentPage; // текущая страница
+        private int _itemsPerPage; // количество элементов на странице
+        private int _totalItems; // всего элементов
+        private bool _flagWriter; // флаг записи
+
         #endregion
 
         #region props
@@ -58,7 +59,7 @@ namespace Project.ViewModels
 
         // переключение видимости
         public Visibility FlagWriterVisibility => _flagWriter ? Visibility.Visible : Visibility.Collapsed;
-        
+
         // Имя поля для сортировки (берется из модели).
         public string SortPropertyName { get; }
 
@@ -84,7 +85,7 @@ namespace Project.ViewModels
         public RelayCommand ChangeDialogButton => new RelayCommand(obj => ChangeDialogBtn(obj));
 
         public RelayCommand ChangeDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
-        
+
         public RelayCommand ShowDialogContextMenu => new RelayCommand(obj => ChangeDialogCtxMenu(obj));
 
         public RelayCommand RefreshCommand => new RelayCommand(obj => Refresh());
@@ -103,12 +104,13 @@ namespace Project.ViewModels
             {
                 // Обновить флаг записи
                 // UpdateFlagWriter();
-                
+
                 // Получаем общее количество элементов
                 _totalItems = DbUtils.GetTableCount<TTable>();
 
                 // Получаем элементы для текущей страницы с автоматической загрузкой навигационных свойств
-                var values = DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage, SortPropertyName);
+                var values =
+                    DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage, SortPropertyName);
 
                 // Фильтрация записей по полю Delete
                 TableValue = new ObservableCollection<TTable>(
@@ -129,20 +131,6 @@ namespace Project.ViewModels
                         // 3. Возвращаем только элементы, которые соответствуют обоим условиям
                         return isNotDeleted && noUndefinedProperties;
                     }));
-
-                // Выводим данные в консоль
-                /*
-                foreach (var item in TableValue)
-                {
-                    var properties = item.GetType().GetProperties();
-                    foreach (var property in properties)
-                    {
-                        var value = property.GetValue(item);
-                        Console.WriteLine($"{property.Name}: {value}");
-                    }
-                    Console.WriteLine("-----------------"); // Разделитель между объектами
-                }
-                */
             }
             catch (Exception ex)
             {
@@ -187,9 +175,11 @@ namespace Project.ViewModels
         {
             if (parameter is object[] parameters && parameters.Length == 2)
             {
-                if (parameters[1] is Type userControlType && typeof(Window).IsAssignableFrom(userControlType) && parameters[0] is Button button)
+                if (parameters[1] is Type userControlType && typeof(Window).IsAssignableFrom(userControlType) &&
+                    parameters[0] is Button button)
                 {
-                    ConstructorInfo constructor = userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
+                    ConstructorInfo constructor =
+                        userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
                     if (constructor != null)
                     {
                         TTable value = (TTable)button.DataContext;
@@ -226,7 +216,8 @@ namespace Project.ViewModels
 
                     if (!string.IsNullOrEmpty(sourceName) && dataContext != null)
                     {
-                        ConstructorInfo constructor = userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
+                        ConstructorInfo constructor =
+                            userControlType.GetConstructor(new Type[] { typeof(TTable), typeof(string) });
                         if (constructor != null)
                         {
                             TTable value = (TTable)dataContext;
@@ -267,7 +258,7 @@ namespace Project.ViewModels
             _flagWriter = Global.GetWritePermissionForDict(typeof(TTable).Name);
             OnPropertyChanged(nameof(FlagWriterVisibility));
         }
-        
+
         #endregion
     }
 }
