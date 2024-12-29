@@ -29,8 +29,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             SaveButton.Icon = SymbolRegular.AddCircle24;
             EditModelName.Width = 255;
             EditMarkName.Width = 255;
+            EditCountryName.Width = 255;
             ButtonAddModel.Visibility = Visibility.Visible;
             ButtonAddMark.Visibility = Visibility.Visible;
+            ButtonAddCountry.Visibility = Visibility.Visible;
         }
 
         // Конструктор для изменения (удаления) данных
@@ -43,10 +45,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
             EditModelName.SelectedItem = 
                 DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+            EditCountryName.SelectedItem = 
+                DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CountryId);
             EditModelName.Width = 300;
             EditMarkName.Width = 300;
+            EditCountryName.Width = 300;
             ButtonAddModel.Visibility = Visibility.Collapsed;
             ButtonAddMark.Visibility = Visibility.Collapsed;
+            ButtonAddCountry.Visibility = Visibility.Collapsed;
             
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -129,6 +135,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
             EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
+            EditCountryName.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
         }
 
         // Валидация данных
@@ -147,10 +154,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
+            
+            if (EditCountryName.SelectedItem == null)
+            {
+                MessageBox.Show("Не выбрана страна авто", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
 
             if (DbUtils.db.MmMarkModels.Any(x =>
                     x.MarkId == (int)EditMarkName.SelectedValue &&
                     x.ModelId == (int)EditModelName.SelectedValue &&
+                    x.CountryId == (int)EditCountryName.SelectedValue &&
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка",
@@ -166,6 +181,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             item.MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
             item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
+            item.CountryId = (EditCountryName.SelectedItem as CarsCountry)?.CountryId ?? item.CountryId;
         }
 
         // События после загрузки окна
@@ -186,6 +202,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             var addMark = new EditMark();
             this.Close();
             addMark.ShowDialog();
+        }
+        
+        private void AddCountry_Click(object sender, RoutedEventArgs e)
+        {
+            var addCountry = new EditCountry();
+            this.Close();
+            addCountry.ShowDialog();
         }
     }
 }

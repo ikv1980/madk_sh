@@ -105,6 +105,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Марка" Binding="{Binding Mark.MarkName}" />
                 <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
+                <DataGridTextColumn Header="Страна" Binding="{Binding Country.CountryName}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

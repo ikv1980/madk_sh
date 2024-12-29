@@ -59,6 +59,27 @@
                 </ui:Button>
             </StackPanel>
             
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox FontSize="17"
+                          modern:ControlHelper.CornerRadius="5"
+                          modern:ControlHelper.PlaceholderText="Выберите страну"
+                          x:Name="EditCountryName"
+                          SelectedValuePath="CountryId"
+                          DisplayMemberPath="CountryName"
+                          Width="300"
+                          BorderBrush="DimGray" />
+                <ui:Button Width="35"
+                           Height="35"
+                           Margin="5,0"
+                           Padding="0"
+                           ToolTip="Добавление новой страны"
+                           x:Name="ButtonAddCountry"
+                           Visibility="Collapsed"
+                           Click="AddCountry_Click">
+                    <Image Source="/Resources/ico/plus.png" Width="30" Height="30" />
+                </ui:Button>
+            </StackPanel>
+            
             <TextBlock Text="Подтверждаете удаление данных?"
                        FontSize="16" FontWeight="SemiBold"
                        VerticalAlignment="Center"

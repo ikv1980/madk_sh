@@ -157,7 +157,7 @@
                                 <Expander.HeaderTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <TextBlock Text="Автомобили"
+                                            <TextBlock Text="Транспорт"
                                                        FontWeight="SemiBold"
                                                        FontSize="16"
                                                        Padding="0,10" />
@@ -200,11 +200,6 @@
                                         x:Name="MmMarkModelButton"
                                         Content="Марка - Модель"
                                         Tag="{x:Type direct:MmMarkModelPage}"
-                                        Click="SubMenuButton_Click" />
-                                    <Button
-                                        x:Name="MmModelCountryButton"
-                                        Content="Страна - Модель"
-                                        Tag="{x:Type direct:MmModelCountryPage}"
                                         Click="SubMenuButton_Click" />
                                 </StackPanel>
                             </Expander>

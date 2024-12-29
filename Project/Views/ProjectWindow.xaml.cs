@@ -100,9 +100,6 @@ namespace Project.Views
                     case "mmmarkmodel":
                         MmMarkModelButton.Visibility = visibility;
                         break;
-                    case "mmmodelcountry":
-                        MmModelCountryButton.Visibility = visibility;
-                        break;
                     // для Пользователей
                     case "user":
                         UsersButton.Visibility = visibility;

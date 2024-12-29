@@ -45,7 +45,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             _oldPassword = item.UsersPassword;
             _itemId = item.UsersId;
 
-            // Установка значвений в форму
+            // Установка значений в форму
             EditUsersSurname.Text = item.UsersSurname;
             EditUsersName.Text = item.UsersName;
             EditUsersPatronymic.Text = item.UsersPatronymic;
