@@ -22,6 +22,4 @@ public partial class CarsModel
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual ICollection<MmMarkModel> MmMarkModels { get; set; } = new List<MmMarkModel>();
-
-    public virtual ICollection<MmModelCountry> MmModelCountries { get; set; } = new List<MmModelCountry>();
 }

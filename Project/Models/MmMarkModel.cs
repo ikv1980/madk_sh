@@ -19,6 +19,13 @@ public partial class MmMarkModel
     /// </summary>
     public int ModelId { get; set; }
 
+    /// <summary>
+    /// id для страны
+    /// </summary>
+    public int CountryId { get; set; }
+
+    public virtual CarsCountry Country { get; set; }
+
     public virtual CarsMark Mark { get; set; }
 
     public virtual CarsModel Model { get; set; }

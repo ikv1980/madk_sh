@@ -35,8 +35,6 @@ public partial class Db : DbContext
 
     public virtual DbSet<MmMarkModel> MmMarkModels { get; set; }
 
-    public virtual DbSet<MmModelCountry> MmModelCountries { get; set; }
-
     public virtual DbSet<MmOrdersCar> MmOrdersCars { get; set; }
 
     public virtual DbSet<MmOrdersStatus> MmOrdersStatuses { get; set; }
@@ -337,40 +335,9 @@ public partial class Db : DbContext
                 .ToTable("mm_mark_model")
                 .UseCollation("utf8mb3_uca1400_ai_ci");
 
+            entity.HasIndex(e => e.CountryId, "country_id");
+
             entity.HasIndex(e => e.MarkId, "mark_id");
-
-            entity.HasIndex(e => e.ModelId, "model_id");
-
-            entity.Property(e => e.Id)
-                .HasColumnType("int(10)")
-                .HasColumnName("id");
-            entity.Property(e => e.MarkId)
-                .HasComment("id для марки")
-                .HasColumnType("int(10)")
-                .HasColumnName("mark_id");
-            entity.Property(e => e.ModelId)
-                .HasComment("id для модели")
-                .HasColumnType("int(10)")
-                .HasColumnName("model_id");
-
-            entity.HasOne(d => d.Mark).WithMany(p => p.MmMarkModels)
-                .HasForeignKey(d => d.MarkId)
-                .HasConstraintName("mm_mark_model_ibfk_1");
-
-            entity.HasOne(d => d.Model).WithMany(p => p.MmMarkModels)
-                .HasForeignKey(d => d.ModelId)
-                .HasConstraintName("mm_mark_model_ibfk_2");
-        });
-
-        modelBuilder.Entity<MmModelCountry>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity
-                .ToTable("mm_model_country")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
-
-            entity.HasIndex(e => e.CountryId, "mm_model_country_ibfk_2");
 
             entity.HasIndex(e => e.ModelId, "model_id");
 
@@ -381,18 +348,27 @@ public partial class Db : DbContext
                 .HasComment("id для страны")
                 .HasColumnType("int(10)")
                 .HasColumnName("country_id");
+            entity.Property(e => e.MarkId)
+                .HasComment("id для марки")
+                .HasColumnType("int(10)")
+                .HasColumnName("mark_id");
             entity.Property(e => e.ModelId)
                 .HasComment("id для модели")
                 .HasColumnType("int(10)")
                 .HasColumnName("model_id");
 
-            entity.HasOne(d => d.Country).WithMany(p => p.MmModelCountries)
+            entity.HasOne(d => d.Country).WithMany(p => p.MmMarkModels)
                 .HasForeignKey(d => d.CountryId)
-                .HasConstraintName("mm_model_country_ibfk_2");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("mm_mark_model_ibfk_3");
 
-            entity.HasOne(d => d.Model).WithMany(p => p.MmModelCountries)
+            entity.HasOne(d => d.Mark).WithMany(p => p.MmMarkModels)
+                .HasForeignKey(d => d.MarkId)
+                .HasConstraintName("mm_mark_model_ibfk_1");
+
+            entity.HasOne(d => d.Model).WithMany(p => p.MmMarkModels)
                 .HasForeignKey(d => d.ModelId)
-                .HasConstraintName("mm_model_country_ibfk_1");
+                .HasConstraintName("mm_mark_model_ibfk_2");
         });
 
         modelBuilder.Entity<MmOrdersCar>(entity =>

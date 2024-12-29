@@ -277,7 +277,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 EditUsersFunction.ItemsSource = DbUtils.db.MmDepartmentFunctions
                     .Where(x => x.DepartmentId == selectDepartment.DepartmentId)
-                    .Select(x => x.Function) // Используйте Function для получения списка должностей
+                    .Select(x => x.Function)
                     .ToList();
             }
             else
