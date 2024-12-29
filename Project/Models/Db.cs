@@ -60,23 +60,9 @@ public partial class Db : DbContext
     public virtual DbSet<UsersStatus> UsersStatuses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Проверьте, был ли уже установлен optionsBuilder
-        if (!optionsBuilder.IsConfigured)
-        {
-            // Настройка подключения с использованием MariaDB
-            var connectionString = "server=213.171.25.72;port=3306;database=madk;uid=madk;pwd=Kostik80";
-            var serverVersion = new MariaDbServerVersion("11.5.2");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=213.171.25.72;port=3306;database=madk;uid=madk;pwd=Kostik80", Microsoft.EntityFrameworkCore.ServerVersion.Parse("11.5.2-mariadb"));
 
-            // Здесь вы можете указать строку подключения напрямую
-            optionsBuilder.UseMySql(connectionString, serverVersion);
-            // Для этапа разработки. В production-среде отключить!!! ikv1980
-            optionsBuilder
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors();
-        }
-    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -132,13 +118,12 @@ public partial class Db : DbContext
                 .HasColumnName("car_model");
             entity.Property(e => e.CarPhoto)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("Ссылка на фотографии")
-                .HasColumnName("car_photo")
-                .UseCollation("utf8mb4_uca1400_ai_ci");
+                .HasComment("Фотография")
+                .HasColumnType("mediumblob")
+                .HasColumnName("car_photo");
             entity.Property(e => e.CarPrice)
                 .HasComment("Цена")
-                .HasColumnType("float(10,2)")
+                .HasColumnType("int(10)")
                 .HasColumnName("car_price");
             entity.Property(e => e.CarPts)
                 .IsRequired()

@@ -42,7 +42,7 @@ public partial class Car
     /// <summary>
     /// Дата производства
     /// </summary>
-    public DateOnly CarDate { get; set; }
+    public DateOnly? CarDate { get; set; }
 
     /// <summary>
     /// Цвет
@@ -50,14 +50,14 @@ public partial class Car
     public int CarColor { get; set; }
 
     /// <summary>
-    /// Ссылка на фотографии
+    /// Фотография
     /// </summary>
-    public string CarPhoto { get; set; }
+    public byte[] CarPhoto { get; set; }
 
     /// <summary>
     /// Цена
     /// </summary>
-    public float CarPrice { get; set; }
+    public int CarPrice { get; set; }
 
     /// <summary>
     /// Блок(резерв)
