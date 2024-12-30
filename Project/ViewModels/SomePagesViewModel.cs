@@ -249,9 +249,11 @@ namespace Project.ViewModels
 
         private string GetDefaultSortProperty()
         {
-            var property = typeof(TTable).GetProperty("DefaultSortProperty", BindingFlags.Static | BindingFlags.Public);
-            return property?.GetValue(null)?.ToString();
+            return Project.Tools.SortConfig.DefaultSortProperties.TryGetValue(typeof(TTable), out var sortProperty) 
+                ? sortProperty 
+                : null;
         }
+
 
         private void UpdateFlagWriter()
         {

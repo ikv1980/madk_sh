@@ -32,7 +32,4 @@ public partial class UsersDepartment
     public virtual ICollection<MmDepartmentFunction> MmDepartmentFunctions { get; set; } = new List<MmDepartmentFunction>();
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
-    
-    // Поле сортировки по умолчанию
-    public static string DefaultSortProperty => nameof(DepartmentName);
 }

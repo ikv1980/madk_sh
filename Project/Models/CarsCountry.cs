@@ -22,7 +22,4 @@ public partial class CarsCountry
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual ICollection<MmMarkModel> MmMarkModels { get; set; } = new List<MmMarkModel>();
-    
-    // Поле сортировки по умолчанию
-    public static string DefaultSortProperty => nameof(CountryName);
 }
