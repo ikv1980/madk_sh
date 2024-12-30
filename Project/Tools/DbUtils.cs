@@ -27,14 +27,14 @@ namespace Project.Tools
         public static List<T> GetSearchingValues<T>(string searchText) where T : class
         {
             var parameter = LinqExpression.Parameter(typeof(T), "e");
+
+            // Получаем строковые свойства текущей таблицы
             var stringProperties = typeof(T).GetProperties()
                 .Where(p => p.PropertyType == typeof(string) && !p.GetGetMethod().IsStatic);
 
-            if (!stringProperties.Any())
-                return new List<T>();
-
             LinqExpression orExpression = null;
 
+            // Добавляем условия для строковых полей текущей таблицы
             foreach (var prop in stringProperties)
             {
                 var propertyExpression = LinqExpression.Property(parameter, prop);
@@ -50,14 +50,59 @@ namespace Project.Tools
                     : LinqExpression.OrElse(orExpression, likeExpression);
             }
 
+            // Подключаем навигационные свойства из конфигурации
+            if (SearchConfig.SearchNavigationProperties.TryGetValue(typeof(T), out var navigationPaths))
+            {
+                foreach (var path in navigationPaths)
+                {
+                    // Разбиваем путь на части
+                    var properties = path.Split('.');
+                    LinqExpression currentExpression = parameter;
+
+                    // Построение вложенного выражения
+                    foreach (var propName in properties)
+                    {
+                        currentExpression = LinqExpression.Property(currentExpression, propName);
+                    }
+
+                    // Добавляем условие Contains для конечного свойства
+                    if (currentExpression.Type == typeof(string))
+                    {
+                        var likeExpression = LinqExpression.Call(
+                            currentExpression,
+                            nameof(string.Contains),
+                            Type.EmptyTypes,
+                            LinqExpression.Constant(searchText, typeof(string))
+                        );
+
+                        orExpression = orExpression == null
+                            ? likeExpression
+                            : LinqExpression.OrElse(orExpression, likeExpression);
+                    }
+                }
+            }
+
+            if (orExpression == null)
+                return new List<T>();
+
             var lambda = LinqExpression.Lambda<Func<T, bool>>(orExpression, parameter);
-            return db.Set<T>().Where(lambda).ToList();
+
+            // Строим запрос с учетом `Include` для связанных сущностей
+            var query = db.Set<T>().AsQueryable();
+            if (SearchConfig.SearchNavigationProperties.TryGetValue(typeof(T), out var includePaths))
+            {
+                foreach (var path in includePaths.Select(p => p.Split('.').First()))
+                {
+                    query = query.Include(path);
+                }
+            }
+
+            return query.Where(lambda).ToList();
         }
         
         // Подсчет всех записей в таблице
         public static int GetTableCount<TTable>() where TTable : class
         {
-            
             using (var context = new Db())
             {
                 return context.Set<TTable>().Count();

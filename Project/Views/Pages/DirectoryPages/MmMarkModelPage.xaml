@@ -109,6 +109,31 @@
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left"
+                    Margin="10">
+            <modern:AutoSuggestBox x:Name="SearchTextBox"
+                                   Width="300"
+                                   VerticalAlignment="Center"
+                                   PlaceholderText="Поиск"
+                                   FontSize="17"
+                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
+                                   Text="{Binding SearchingText, Mode=TwoWay}"
+                                   BorderBrush="Gray"
+                                   modern:ControlHelper.CornerRadius="5"
+                                   QueryIcon="Find">
+            </modern:AutoSuggestBox>
+            <ui:Button FontSize="18"
+                       FontWeight="SemiBold"
+                       Content="Сброс"
+                       Background="DodgerBlue"
+                       Height="35"
+                       Margin="10,0"
+                       Padding="10,0"
+                       modern:ControlHelper.CornerRadius="10"
+                       Appearance="Primary"
+                       x:Name="RefreshButton"
+                       Command="{Binding RefreshCommand}" />
+        </StackPanel>
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <ui:Button

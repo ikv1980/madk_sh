@@ -8,7 +8,6 @@
         xmlns:modern="http://schemas.modernwpf.com/2019"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        modern:TitleBar.Background="#FFC4CBE8"
         modern:WindowHelper.UseModernWindowStyle="True"
         Icon="/Resources/Logo_tomware.png"
         Loaded="Window_Loaded" 

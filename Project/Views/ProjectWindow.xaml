@@ -247,6 +247,7 @@
                                         Content="Отдел - Должность"
                                         Tag="{x:Type direct:MmDepartmentFunctionPage}"
                                         Click="SubMenuButton_Click" />
+                                    <Separator Background="Gainsboro" />
                                 </StackPanel>
                             </Expander>
                         </StackPanel>

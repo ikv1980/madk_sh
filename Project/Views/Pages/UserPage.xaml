@@ -202,7 +202,7 @@
                            Click="UpdateButton_Click"
                            x:Name="UpdateButton"
                            Visibility="Hidden"
-                           Background="#FF2395FF" />
+                           Background="DodgerBlue" />
             </Grid>
         </Grid>
     </StackPanel>
