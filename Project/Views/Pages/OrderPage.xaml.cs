@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Project.ViewModels;
 
 namespace Project.Views.Pages
 {
@@ -7,6 +8,7 @@ namespace Project.Views.Pages
         public OrderPage()
         {
             InitializeComponent();
+            this.DataContext = new OrderPageViewModel();
         }
     }
 }
