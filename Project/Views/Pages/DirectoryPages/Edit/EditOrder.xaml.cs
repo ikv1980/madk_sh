@@ -1,10 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
@@ -58,7 +54,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DbUtils.db.OrdersPayments.FirstOrDefault(m => m.PaymentId == item.OrdersPayment);
             EditOrdersDelivery.SelectedItem =
                 DbUtils.db.OrdersDeliveries.FirstOrDefault(m => m.DeliveryId == item.OrdersDelivery);
-            EditOrdersAddress.Text = item.OrdersAddress.ToString();
+            EditOrdersAddress.Text = item.OrdersAddress;
+            // Получение статуса Заказа
+            var latestStatusId = item.MmOrdersStatuses
+                .OrderByDescending(s => s.Date)
+                .FirstOrDefault()?.StatusId;
+            EditOrdersStatus.SelectedItem = 
+                DbUtils.db.OrdersStatuses.FirstOrDefault(m => m.OrderStatusId == latestStatusId);
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -112,6 +114,21 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     // Изменение или добавление
                     UpdateItem(item);
 
+                    // Сохранение нового статуса
+                    var selectedStatus = (EditOrdersStatus.SelectedItem as OrdersStatus)?.OrderStatusId;
+
+                    if (selectedStatus != null)
+                    {
+                        var newStatus = new MmOrdersStatus
+                        {
+                            OrderId = item.OrdersId,
+                            StatusId = selectedStatus.Value,
+                            Date = DateTime.Now
+                        };
+
+                        DbUtils.db.MmOrdersStatuses.Add(newStatus);
+                    }
+                    
                     if (!_isEditMode)
                     {
                         DbUtils.db.Orders.Add(item);
@@ -144,6 +161,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             EditOrdersUsers.ItemsSource = DbUtils.db.Users.Where(x => !x.Delete && x.UsersDepartment == 4).ToList();
             EditOrdersPayment.ItemsSource = DbUtils.db.OrdersPayments.Where(x => !x.Delete).ToList();
             EditOrdersDelivery.ItemsSource = DbUtils.db.OrdersDeliveries.Where(x => !x.Delete).ToList();
+            EditOrdersStatus.ItemsSource = DbUtils.db.OrdersStatuses.Where(x => !x.Delete).ToList();
         }
 
         // Валидация данных
@@ -180,6 +198,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             if (string.IsNullOrWhiteSpace(EditOrdersAddress.Text))
             {
                 MessageBox.Show("Требуется заполнить адрес доставки.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            
+            if (EditOrdersStatus.SelectedItem == null)
+            {
+                MessageBox.Show("Не выбран статус заказа", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
