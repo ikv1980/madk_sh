@@ -50,7 +50,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -60,7 +60,7 @@
                               Height="35"
                               Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                              CommandParameter="{x:Type wind:EditCar}" />
+                              CommandParameter="{x:Type wind:EditOrder}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
@@ -70,7 +70,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -83,7 +83,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>

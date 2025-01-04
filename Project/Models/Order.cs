@@ -22,7 +22,7 @@ public partial class Order
     /// <summary>
     /// Дата создания заказа
     /// </summary>
-    public DateTime OrdersData { get; set; }
+    public DateTime? OrdersData { get; set; }
 
     /// <summary>
     /// Тип оплаты

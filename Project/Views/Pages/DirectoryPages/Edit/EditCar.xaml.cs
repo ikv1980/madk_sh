@@ -21,7 +21,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isDeleteMode;
         private readonly bool _isShowMode;
         private readonly int _itemId;
-        private readonly string _oldPassword;
         private readonly ValidateField _validator;
         private byte[] _carImageBytes;
 
@@ -86,7 +85,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Просмотр данных";
                 SaveButton.Visibility = Visibility.Collapsed;
             }
-
             if (button == "Delete")
             {
                 _isDeleteMode = true;
