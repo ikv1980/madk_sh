@@ -16,6 +16,8 @@ namespace Project.ViewModels
         public ObservableCollection<MmOrdersStatus> SelectedOrderStatuses { get; set; }
 
         private Order _selectedOrder;
+        
+        public Visibility OrderDetailsVisibility => SelectedOrder != null ? Visibility.Visible : Visibility.Collapsed;
 
         public Order SelectedOrder
         {
@@ -70,6 +72,9 @@ namespace Project.ViewModels
                 
                 foreach (var status in statuses)
                     SelectedOrderStatuses.Add(status);
+                
+                // Уведомление об изменении видимости
+                OnPropertyChanged(nameof(OrderDetailsVisibility));
             }
         }
     }

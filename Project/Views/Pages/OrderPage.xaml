@@ -13,11 +13,12 @@
     <Page.Resources>
         <props:MultiBindingConverter x:Key="MultiBindingConverter" />
         <props:IndexConverter x:Key="IndexConverter" />
+        <props:OrderLastStatusConverter x:Key="LastStatusConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="4*" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -36,7 +37,7 @@
                   BorderBrush="Gray"
                   FontSize="16"
                   SelectedItem="{Binding SelectedOrder}"
-                  ItemsSource="{Binding Orders}">
+                  ItemsSource="{Binding TableValue}">
             <DataGrid.Resources>
                 <!-- Контекстное меню -->
                 <ContextMenu x:Key="RowContextMenu" Width="150" FontSize="18"
@@ -88,26 +89,6 @@
                     </MenuItem>
                 </ContextMenu>
             </DataGrid.Resources>
-            <!-- Стиль для строк -->
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="LightGray" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="SkyBlue" />
-                            <Setter Property="Opacity" Value="0.8"></Setter>
-                        </Trigger>
-                        <!-- Цвет выделения для CarBlock = false -->
-                        <DataTrigger Binding="{Binding CarBlock}" Value="True">
-                            <Setter Property="Background" Value="Pink" />
-                            <Setter Property="Foreground" Value="Black" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding OrdersId}" />
@@ -125,61 +106,115 @@
                 <DataGridTextColumn Header="Тип оплаты" Binding="{Binding OrdersPaymentNavigation.PaymentName}" />
                 <DataGridTextColumn Header="Тип доставки" Binding="{Binding OrdersDeliveryNavigation.DeliveryName}" />
                 <DataGridTextColumn Header="Адрес доставки" Binding="{Binding OrdersAddress}" />
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}" />
             </DataGrid.Columns>
+            <!-- Стиль для строк -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightGray" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="SkyBlue" />
+                            <Setter Property="Opacity" Value="0.8"></Setter>
+                        </Trigger>
+                        <!-- Цвет выделения для LastStatusConverter = 3 -->
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Создан">
+                            <Setter Property="Background" Value="LightYellow" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Подтвержден">
+                            <Setter Property="Background" Value="LightGreen" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
         <!-- Таблица с дополнительными данными -->
-        <StackPanel Grid.Row="2">
-            <TextBlock Text="Автомобили" FontWeight="Bold" Margin="0,10" />
-            <DataGrid Grid.Row="1"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      Margin="10,10,10,0"
-                      HeadersVisibility="Column"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      FontSize="16"
-                      AlternationCount="20"
-                      ItemsSource="{Binding SelectedOrderCars}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="№" 
-                                        Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
-                    <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
-                    <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
-                    <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
-                    <DataGridTextColumn Header="Дата производства"
-                                        Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                </DataGrid.Columns>
-            </DataGrid>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-            <TextBlock Text="История статусов" FontWeight="Bold" Margin="0,10" />
-            <DataGrid Grid.Row="1"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      Margin="10,10,10,0"
-                      HeadersVisibility="Column"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      FontSize="16"
-                      AlternationCount="20"
-                      ItemsSource="{Binding SelectedOrderStatuses}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="№" 
-                                        Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
-                    <DataGridTextColumn Header="Дата изменения"
-                                        Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
-                    <DataGridTextColumn Header="Статус" Binding="{Binding Status.OrderStatusName}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+        <Grid Grid.Row="2" Visibility="{Binding OrderDetailsVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="350" />
+            </Grid.ColumnDefinitions>
+            <!-- Таблица с автомобилями -->
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Автомобили в заказе" FontSize="16" FontWeight="Normal" Margin="10, 20, 0,0" />
+                <DataGrid AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Margin="10,10,10,0"
+                          HeadersVisibility="Column"
+                          BorderThickness="1"
+                          BorderBrush="LightGray"
+                          FontSize="16"
+                          AlternationCount="20"
+                          RowHeight="30" MaxHeight="180"
+                          ScrollViewer.CanContentScroll="False"
+                          ItemsSource="{Binding SelectedOrderCars}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№"
+                                            Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
+                        <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
+                        <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
+                        <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
+                        <DataGridTextColumn Header="Дата производства"
+                                            Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                    </DataGrid.Columns>
+                    <!-- Стиль для заголовка -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <StaticResource ResourceKey="GreyHeader" />
+                    </DataGrid.ColumnHeaderStyle>
+                    <!-- Стиль для строк -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGray" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="SkyBlue" />
+                                    <Setter Property="Opacity" Value="0.8"></Setter>
+                                </Trigger>
+                                <!-- Цвет выделения для CarBlock = false -->
+                                <DataTrigger Binding="{Binding CarBlock}" Value="True">
+                                    <Setter Property="Background" Value="Pink" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </StackPanel>
+            <!-- Таблица с историей статусов -->
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="История статусов" FontSize="16" FontWeight="Normal" Margin="10, 20, 0,0" />
+                <DataGrid AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Margin="10,10,10,0"
+                          HeadersVisibility="Column"
+                          BorderThickness="1"
+                          BorderBrush="LightGray"
+                          FontSize="16"
+                          AlternationCount="20"
+                          RowHeight="30" MaxHeight="180"
+                          ScrollViewer.CanContentScroll="False"
+                          ItemsSource="{Binding SelectedOrderStatuses}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№"
+                                            Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
+                        <DataGridTextColumn Header="Дата изменения"
+                                            Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status.OrderStatusName}" />
+                    </DataGrid.Columns>
+                    <DataGrid.ColumnHeaderStyle>
+                        <StaticResource ResourceKey="GreyHeader" />
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
+            </StackPanel>
+        </Grid>
         <!-- Блок навигации внизу -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left"
                     Margin="10">
@@ -206,7 +241,7 @@
                        x:Name="RefreshButton"
                        Command="{Binding RefreshCommand}" />
         </StackPanel>
-        <StackPanel Grid.Row="2"
+        <StackPanel Grid.Row="3"
                     Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <ui:Button
                 Icon="ArrowPrevious24"
