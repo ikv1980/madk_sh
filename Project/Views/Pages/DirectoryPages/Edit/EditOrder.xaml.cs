@@ -62,7 +62,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             EditOrdersDelivery.SelectedItem =
                 DbUtils.db.OrdersDeliveries.FirstOrDefault(m => m.DeliveryId == item.OrdersDelivery);
             EditOrdersAddress.Text = item.OrdersAddress.ToString();
-            
+
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
             {
@@ -143,11 +143,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private void Init()
         {
             EditOrdersClient.ItemsSource = DbUtils.db.OrdersClients.Where(x => !x.Delete).ToList();
-            EditOrdersUsers.ItemsSource = DbUtils.db.Users.Where(x => !x.Delete).ToList();
+            // Только из Отдела продаж
+            EditOrdersUsers.ItemsSource = DbUtils.db.Users.Where(x => !x.Delete && x.UsersDepartment == 4).ToList();
             EditOrdersPayment.ItemsSource = DbUtils.db.OrdersPayments.Where(x => !x.Delete).ToList();
             EditOrdersDelivery.ItemsSource = DbUtils.db.OrdersDeliveries.Where(x => !x.Delete).ToList();
         }
-        
+
         // Валидация данных
         private bool IsValidInput()
         {
@@ -181,7 +182,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (string.IsNullOrWhiteSpace(EditOrdersAddress.Text))
             {
-                MessageBox.Show("Требуется заполнить адрес доставки.", "Ошибка", 
+                MessageBox.Show("Требуется заполнить адрес доставки.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
@@ -195,25 +196,25 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             item.OrdersClient = (EditOrdersClient.SelectedItem as OrdersClient)?.ClientId ??
                                 item.OrdersClient;
             item.OrdersUser = (EditOrdersUsers.SelectedItem as User)?.UsersId ??
-                                item.OrdersClient;
+                              item.OrdersClient;
             item.OrdersData = EditOrdersData.SelectedDate.HasValue
                 ? (DateTime?)EditOrdersData.SelectedDate.Value
                 : DateTime.Now;
             item.OrdersPayment = (EditOrdersPayment.SelectedItem as OrdersPayment)?.PaymentId ??
-                              item.OrdersPayment;
+                                 item.OrdersPayment;
             item.OrdersDelivery = (EditOrdersDelivery.SelectedItem as OrdersDelivery)?.DeliveryId ??
-                              item.OrdersDelivery;
-            item.OrdersAddress = (item.OrdersDelivery == 1) 
-                ? "Москва. Склад" 
+                                  item.OrdersDelivery;
+            item.OrdersAddress = (item.OrdersDelivery == 1)
+                ? "Москва. Основной склад"
                 : EditOrdersAddress.Text.Trim();
         }
-        
+
         // Фокус на элементе
         private void UiWindow_Loaded(object sender, RoutedEventArgs e)
         {
             EditOrdersClient.Focus();
         }
-        
+
         // Выбор типа доставки
         private void SelectionDelivery(object sender, SelectionChangedEventArgs e)
         {
@@ -223,12 +224,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 if (selectDelivery.DeliveryId == 1)
                 {
-                    EditOrdersAddress.Visibility = Visibility.Collapsed;
-                    EditOrdersAddress.Text = null;
+                    EditAddress.Visibility = Visibility.Collapsed;
+                    EditOrdersAddress.Text = "Москва. Основной склад";
                 }
                 else
                 {
-                    EditOrdersAddress.Visibility = Visibility.Visible;
+                    EditAddress.Visibility = Visibility.Visible;
                 }
             }
         }
