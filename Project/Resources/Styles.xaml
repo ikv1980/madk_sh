@@ -1,12 +1,21 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Стили для заголовков колонок -->
+    <!-- Стили для заголовков колонок LightSkyBlue -->
     <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
            TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="Background" Value="LightSkyBlue" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Height" Value="40" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="10,0" />
+    </Style>
+    <!-- Стили для заголовков колонок LightGray -->
+    <Style x:Key="GreyHeader" TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background" Value="LightGray" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Height" Value="30" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="10,0" />
     </Style>

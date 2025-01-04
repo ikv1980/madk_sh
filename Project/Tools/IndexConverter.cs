@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
+// Добавляем индекс в таблицах, для наглядности
 namespace Project.Tools
 {
     public class IndexConverter : IValueConverter

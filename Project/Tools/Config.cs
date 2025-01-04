@@ -57,6 +57,17 @@ namespace Project.Tools
                         "Function.FunctionName",
                     }
                 },
+                {
+                    typeof(Order),
+                    new List<string>
+                    {
+                        "OrdersClientNavigation.ClientName",
+                        "OrdersDeliveryNavigation.DeliveryName",
+                        "OrdersPaymentNavigation.PaymentName",
+                        "OrdersUserNavigation.UsersName",
+                        "OrdersUserNavigation.UsersSurname",
+                    }
+                },
             };
     }
 }
