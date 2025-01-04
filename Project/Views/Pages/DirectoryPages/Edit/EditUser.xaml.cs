@@ -14,7 +14,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly bool _isShowMode;
         private readonly int _itemId;
         private readonly string _oldPassword;
         private readonly ValidateField _validator;

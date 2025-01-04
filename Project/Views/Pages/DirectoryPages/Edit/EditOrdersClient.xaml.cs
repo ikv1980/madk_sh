@@ -14,7 +14,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly bool _isShowMode;
         private readonly int _itemId;
         private readonly string _oldPassword;
         private readonly ValidateField _validator;
@@ -70,6 +69,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 ShowClientLogin.Visibility = Visibility.Visible;
                 EditClientLogin.Visibility = Visibility.Collapsed;
             }
+
             if (button == "Delete")
             {
                 _isDeleteMode = true;
@@ -85,9 +85,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             try
             {
-                if (!ValidateInputs())
-                    return;
-
                 var item = (_isEditMode || _isDeleteMode)
                     ? DbUtils.db.OrdersClients.FirstOrDefault(x => x.ClientId == _itemId)
                     : new OrdersClient();
@@ -98,13 +95,20 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     return;
                 }
 
+                // Удаление
+                if (_isDeleteMode)
+                {
+                    item.Delete = true; //DbUtils.db.OrdersClients.Remove(item); 
+                }
+                else
+                {
+                    if (!IsValidInput())
+                        return;
+                }
+
                 // Изменение
                 if (_isEditMode)
                     UpdateItem(item);
-
-                // Удаление
-                if (_isDeleteMode)
-                    item.Delete = true; //DbUtils.db.OrdersClients.Remove(item);
 
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
@@ -120,7 +124,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка", MessageBoxButton.OK,
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
         }
@@ -132,11 +137,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Валидация данных
-        private bool ValidateInputs()
+        private bool IsValidInput()
         {
             if (string.IsNullOrWhiteSpace(EditClientName.Text))
             {
-                MessageBox.Show("Имя клиента не может быть пустым.", "Ошибка", MessageBoxButton.OK,
+                MessageBox.Show("Имя клиента не может быть пустым.", "Ошибка",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return false;
             }
@@ -150,7 +156,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             if (!_validator.IsValid(EditClientMail.Text, "email"))
             {
-                MessageBox.Show("Некорректный e-mail.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Некорректный e-mail.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -160,21 +167,24 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                 if (string.IsNullOrWhiteSpace(clientLogin))
                 {
-                    MessageBox.Show("Логин клиента не может быть пустым.", "Ошибка", MessageBoxButton.OK,
+                    MessageBox.Show("Логин клиента не может быть пустым.", "Ошибка",
+                        MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return false;
                 }
 
                 if (DbUtils.db.OrdersClients.Any(x => x.ClientLogin == clientLogin))
                 {
-                    MessageBox.Show("Клиент с таким логином уже существует.", "Ошибка", MessageBoxButton.OK,
+                    MessageBox.Show("Клиент с таким логином уже существует.", "Ошибка",
+                        MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return false;
                 }
-                
+
                 if (!_validator.IsValid(EditClientPassword.Password, "password"))
                 {
-                    MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK,
+                    MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка",
+                        MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return false;
                 }
@@ -183,7 +193,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             if (!string.IsNullOrWhiteSpace(EditClientPassword.Password.Trim()) &&
                 !_validator.IsValid(EditClientPassword.Password, "password"))
             {
-                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка", MessageBoxButton.OK,
+                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return false;
             }

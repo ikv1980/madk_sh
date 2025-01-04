@@ -19,9 +19,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly bool _isShowMode;
         private readonly int _itemId;
-        private readonly ValidateField _validator;
 
         // Конструктор для добавления данных
         public EditOrder()
@@ -34,7 +32,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
-            _validator = new ValidateField();
             EditOrdersData.SelectedDate = DateTime.Now;
         }
 
