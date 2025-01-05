@@ -35,11 +35,17 @@ namespace Project.ViewModels
         
         public OrderPageViewModel()
         {
-            Orders = new ObservableCollection<Order>(
-                DbUtils.GetTablePagedValuesWithIncludes<Order>(1, 20)
-            );
             SelectedOrderCars = new ObservableCollection<Car>();
             SelectedOrderStatuses = new ObservableCollection<MmOrdersStatus>();
+        
+            // Инициализация данных
+            InitializeOrdersAsync();
+        }
+
+        private async void InitializeOrdersAsync()
+        {
+            var orders = await DbUtils.GetTablePagedValuesWithIncludes<Order>(1, 20);
+            Orders = new ObservableCollection<Order>(orders);
         }
         
         private void LoadOrderDetails()

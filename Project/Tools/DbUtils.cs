@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.EntityFrameworkCore;
 using Project.Models;
 using MessageBox = System.Windows.MessageBox;
@@ -24,7 +23,7 @@ namespace Project.Tools
         }
 
         // Поиск в таблице
-        public static List<T> GetSearchingValues<T>(string searchText) where T : class
+        public static async Task<List<T>> GetSearchingValues<T>(string searchText) where T : class
         {
             var parameter = LinqExpression.Parameter(typeof(T), "e");
 
@@ -97,20 +96,21 @@ namespace Project.Tools
                 }
             }
 
-            return query.Where(lambda).ToList();
+            return await query.Where(lambda).ToListAsync();
         }
-        
+
         // Подсчет всех записей в таблице
-        public static int GetTableCount<TTable>() where TTable : class
+        public static async Task<int> GetTableCount<TTable>() where TTable : class
         {
             using (var context = new Db())
             {
-                return context.Set<TTable>().Count();
+                return await context.Set<TTable>().CountAsync();
             }
         }
-        
+
         // Получение данных из БД
-        public static List<TTable> GetTablePagedValuesWithIncludes<TTable>(int page, int pageSize, string sortPropertyName = null) where TTable : class
+        public static async Task<List<TTable>> GetTablePagedValuesWithIncludes<TTable>(int page, int pageSize,
+            string sortPropertyName = null) where TTable : class
         {
             using (var context = new Db())
             {
@@ -138,10 +138,10 @@ namespace Project.Tools
                     }
                 }
 
-                return query
+                return await query
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToList();
+                    .ToListAsync();
             }
         }
     }

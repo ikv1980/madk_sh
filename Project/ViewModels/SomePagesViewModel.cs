@@ -13,10 +13,10 @@ namespace Project.ViewModels
 
         private ObservableCollection<TTable> _tableValue;
         private string _searchingText;
-        private int _currentPage; // текущая страница
-        private int _itemsPerPage; // количество элементов на странице
-        private int _totalItems; // всего элементов
-        private bool _flagWriter; // флаг записи
+        private int _currentPage;       // текущая страница
+        private int _itemsPerPage;      // количество элементов на странице
+        private int _totalItems;        // всего элементов
+        private bool _flagWriter;       // флаг записи
 
         #endregion
 
@@ -98,7 +98,7 @@ namespace Project.ViewModels
 
         #region Methods
 
-        protected virtual void Refresh()
+        protected virtual async Task Refresh()
         {
             try
             {
@@ -106,11 +106,11 @@ namespace Project.ViewModels
                 // UpdateFlagWriter();
 
                 // Получаем общее количество элементов
-                _totalItems = DbUtils.GetTableCount<TTable>();
+                _totalItems = await DbUtils.GetTableCount<TTable>();
 
                 // Получаем элементы для текущей страницы с автоматической загрузкой навигационных свойств
                 var values =
-                    DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage, SortPropertyName);
+                    await DbUtils.GetTablePagedValuesWithIncludes<TTable>(CurrentPage, _itemsPerPage, SortPropertyName);
 
                 // Фильтрация записей по полю Delete
                 TableValue = new ObservableCollection<TTable>(
@@ -139,11 +139,11 @@ namespace Project.ViewModels
             }
         }
 
-        protected virtual void SearchData(string searchText)
+        protected virtual async Task SearchData(string searchText)
         {
             try
             {
-                var values = DbUtils.GetSearchingValues<TTable>(searchText);
+                var values = await DbUtils.GetSearchingValues<TTable>(searchText);
                 TableValue = new ObservableCollection<TTable>(values);
             }
             catch (Exception ex)
@@ -160,7 +160,10 @@ namespace Project.ViewModels
                 try
                 {
                     var window = (Window)Activator.CreateInstance(userControlType);
-                    if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
+                    if (window is IRefresh dialog)
+                    {
+                        dialog.RefreshRequested += RefreshRequestedHandler;
+                    }
                     window.ShowDialog();
                 }
                 catch (Exception ex)
@@ -184,7 +187,10 @@ namespace Project.ViewModels
                     {
                         TTable value = (TTable)button.DataContext;
                         var window = (Window)constructor.Invoke(new object[] { value, button.Name });
-                        if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
+                        if (window is IRefresh dialog)
+                        {
+                            dialog.RefreshRequested += RefreshRequestedHandler;
+                        }
                         window.ShowDialog();
                     }
                     else
@@ -222,7 +228,10 @@ namespace Project.ViewModels
                         {
                             TTable value = (TTable)dataContext;
                             var window = (Window)constructor.Invoke(new object[] { value, sourceName });
-                            if (window is IRefresh dialog) dialog.RefreshRequested += Refresh;
+                            if (window is IRefresh dialog)
+                            {
+                                dialog.RefreshRequested += RefreshRequestedHandler;
+                            }
                             window.ShowDialog();
                         }
                         else
@@ -240,6 +249,12 @@ namespace Project.ViewModels
             }
         }
 
+        // Асинхронный обработчик события
+        private async void RefreshRequestedHandler()
+        {
+            await Refresh();
+        }
+
         private void ChangePage(int newPage)
         {
             if (newPage < 1 || newPage > TotalPages) return; // Проверка на валидность страницы
@@ -249,8 +264,8 @@ namespace Project.ViewModels
 
         private string GetDefaultSortProperty()
         {
-            return Project.Tools.Config.DefaultSortProperties.TryGetValue(typeof(TTable), out var sortProperty) 
-                ? sortProperty 
+            return Project.Tools.Config.DefaultSortProperties.TryGetValue(typeof(TTable), out var sortProperty)
+                ? sortProperty
                 : null;
         }
 
