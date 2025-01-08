@@ -24,13 +24,11 @@ namespace Project.Views
                 else
                 {
                     MessageBox.Show("Не удалось подключиться к базе данных.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Close();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка подключения к БД\n{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
                 Environment.Exit(0);
             }
         }
