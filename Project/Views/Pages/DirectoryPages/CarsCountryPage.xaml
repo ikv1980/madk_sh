@@ -15,15 +15,15 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="📗 Справочник 'Страны'"
                    FontSize="20"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Top" 
-                   Margin="15,15,0,0"/>
+                   VerticalAlignment="Top"
+                   Margin="15,15,0,0" />
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
@@ -106,59 +106,61 @@
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left"
-                    Margin="10">
-            <modern:AutoSuggestBox x:Name="SearchTextBox"
-                                   Width="300"
-                                   VerticalAlignment="Center"
-                                   PlaceholderText="Поиск"
-                                   FontSize="17"
-                                   props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
-                                   Text="{Binding SearchingText, Mode=TwoWay}"
-                                   BorderBrush="Gray"
-                                   modern:ControlHelper.CornerRadius="5"
-                                   QueryIcon="Find">
-            </modern:AutoSuggestBox>
-            <ui:Button FontSize="18"
-                       FontWeight="SemiBold"
-                       Content="Сброс"
-                       Background="DodgerBlue"
-                       Height="35"
-                       Margin="10,0"
-                       Padding="10,0"
-                       modern:ControlHelper.CornerRadius="10"
-                       Appearance="Primary"
-                       x:Name="RefreshButton"
-                       Command="{Binding RefreshCommand}" />
-        </StackPanel>
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <ui:Button
-                Icon="ArrowPrevious24"
-                Background="DodgerBlue"
-                Command="{Binding PreviousPageCommand}"
-                Appearance="Primary"
-                FontWeight="Bold"
-                Margin="5, 0"
-                Padding="0"
-                Width="40"
-                Height="35" />
-            <TextBlock
-                Text="{Binding CurrentPageText}"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Margin="5"
-                FontSize="16" />
-            <ui:Button
-                Icon="ArrowNext24"
-                Background="DodgerBlue"
-                Command="{Binding NextPageCommand}"
-                Appearance="Primary"
-                FontWeight="Bold"
-                Margin="5, 0"
-                Padding="0"
-                Width="40"
-                Height="35" />
-        </StackPanel>
+        <Grid Grid.Row="2" Background="LightSkyBlue" Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                        Margin="10">
+                <modern:AutoSuggestBox x:Name="SearchTextBox"
+                                       Width="300"
+                                       VerticalAlignment="Center"
+                                       PlaceholderText="Поиск"
+                                       Background="White"
+                                       FontSize="17"
+                                       props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
+                                       Text="{Binding SearchingText, Mode=TwoWay}"
+                                       BorderBrush="Gray"
+                                       modern:ControlHelper.CornerRadius="5"
+                                       QueryIcon="Find">
+                </modern:AutoSuggestBox>
+                <ui:Button FontSize="18"
+                           FontWeight="SemiBold"
+                           Content="Сброс"
+                           Background="DodgerBlue"
+                           Height="35"
+                           Margin="10,0"
+                           Padding="10,0"
+                           modern:ControlHelper.CornerRadius="10"
+                           Appearance="Primary"
+                           x:Name="RefreshButton"
+                           Command="{Binding RefreshCommand}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                <ui:Button
+                    Icon="ArrowPrevious24"
+                    Background="DodgerBlue"
+                    Command="{Binding PreviousPageCommand}"
+                    Appearance="Primary"
+                    FontWeight="Bold"
+                    Margin="5, 0"
+                    Padding="0"
+                    Width="40"
+                    Height="35" />
+                <TextBlock
+                    Text="{Binding CurrentPageText}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="5"
+                    FontSize="16" />
+                <ui:Button
+                    Icon="ArrowNext24"
+                    Background="DodgerBlue"
+                    Command="{Binding NextPageCommand}"
+                    Appearance="Primary"
+                    FontWeight="Bold"
+                    Margin="5, 0"
+                    Padding="0"
+                    Width="40"
+                    Height="35" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

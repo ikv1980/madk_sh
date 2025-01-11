@@ -112,6 +112,7 @@
                                    Width="300"
                                    VerticalAlignment="Center"
                                    PlaceholderText="Поиск"
+                                   Background="White"
                                    FontSize="17"
                                    props:MVVMPropirties.QuerySubmittedCommand="{Binding SearchCommand}"
                                    Text="{Binding SearchingText, Mode=TwoWay}"
