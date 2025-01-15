@@ -16,6 +16,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
+        private readonly int _currentStatus;
 
         // Конструктор для добавления данных
         public EditOrder()
@@ -25,10 +26,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
+            // Установка значений в форму
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
+            ShowStatus.Visibility = Visibility.Collapsed;
+            EditOrdersStatus.Visibility = Visibility.Collapsed;
+            EditOrdersStatus.SelectedItem = DbUtils.db.OrdersStatuses
+                .FirstOrDefault(m => m.OrderStatusId == 1);
             EditOrdersData.SelectedDate = DateTime.Now;
+            EditOrdersUsers.SelectedItem = DbUtils.db.Users
+                .FirstOrDefault(m => m.UsersId == Global.CurrentUser.UsersId);
         }
 
         // Конструктор для изменения (удаления) данных
@@ -47,6 +55,9 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DbUtils.db.OrdersClients.FirstOrDefault(m => m.ClientId == item.OrdersClient);
             EditOrdersUsers.SelectedItem =
                 DbUtils.db.Users.FirstOrDefault(m => m.UsersId == item.OrdersUser);
+            ShowOrdersData.Text = item.OrdersData.HasValue
+                ? item.OrdersData.Value.ToString("dd.MM.yyyy")
+                : DateTime.Now.ToString("dd.MM.yyyy");
             EditOrdersData.SelectedDate = item.OrdersData.HasValue
                 ? item.OrdersData.Value.Date
                 : DateTime.Now;
@@ -56,9 +67,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 DbUtils.db.OrdersDeliveries.FirstOrDefault(m => m.DeliveryId == item.OrdersDelivery);
             EditOrdersAddress.Text = item.OrdersAddress;
             // Получение статуса Заказа
+            ShowStatus.Visibility = Visibility.Visible;
+            EditOrdersStatus.Visibility = Visibility.Visible;
             var latestStatusId = item.MmOrdersStatuses
                 .OrderByDescending(s => s.Date)
                 .FirstOrDefault()?.StatusId;
+            _currentStatus = (int)latestStatusId;
             EditOrdersStatus.SelectedItem = 
                 DbUtils.db.OrdersStatuses.FirstOrDefault(m => m.OrderStatusId == latestStatusId);
 
@@ -69,12 +83,16 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
+                ShowOrdersData.Visibility = Visibility.Collapsed;
+                EditOrdersData.Visibility = Visibility.Visible;
             }
             else if (button == "Show")
             {
                 _isEditMode = true;
                 Title = "Просмотр данных";
                 SaveButton.Visibility = Visibility.Collapsed;
+                ShowOrdersData.Visibility = Visibility.Visible;
+                EditOrdersData.Visibility = Visibility.Collapsed;
             }
             if (button == "Delete")
             {
@@ -114,10 +132,22 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     // Изменение или добавление
                     UpdateItem(item);
 
+                    if (!_isEditMode)
+                    {
+                        DbUtils.db.Orders.Add(item);
+                    }
+                    
+                    DbUtils.db.SaveChanges();
+                    
                     // Сохранение нового статуса
                     var selectedStatus = (EditOrdersStatus.SelectedItem as OrdersStatus)?.OrderStatusId;
 
-                    if (selectedStatus != null)
+                    if (selectedStatus == null)
+                    {
+                        selectedStatus = 1; // Статус "Создан"
+                    }
+                    
+                    if (_currentStatus != selectedStatus.Value)
                     {
                         var newStatus = new MmOrdersStatus
                         {
@@ -127,11 +157,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         };
 
                         DbUtils.db.MmOrdersStatuses.Add(newStatus);
-                    }
-                    
-                    if (!_isEditMode)
-                    {
-                        DbUtils.db.Orders.Add(item);
                     }
                 }
 
@@ -153,7 +178,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             Close();
         }
 
-        // Инициализация данных для списков
+        // Инициализация данных
         private void Init()
         {
             EditOrdersClient.ItemsSource = DbUtils.db.OrdersClients.Where(x => !x.Delete).ToList();
@@ -246,14 +271,23 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 if (selectDelivery.DeliveryId == 1)
                 {
-                    EditAddress.Visibility = Visibility.Collapsed;
+                    EditAddressName.Visibility = Visibility.Collapsed;
+                    EditAddressData.Visibility = Visibility.Collapsed;
                     EditOrdersAddress.Text = "Москва. Основной склад";
                 }
                 else
                 {
-                    EditAddress.Visibility = Visibility.Visible;
+                    EditAddressName.Visibility = Visibility.Visible;
+                    EditAddressData.Visibility = Visibility.Visible;
                 }
             }
+        }
+
+        private void AddClient(object sender, RoutedEventArgs e)
+        {
+            var addClient = new EditOrdersClient();
+            this.Close();
+            addClient.ShowDialog();
         }
     }
 }

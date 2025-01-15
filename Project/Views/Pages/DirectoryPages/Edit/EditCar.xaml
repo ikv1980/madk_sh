@@ -24,9 +24,6 @@
                     <ColumnDefinition Width="450" />
                     <ColumnDefinition Width="600" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <!-- Левая часть -->
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
