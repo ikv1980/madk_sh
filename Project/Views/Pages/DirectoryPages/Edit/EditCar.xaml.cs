@@ -60,10 +60,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             EditCarDate.SelectedDate = item.CarDate.HasValue
                 ? item.CarDate.Value.ToDateTime(TimeOnly.MinValue)
                 : (DateTime?)null;
-            EditCarBlock.SelectedItem = EditCarBlock.Items
-                .Cast<ComboBoxItem>()
-                .FirstOrDefault(i => i.Tag.ToString() == (item.CarBlock == true ? "1" : "0"));
-            EditCarBlock.Background = item.CarBlock ? Brushes.Pink : Brushes.LightGreen;
+            ShowCarBlock.Text = (item.CarBlock == true ? "В заказе" : "Свободна к продаже");
+            ShowCarBlock.Background = item.CarBlock ? Brushes.Pink : Brushes.LightGreen;
             EditPrice.Text = item.CarPrice.ToString();
             _carImageBytes = item.CarPhoto;
             DisplayImage(item.CarPhoto);
@@ -256,7 +254,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             item.CarDate = EditCarDate.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(EditCarDate.SelectedDate.Value)
                 : (DateOnly?)null;
-            item.CarBlock = ((ComboBoxItem)EditCarBlock.SelectedItem)?.Tag.ToString() == "1";
             item.CarPrice = int.TryParse(EditPrice.Text.Trim(), out int price) ? price : 0;
             item.CarPhoto = EditCarImage.Source != null ? _carImageBytes : null;
         }

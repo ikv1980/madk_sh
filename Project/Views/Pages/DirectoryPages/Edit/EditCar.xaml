@@ -240,16 +240,13 @@
                                    Margin="0,0,10,0"
                                    FontSize="18" FontWeight="SemiBold"
                                    VerticalAlignment="Center" />
-                        <ComboBox Grid.Column="1"
-                                  FontSize="17"
-                                  modern:ControlHelper.CornerRadius="5"
-                                  modern:ControlHelper.PlaceholderText="Выберите статус"
-                                  x:Name="EditCarBlock"
-                                  HorizontalAlignment="Stretch"
-                                  BorderBrush="DarkGray">
-                            <ComboBoxItem Content="Свободная" Tag="0" />
-                            <ComboBoxItem Content="В заказе" Tag="1" />
-                        </ComboBox>
+                        <TextBlock Grid.Column="1"
+                                   Text="Доступна к продаже"
+                                   Margin="0,0,10,0"
+                                   Padding="10,5"
+                                   FontSize="17" FontWeight="SemiBold"
+                                   x:Name="ShowCarBlock"
+                                   VerticalAlignment="Center" />
                     </Grid>
                     <Grid Grid.Row="10" Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>

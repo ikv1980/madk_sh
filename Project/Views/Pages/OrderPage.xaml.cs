@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Project.ViewModels;
 using Project.Views.Pages.DirectoryPages.Edit;
 
@@ -11,12 +12,6 @@ namespace Project.Views.Pages
         {
             InitializeComponent();
             this.DataContext = new OrderPageViewModel();
-        }
-
-        private void AddOrder(object sender, RoutedEventArgs e)
-        {
-            var addOrder = new EditOrder();
-            addOrder.ShowDialog();
         }
     }
 }

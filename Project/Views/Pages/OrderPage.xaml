@@ -20,11 +20,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="4*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="6*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DockPanel Margin="0,0,10,0">
+        <DockPanel Grid.Row="0" Margin="0,0,10,0">
             <TextBlock Grid.Row="0" Text="🛒 Заказы"
                        FontSize="20"
                        HorizontalAlignment="Left"
@@ -39,7 +39,8 @@
                        Padding="10,0"
                        Appearance="Primary"
                        HorizontalAlignment="Right"
-                       Click="AddOrder" />
+                       Command="{Binding AddDialogButton}"
+                       CommandParameter="{x:Type wind:EditOrder}" />
         </DockPanel>
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
@@ -144,8 +145,19 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
                                      Value="Подтвержден">
-                            <Setter Property="Background" Value="LightGreen" />
+                            <Setter Property="Background" Value="Lime" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Отменен">
+                            <Setter Property="Background" Value="OrangeRed" />
+                            <Setter Property="Foreground" Value="White" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Выполнен">
+                            <Setter Property="Background" Value="ForestGreen" />
+                            <Setter Property="Foreground" Value="White" />
+                        </DataTrigger>
+
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
@@ -167,7 +179,7 @@
                           BorderBrush="LightGray"
                           FontSize="16"
                           AlternationCount="20"
-                          RowHeight="30" MaxHeight="180"
+                          RowHeight="30" MaxHeight="190"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderCars}">
                     <DataGrid.Columns>
@@ -193,7 +205,7 @@
                                     <Setter Property="Background" Value="LightGray" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="SkyBlue" />
+                                    <Setter Property="Background" Value="DarkOrange" />
                                     <Setter Property="Opacity" Value="0.8"></Setter>
                                 </Trigger>
                             </Style.Triggers>
@@ -212,7 +224,7 @@
                           BorderBrush="LightGray"
                           FontSize="16"
                           AlternationCount="20"
-                          RowHeight="30" MaxHeight="180"
+                          RowHeight="30" MaxHeight="190"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderStatuses}">
                     <DataGrid.Columns>
@@ -270,6 +282,12 @@
                            Appearance="Primary"
                            x:Name="RefreshButton"
                            Command="{Binding RefreshCommand}" />
+                <ui:ToggleSwitch
+                    IsChecked="{Binding ShowClosedOrders, Mode=TwoWay}" 
+                    Margin="10,0"
+                    Content="Показать закрытые заказы"
+                    VerticalAlignment="Center"
+                    x:Name="ShowOrders" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
                 <ui:Button
