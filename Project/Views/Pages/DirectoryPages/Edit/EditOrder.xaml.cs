@@ -17,6 +17,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private readonly bool _isDeleteMode;
         private readonly int _itemId;
         private readonly int _currentStatus;
+        public ObservableCollection<Car> SelectedOrderCars { get; set; } = new ObservableCollection<Car>();
 
         // Конструктор для добавления данных
         public EditOrder()
@@ -73,8 +74,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 .OrderByDescending(s => s.Date)
                 .FirstOrDefault()?.StatusId;
             _currentStatus = (int)latestStatusId;
-            EditOrdersStatus.SelectedItem = 
+            EditOrdersStatus.SelectedItem =
                 DbUtils.db.OrdersStatuses.FirstOrDefault(m => m.OrderStatusId == latestStatusId);
+
+            // Загрузка связанных автомобилей
+            var carsInOrder = DbUtils.db.MmOrdersCars
+                .Where(moc => moc.OrderId == item.OrdersId)
+                .Select(moc => moc.Car)
+                .ToList();
+
+            foreach (var car in carsInOrder)
+                SelectedOrderCars.Add(car);
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -94,6 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 ShowOrdersData.Visibility = Visibility.Visible;
                 EditOrdersData.Visibility = Visibility.Collapsed;
             }
+
             if (button == "Delete")
             {
                 _isDeleteMode = true;
@@ -136,17 +147,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     {
                         DbUtils.db.Orders.Add(item);
                     }
-                    
+
                     DbUtils.db.SaveChanges();
-                    
-                    // Сохранение нового статуса
+
+                    // Сохранение нового статуса заказа
                     var selectedStatus = (EditOrdersStatus.SelectedItem as OrdersStatus)?.OrderStatusId;
 
                     if (selectedStatus == null)
                     {
                         selectedStatus = 1; // Статус "Создан"
                     }
-                    
+
                     if (_currentStatus != selectedStatus.Value)
                     {
                         var newStatus = new MmOrdersStatus
@@ -158,6 +169,24 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                         DbUtils.db.MmOrdersStatuses.Add(newStatus);
                     }
+
+// Сохранение автомобилей в заказе
+                    foreach (var car in SelectedOrderCars)
+                    {
+                        if (!DbUtils.db.MmOrdersCars.Any(moc => moc.OrderId == item.OrdersId && moc.CarId == car.CarId))
+                        {
+                            var newOrderCar = new MmOrdersCar { OrderId = item.OrdersId, CarId = car.CarId };
+                            DbUtils.db.MmOrdersCars.Add(newOrderCar);
+                        }
+
+                        // Устанавливаем флаг CarBlock = true
+                        var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
+                        if (carToUpdate != null)
+                        {
+                            carToUpdate.CarBlock = true;
+                        }
+                    }
+
                 }
 
                 DbUtils.db.SaveChanges();
@@ -187,6 +216,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             EditOrdersPayment.ItemsSource = DbUtils.db.OrdersPayments.Where(x => !x.Delete).ToList();
             EditOrdersDelivery.ItemsSource = DbUtils.db.OrdersDeliveries.Where(x => !x.Delete).ToList();
             EditOrdersStatus.ItemsSource = DbUtils.db.OrdersStatuses.Where(x => !x.Delete).ToList();
+
+            // Загружаем доступные автомобили (с учетом уже добавленных)
+            UpdateAvailableCars();
+            
+            DataContext = this;
         }
 
         // Валидация данных
@@ -226,7 +260,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            
+
             if (EditOrdersStatus.SelectedItem == null)
             {
                 MessageBox.Show("Не выбран статус заказа", "Ошибка",
@@ -283,11 +317,112 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
         }
 
+        // Добавить автомобиль в заказ
+        private void AddCarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedCar = AvailableCarsComboBox.SelectedItem as Car;
+            if (selectedCar == null)
+            {
+                MessageBox.Show("Выберите автомобиль для добавления.", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            if (SelectedOrderCars.Any(c => c.CarId == selectedCar.CarId))
+            {
+                MessageBox.Show("Этот автомобиль уже добавлен.", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            // Загружаем связанные данные перед добавлением
+            var fullCar = DbUtils.db.Cars
+                .Where(c => c.CarId == selectedCar.CarId)
+                .Select(c => new Car
+                {
+                    CarId = c.CarId,
+                    CarVin = c.CarVin,
+                    CarPts = c.CarPts,
+                    CarDate = c.CarDate,
+                    CarMarkNavigation = c.CarMarkNavigation,
+                    CarModelNavigation = c.CarModelNavigation,
+                    CarColorNavigation = c.CarColorNavigation,
+                    CarCountryNavigation = c.CarCountryNavigation,
+                    CarTypeNavigation = c.CarTypeNavigation
+                })
+                .FirstOrDefault();
+            
+            SelectedOrderCars.Add(selectedCar);
+
+            if (_itemId != -1)
+            {
+                var newOrderCar = new MmOrdersCar { OrderId = _itemId, CarId = selectedCar.CarId };
+                DbUtils.db.MmOrdersCars.Add(newOrderCar);
+            }
+            
+            UpdateAvailableCars();
+        }
+
+        // Удалить автомобиль из заказа
+        private void RemoveCarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedCar = AddedCarsList.SelectedItem as Car;
+            if (selectedCar == null)
+            {
+                MessageBox.Show("Выберите автомобиль для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            SelectedOrderCars.Remove(selectedCar);
+
+            if (_itemId != -1)
+            {
+                var carToRemove = DbUtils.db.MmOrdersCars
+                    .FirstOrDefault(moc => moc.CarId == selectedCar.CarId && moc.OrderId == _itemId);
+
+                if (carToRemove != null)
+                    DbUtils.db.MmOrdersCars.Remove(carToRemove);
+
+                // Снимаем блокировку автомобиля (CarBlock = false)
+                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == selectedCar.CarId);
+                if (carToUnblock != null)
+                {
+                    carToUnblock.CarBlock = false;
+                }
+            }
+
+            UpdateAvailableCars();
+        }
+
+        // Обновление автомобилей в форме выбора
+        private void UpdateAvailableCars()
+        {
+            // Получаем ID уже добавленных автомобилей
+            var selectedCarIds = SelectedOrderCars.Select(c => c.CarId).ToList();
+
+            // Фильтруем доступные автомобили
+            AvailableCarsComboBox.ItemsSource = DbUtils.db.Cars
+                .Where(c => !c.Delete && !c.CarBlock) // Отбор только не заблокированных машин
+                .AsEnumerable() // Переключаемся на обработку в памяти
+                .Where(c => !selectedCarIds.Contains(c.CarId)) // Фильтруем уже добавленные машины
+                .ToList();
+        }
+        
+        // Вызов окна для добавление нового клиента
         private void AddClient(object sender, RoutedEventArgs e)
         {
             var addClient = new EditOrdersClient();
             this.Close();
             addClient.ShowDialog();
+        }
+        
+        // Вызов окна для просмотра авто
+        private void ShowCar(object sender, RoutedEventArgs e)
+        {
+            var selectedCar = AddedCarsList.SelectedItem as Car;
+
+            var showCar = new EditCar(selectedCar, "Show");
+            showCar.ShowDialog();
         }
     }
 }

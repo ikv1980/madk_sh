@@ -110,6 +110,11 @@
                                         <Button Content="🔑"
                                                 Click="EditPermissions_Click"
                                                 Background="LightSteelBlue"
+                                                Padding="10,0"
+                                                FontWeight="Bold"
+                                                Foreground="DarkBlue"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
                                                 Tag="{Binding}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

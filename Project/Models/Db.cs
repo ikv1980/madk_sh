@@ -132,7 +132,6 @@ public partial class Db : DbContext
                 .HasColumnType("int(10)")
                 .HasColumnName("car_model");
             entity.Property(e => e.CarPhoto)
-                .IsRequired()
                 .HasComment("Фотография")
                 .HasColumnType("mediumblob")
                 .HasColumnName("car_photo");
