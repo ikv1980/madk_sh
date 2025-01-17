@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Project.Interfaces;
+using Project.Models;
 
 namespace Project.ViewModels
 {
@@ -13,10 +14,10 @@ namespace Project.ViewModels
 
         private ObservableCollection<TTable> _tableValue;
         private string _searchingText;
-        private int _currentPage;       // текущая страница
-        private int _itemsPerPage;      // количество элементов на странице
-        private int _totalItems;        // всего элементов
-        private bool _flagWriter;       // флаг записи
+        private int _currentPage; // текущая страница
+        private int _itemsPerPage; // количество элементов на странице
+        private int _totalItems; // всего элементов
+        private bool _flagWriter; // флаг записи
 
         #endregion
 
@@ -102,9 +103,6 @@ namespace Project.ViewModels
         {
             try
             {
-                // Обновить флаг записи
-                // UpdateFlagWriter();
-
                 // Получаем общее количество элементов
                 _totalItems = await DbUtils.GetTableCount<TTable>();
 
@@ -131,6 +129,27 @@ namespace Project.ViewModels
                         // 3. Возвращаем только элементы, которые соответствуют обоим условиям
                         return isNotDeleted && noUndefinedProperties;
                     }));
+
+                // Дополнительная логика для типа Order
+                if (typeof(TTable) == typeof(Order))
+                {
+                    var orderValues = TableValue.Cast<Order>().Where(order =>
+                    {
+                        var lastStatus = order.MmOrdersStatuses
+                            .OrderByDescending(status => status.Date)
+                            .FirstOrDefault();
+
+                        if (lastStatus != null)
+                        {
+                            return lastStatus.StatusId != 4 && lastStatus.StatusId != 5;
+                        }
+
+                        return true;
+                    }).ToList();
+
+
+                    TableValue = new ObservableCollection<TTable>(orderValues.Cast<TTable>());
+                }
             }
             catch (Exception ex)
             {
@@ -164,6 +183,7 @@ namespace Project.ViewModels
                     {
                         dialog.RefreshRequested += RefreshRequestedHandler;
                     }
+
                     window.ShowDialog();
                 }
                 catch (Exception ex)
@@ -191,6 +211,7 @@ namespace Project.ViewModels
                         {
                             dialog.RefreshRequested += RefreshRequestedHandler;
                         }
+
                         window.ShowDialog();
                     }
                     else
@@ -232,6 +253,7 @@ namespace Project.ViewModels
                             {
                                 dialog.RefreshRequested += RefreshRequestedHandler;
                             }
+
                             window.ShowDialog();
                         }
                         else
@@ -267,12 +289,6 @@ namespace Project.ViewModels
             return Project.Tools.Config.DefaultSortProperties.TryGetValue(typeof(TTable), out var sortProperty)
                 ? sortProperty
                 : null;
-        }
-        
-        private void UpdateFlagWriter()
-        {
-            _flagWriter = Global.GetWritePermissionForDict(typeof(TTable).Name);
-            OnPropertyChanged(nameof(FlagWriterVisibility));
         }
 
         #endregion

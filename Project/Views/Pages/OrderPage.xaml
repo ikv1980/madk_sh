@@ -282,12 +282,6 @@
                            Appearance="Primary"
                            x:Name="RefreshButton"
                            Command="{Binding RefreshCommand}" />
-                <ui:ToggleSwitch
-                    IsChecked="{Binding ShowClosedOrders, Mode=TwoWay}" 
-                    Margin="10,0"
-                    Content="Показать закрытые заказы"
-                    VerticalAlignment="Center"
-                    x:Name="ShowOrders" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
                 <ui:Button

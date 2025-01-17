@@ -8,7 +8,7 @@
       mc:Ignorable="d"
       Title="SettingPage">
     <Grid>
-        <StackPanel Margin="15">
+        <StackPanel Margin="20">
             <Expander IsExpanded="False">
                 <Expander.HeaderTemplate>
                     <DataTemplate>
