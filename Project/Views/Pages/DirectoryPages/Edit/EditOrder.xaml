@@ -16,6 +16,7 @@
     <ui:UiWindow.Resources>
         <tools:UserFullNameConverter x:Key="UserFullNameConverter" />
         <tools:IndexConverter x:Key="IndexConverter" />
+        <tools:PriceConverter x:Key="PriceConverter" />
     </ui:UiWindow.Resources>
     <Grid>
         <modern:SimpleStackPanel HorizontalAlignment="Center"
@@ -242,6 +243,8 @@
                             <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
                             <DataGridTextColumn Header="Дата производства"
                                                 Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                            <DataGridTextColumn Header="Цена, ₽"
+                                                Binding="{Binding CarPrice, Converter={StaticResource PriceConverter}}" />
                             <DataGridTemplateColumn Header="">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

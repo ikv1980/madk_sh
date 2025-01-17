@@ -170,7 +170,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         DbUtils.db.MmOrdersStatuses.Add(newStatus);
                     }
 
-// Сохранение автомобилей в заказе
+                    // Сохранение автомобилей в заказе
                     foreach (var car in SelectedOrderCars)
                     {
                         if (!DbUtils.db.MmOrdersCars.Any(moc => moc.OrderId == item.OrdersId && moc.CarId == car.CarId))
@@ -183,7 +183,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
                         if (carToUpdate != null)
                         {
-                            carToUpdate.CarBlock = true;
+                            carToUpdate.CarBlock = item.OrdersId;
                         }
                     }
 
@@ -387,7 +387,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == selectedCar.CarId);
                 if (carToUnblock != null)
                 {
-                    carToUnblock.CarBlock = false;
+                    carToUnblock.CarBlock = 0;
                 }
             }
 
@@ -402,9 +402,9 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             // Фильтруем доступные автомобили
             AvailableCarsComboBox.ItemsSource = DbUtils.db.Cars
-                .Where(c => !c.Delete && !c.CarBlock) // Отбор только не заблокированных машин
-                .AsEnumerable() // Переключаемся на обработку в памяти
-                .Where(c => !selectedCarIds.Contains(c.CarId)) // Фильтруем уже добавленные машины
+                .Where(c => !c.Delete && (c.CarBlock != 0))
+                .AsEnumerable()
+                .Where(c => !selectedCarIds.Contains(c.CarId))
                 .ToList();
         }
         

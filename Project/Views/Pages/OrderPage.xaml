@@ -179,7 +179,7 @@
                           BorderBrush="LightGray"
                           FontSize="16"
                           AlternationCount="20"
-                          RowHeight="30" MaxHeight="190"
+                          RowHeight="30" MaxHeight="185"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderCars}">
                     <DataGrid.Columns>
@@ -224,7 +224,7 @@
                           BorderBrush="LightGray"
                           FontSize="16"
                           AlternationCount="20"
-                          RowHeight="30" MaxHeight="190"
+                          RowHeight="30" MaxHeight="185"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderStatuses}">
                     <DataGrid.Columns>

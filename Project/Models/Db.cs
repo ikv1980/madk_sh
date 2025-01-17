@@ -110,7 +110,8 @@ public partial class Db : DbContext
                 .HasColumnType("int(10)")
                 .HasColumnName("car_id");
             entity.Property(e => e.CarBlock)
-                .HasComment("Блок(резерв)")
+                .HasComment("Номер заказа")
+                .HasColumnType("int(10)")
                 .HasColumnName("car_block");
             entity.Property(e => e.CarColor)
                 .HasComment("Цвет")

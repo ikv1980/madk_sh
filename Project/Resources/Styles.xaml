@@ -15,7 +15,7 @@
         <Setter Property="Background" Value="LightGray" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="Height" Value="30" />
+        <Setter Property="Height" Value="35" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="10,0" />
     </Style>
@@ -54,7 +54,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="2"> <!-- Укажите радиус здесь -->
+                        CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>

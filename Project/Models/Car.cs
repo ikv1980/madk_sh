@@ -60,9 +60,9 @@ public partial class Car
     public int CarPrice { get; set; }
 
     /// <summary>
-    /// Блок(резерв)
+    /// Номер заказа
     /// </summary>
-    public bool CarBlock { get; set; }
+    public int CarBlock { get; set; }
 
     /// <summary>
     /// Метка удаления

@@ -60,8 +60,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             EditCarDate.SelectedDate = item.CarDate.HasValue
                 ? item.CarDate.Value.ToDateTime(TimeOnly.MinValue)
                 : (DateTime?)null;
-            ShowCarBlock.Text = (item.CarBlock == true ? "В заказе" : "Свободна к продаже");
-            ShowCarBlock.Background = item.CarBlock ? Brushes.Pink : Brushes.LightGreen;
+            ShowCarBlock.Text = (item.CarBlock != 0 ? "В заказе №" + item.CarBlock.ToString() : "Свободна к продаже");
+            ShowCarBlock.Background = item.CarBlock != 0 ? Brushes.Pink : Brushes.LightGreen;
             EditPrice.Text = item.CarPrice.ToString();
             _carImageBytes = item.CarPhoto;
             DisplayImage(item.CarPhoto);

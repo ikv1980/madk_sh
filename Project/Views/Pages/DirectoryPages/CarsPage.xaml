@@ -89,6 +89,7 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
+                    <Setter Property="Background" Value="Pink" />
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightGray" />
@@ -97,9 +98,9 @@
                             <Setter Property="Background" Value="SkyBlue" />
                             <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
-                        <!-- Цвет выделения для CarBlock = false -->
-                        <DataTrigger Binding="{Binding CarBlock}" Value="True">
-                            <Setter Property="Background" Value="Pink" />
+                        <!-- Цвет выделения для CarBlock = 0 -->
+                        <DataTrigger Binding="{Binding CarBlock}" Value="0">
+                            <Setter Property="Background" Value="Transparent" />
                             <Setter Property="Foreground" Value="Black" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -117,6 +118,7 @@
                                     Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
                 <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
                 <DataGridTextColumn Header="Цена, ₽" Binding="{Binding CarPrice, StringFormat=N2}" />
+                <DataGridTextColumn Header="№ Заказа" Binding="{Binding CarBlock}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

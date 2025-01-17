@@ -268,8 +268,7 @@ namespace Project.ViewModels
                 ? sortProperty
                 : null;
         }
-
-
+        
         private void UpdateFlagWriter()
         {
             _flagWriter = Global.GetWritePermissionForDict(typeof(TTable).Name);
