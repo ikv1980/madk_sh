@@ -135,15 +135,32 @@ namespace Project.ViewModels
                 {
                     var orderValues = TableValue.Cast<Order>().Where(order =>
                     {
+                        // Получаем последний статус
                         var lastStatus = order.MmOrdersStatuses
                             .OrderByDescending(status => status.Date)
                             .FirstOrDefault();
 
                         if (lastStatus != null)
                         {
-                            return lastStatus.StatusId != 4 && lastStatus.StatusId != 5;
+                            // 1. Проверяем статус "Отменен" (StatusId == 4), если статус "Отменен", исключаем заказ
+                            if (lastStatus.StatusId == 4)
+                            {
+                                return false;
+                            }
+
+                            // 2. Проверяем статус "Выполнен" (StatusId == 5)
+                            if (lastStatus.StatusId == 5)
+                            {
+                                // Если статус был получен более 5 дней назад, исключаем заказ
+                                var daysSinceCompleted = (DateTime.Now - lastStatus.Date).TotalDays;
+                                if (daysSinceCompleted >= 5)
+                                {
+                                    return false;
+                                }
+                            }
                         }
 
+                        // Если статус не соответствует исключающим условиям, показываем заказ
                         return true;
                     }).ToList();
 
