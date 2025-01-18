@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
@@ -79,6 +80,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             // Загрузка связанных автомобилей
             var carsInOrder = DbUtils.db.MmOrdersCars
+                .Include(m => m.Car)
+                .ThenInclude(c => c.CarMarkNavigation)
+                .Include(m => m.Car.CarModelNavigation)
+                .Include(m => m.Car.CarColorNavigation)
+                .Include(m => m.Car.CarCountryNavigation)
+                .Include(m => m.Car.CarTypeNavigation)
                 .Where(moc => moc.OrderId == item.OrdersId)
                 .Select(moc => moc.Car)
                 .ToList();
@@ -403,6 +410,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             // Фильтруем доступные автомобили
             AvailableCarsComboBox.ItemsSource = DbUtils.db.Cars
                 .Where(c => !c.Delete && (c.CarBlock == 0))
+                .Include(c => c.CarMarkNavigation)
+                .Include(c => c.CarModelNavigation)
+                .Include(c => c.CarColorNavigation)
+                .Include(c => c.CarCountryNavigation)
+                .Include(c => c.CarTypeNavigation)
                 .AsEnumerable()
                 .Where(c => !selectedCarIds.Contains(c.CarId))
                 .ToList();

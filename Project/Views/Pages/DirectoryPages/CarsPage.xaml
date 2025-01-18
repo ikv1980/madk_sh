@@ -12,7 +12,6 @@
       Title="CarsPage">
     <Page.Resources>
         <tools:MultiBindingConverter x:Key="MultiBindingConverter" />
-        <tools:IndexConverter x:Key="IndexConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,7 +27,6 @@
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
-                  AlternationCount="100"
                   IsReadOnly="True"
                   Margin="10,10,10,0"
                   HeadersVisibility="Column"
@@ -110,8 +108,6 @@
             </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№"
-                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
                 <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
                 <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
                 <DataGridTextColumn Header="Страна" Binding="{Binding CarCountryNavigation.CountryName}" />
