@@ -402,7 +402,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             // Фильтруем доступные автомобили
             AvailableCarsComboBox.ItemsSource = DbUtils.db.Cars
-                .Where(c => !c.Delete && (c.CarBlock != 0))
+                .Where(c => !c.Delete && (c.CarBlock == 0))
                 .AsEnumerable()
                 .Where(c => !selectedCarIds.Contains(c.CarId))
                 .ToList();

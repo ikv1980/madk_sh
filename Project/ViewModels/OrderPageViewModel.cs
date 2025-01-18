@@ -16,7 +16,7 @@ namespace Project.ViewModels
         public ObservableCollection<MmOrdersStatus> SelectedOrderStatuses { get; set; }
 
         private Order _selectedOrder;
-        
+
         public Visibility OrderDetailsVisibility => SelectedOrder != null ? Visibility.Visible : Visibility.Collapsed;
 
         public Order SelectedOrder
@@ -32,12 +32,12 @@ namespace Project.ViewModels
                 }
             }
         }
-        
+
         public OrderPageViewModel()
         {
             SelectedOrderCars = new ObservableCollection<Car>();
             SelectedOrderStatuses = new ObservableCollection<MmOrdersStatus>();
-        
+
             // Инициализация данных
             InitializeOrdersAsync();
         }
@@ -47,7 +47,36 @@ namespace Project.ViewModels
             var orders = await DbUtils.GetTablePagedValuesWithIncludes<Order>(1, 20);
             Orders = new ObservableCollection<Order>(orders);
         }
-        
+
+        protected override async Task Refresh()
+        {
+            await base.Refresh(); // Загружаем базовые данные
+
+            var orderValues = TableValue.Cast<Order>().Where(order =>
+            {
+                var lastStatus = order.MmOrdersStatuses
+                    .OrderByDescending(status => status.Date)
+                    .FirstOrDefault();
+
+                if (lastStatus != null)
+                {
+                    if (lastStatus.StatusId == 4)
+                        return false;
+
+                    if (lastStatus.StatusId == 5)
+                    {
+                        var daysSinceCompleted = (DateTime.Now - lastStatus.Date).TotalDays;
+                        if (daysSinceCompleted >= 5)
+                            return false;
+                    }
+                }
+
+                return true;
+            }).ToList();
+
+            TableValue = new ObservableCollection<Order>(orderValues);
+        }
+
         private void LoadOrderDetails()
         {
             // Если заказ выбран, загрузим связанные данные
@@ -75,10 +104,10 @@ namespace Project.ViewModels
                     .Where(s => s.OrderId == SelectedOrder.OrdersId)
                     .OrderBy(s => s.Date)
                     .ToList();
-                
+
                 foreach (var status in statuses)
                     SelectedOrderStatuses.Add(status);
-                
+
                 // Уведомление об изменении видимости
                 OnPropertyChanged(nameof(OrderDetailsVisibility));
             }

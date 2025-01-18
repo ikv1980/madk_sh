@@ -129,44 +129,6 @@ namespace Project.ViewModels
                         // 3. Возвращаем только элементы, которые соответствуют обоим условиям
                         return isNotDeleted && noUndefinedProperties;
                     }));
-
-                // Дополнительная логика для типа Order
-                if (typeof(TTable) == typeof(Order))
-                {
-                    var orderValues = TableValue.Cast<Order>().Where(order =>
-                    {
-                        // Получаем последний статус
-                        var lastStatus = order.MmOrdersStatuses
-                            .OrderByDescending(status => status.Date)
-                            .FirstOrDefault();
-
-                        if (lastStatus != null)
-                        {
-                            // 1. Проверяем статус "Отменен" (StatusId == 4), если статус "Отменен", исключаем заказ
-                            if (lastStatus.StatusId == 4)
-                            {
-                                return false;
-                            }
-
-                            // 2. Проверяем статус "Выполнен" (StatusId == 5)
-                            if (lastStatus.StatusId == 5)
-                            {
-                                // Если статус был получен более 5 дней назад, исключаем заказ
-                                var daysSinceCompleted = (DateTime.Now - lastStatus.Date).TotalDays;
-                                if (daysSinceCompleted >= 5)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        // Если статус не соответствует исключающим условиям, показываем заказ
-                        return true;
-                    }).ToList();
-
-
-                    TableValue = new ObservableCollection<TTable>(orderValues.Cast<TTable>());
-                }
             }
             catch (Exception ex)
             {

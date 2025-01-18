@@ -66,6 +66,9 @@ namespace Project.Views
                 switch (directoryesPermission.Name.ToLower())
                 {
                     // для Заказов
+                    case "order":
+                        OrdersClientButton.Visibility = visibility;
+                        break;
                     case "ordersclient":
                         OrdersClientButton.Visibility = visibility;
                         break;

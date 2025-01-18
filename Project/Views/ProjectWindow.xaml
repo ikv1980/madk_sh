@@ -126,6 +126,11 @@
                                 </Expander.HeaderTemplate>
                                 <StackPanel x:Name="OrdersButtonPanel" Margin="-5,0,0,0">
                                     <Button
+                                        x:Name="OrdersButton"
+                                        Content="Заказы"
+                                        Tag="{x:Type direct:OrdersPage}"
+                                        Click="SubMenuButton_Click" />
+                                    <Button
                                         x:Name="OrdersClientButton"
                                         Content="Клиенты"
                                         Tag="{x:Type direct:OrdersClientPage}"

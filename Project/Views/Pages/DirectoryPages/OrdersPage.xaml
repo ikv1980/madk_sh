@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project.Views.Pages.DirectoryPages.CarsPage"
+﻿<Page x:Class="Project.Views.Pages.DirectoryPages.OrdersPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,10 +9,12 @@
       xmlns:tools="clr-namespace:Project.Tools"
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
-      Title="CarsPage">
+      Title="OrdersPage">
     <Page.Resources>
         <tools:MultiBindingConverter x:Key="MultiBindingConverter" />
-        <tools:IndexConverter x:Key="IndexConverter" />
+        <tools:OrderLastStatusConverter x:Key="LastStatusConverter" />
+        <tools:TotalPriceConverter x:Key="TotalPriceConverter" />
+        <tools:PriceConverter x:Key="PriceConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -20,7 +22,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="📗 Справочник 'Автомобили'"
+        <TextBlock Grid.Row="0" Text="📗 Справочник 'Заказы'"
                    FontSize="20"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
@@ -28,7 +30,6 @@
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
-                  AlternationCount="100"
                   IsReadOnly="True"
                   Margin="10,10,10,0"
                   HeadersVisibility="Column"
@@ -48,7 +49,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -58,7 +59,7 @@
                               Height="35"
                               Visibility="{Binding DataContext.FlagWriterVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
                               Command="{Binding DataContext.AddDialogButton, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}"
-                              CommandParameter="{x:Type wind:EditCar}" />
+                              CommandParameter="{x:Type wind:EditOrder}" />
                     <MenuItem Header="Изменить"
                               Icon="✏️"
                               Tag="Change"
@@ -68,7 +69,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -81,7 +82,7 @@
                         <MenuItem.CommandParameter>
                             <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                                 <Binding RelativeSource="{RelativeSource Self}" />
-                                <Binding Source="{x:Type wind:EditCar}" />
+                                <Binding Source="{x:Type wind:EditOrder}" />
                             </MultiBinding>
                         </MenuItem.CommandParameter>
                     </MenuItem>
@@ -91,7 +92,6 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}" />
-                    <Setter Property="Background" Value="Pink" />
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="LightGray" />
@@ -100,29 +100,49 @@
                             <Setter Property="Background" Value="SkyBlue" />
                             <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
-                        <!-- Цвет выделения для CarBlock = 0 -->
-                        <DataTrigger Binding="{Binding CarBlock}" Value="0">
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="Foreground" Value="Black" />
+                        <!-- Цвет выделения для LastStatusConverter = 3 -->
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Создан">
+                            <Setter Property="Background" Value="Yellow" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Подтвержден">
+                            <Setter Property="Background" Value="LightGreen" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Отменен">
+                            <Setter Property="Background" Value="OrangeRed" />
+                            <Setter Property="Foreground" Value="White" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                                     Value="Выполнен">
+                            <Setter Property="Background" Value="ForestGreen" />
+                            <Setter Property="Foreground" Value="White" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№"
-                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
-                <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
-                <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
-                <DataGridTextColumn Header="Страна" Binding="{Binding CarCountryNavigation.CountryName}" />
-                <DataGridTextColumn Header="Тип кузова" Binding="{Binding CarTypeNavigation.TypeName}" />
-                <DataGridTextColumn Header="VIN код" Binding="{Binding CarVin}" />
-                <DataGridTextColumn Header="Номер ПТС" Binding="{Binding CarPts}" />
-                <DataGridTextColumn Header="Дата производства"
-                                    Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
-                <DataGridTextColumn Header="Цена, ₽" Binding="{Binding CarPrice, StringFormat=N2}" />
-                <DataGridTextColumn Header="№ Заказа" Binding="{Binding CarBlock}" />
+                <DataGridTextColumn Header="№ заказа" Binding="{Binding OrdersId}" />
+                <DataGridTextColumn Header="Клиент" Binding="{Binding OrdersClientNavigation.ClientName}" />
+                <DataGridTextColumn Header="Менеджер">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="OrdersUserNavigation.UsersSurname" />
+                            <Binding Path="OrdersUserNavigation.UsersName" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Дата создания"
+                                    Binding="{Binding OrdersData, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Тип оплаты" Binding="{Binding OrdersPaymentNavigation.PaymentName}" />
+                <DataGridTextColumn Header="Тип доставки" Binding="{Binding OrdersDeliveryNavigation.DeliveryName}" />
+                <DataGridTextColumn Header="Адрес доставки" Binding="{Binding OrdersAddress}" />
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}" />
+                <DataGridTextColumn Header="ИТОГО"
+                                    Binding="{Binding OrdersId, Converter={StaticResource TotalPriceConverter}}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

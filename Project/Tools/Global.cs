@@ -88,9 +88,6 @@ namespace Project.Tools
         // Справочники - проверка прав на запись
         public static bool GetWritePermissionForDict(string dictName)
         {
-            // справочники - исключения
-            if(dictName == "Order") return true;
-            
             if (ParsedPermissions == null)
             {
                 MessageBox.Show("Права пользователя отсутствуют.", "Ошибка",

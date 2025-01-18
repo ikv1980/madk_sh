@@ -104,28 +104,6 @@
                     </MenuItem>
                 </ContextMenu>
             </DataGrid.Resources>
-            <!-- Основной контент -->
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding OrdersId}" />
-                <DataGridTextColumn Header="Клиент" Binding="{Binding OrdersClientNavigation.ClientName}" />
-                <DataGridTextColumn Header="Менеджер">
-                    <DataGridTextColumn.Binding>
-                        <MultiBinding StringFormat="{}{0} {1}">
-                            <Binding Path="OrdersUserNavigation.UsersSurname" />
-                            <Binding Path="OrdersUserNavigation.UsersName" />
-                        </MultiBinding>
-                    </DataGridTextColumn.Binding>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Дата создания"
-                                    Binding="{Binding OrdersData, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Тип оплаты" Binding="{Binding OrdersPaymentNavigation.PaymentName}" />
-                <DataGridTextColumn Header="Тип доставки" Binding="{Binding OrdersDeliveryNavigation.DeliveryName}" />
-                <DataGridTextColumn Header="Адрес доставки" Binding="{Binding OrdersAddress}" />
-                <DataGridTextColumn Header="Статус"
-                                    Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}" />
-                <DataGridTextColumn Header="ИТОГО"
-                                    Binding="{Binding OrdersId, Converter={StaticResource TotalPriceConverter}}" />
-            </DataGrid.Columns>
             <!-- Стиль для строк -->
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
@@ -145,22 +123,38 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
                                      Value="Подтвержден">
-                            <Setter Property="Background" Value="Lime" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
-                                     Value="Отменен">
-                            <Setter Property="Background" Value="OrangeRed" />
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="LightGreen" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
                                      Value="Выполнен">
                             <Setter Property="Background" Value="ForestGreen" />
                             <Setter Property="Foreground" Value="White" />
                         </DataTrigger>
-
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
+            <!-- Основной контент -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№ заказа" Binding="{Binding OrdersId}" />
+                <DataGridTextColumn Header="Клиент" Binding="{Binding OrdersClientNavigation.ClientName}" />
+                <DataGridTextColumn Header="Менеджер">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="OrdersUserNavigation.UsersSurname" />
+                            <Binding Path="OrdersUserNavigation.UsersName" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Дата создания"
+                                    Binding="{Binding OrdersData, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Тип оплаты" Binding="{Binding OrdersPaymentNavigation.PaymentName}" />
+                <DataGridTextColumn Header="Тип доставки" Binding="{Binding OrdersDeliveryNavigation.DeliveryName}" />
+                <DataGridTextColumn Header="Адрес доставки" Binding="{Binding OrdersAddress}" />
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}" />
+                <DataGridTextColumn Header="ИТОГО"
+                                    Binding="{Binding OrdersId, Converter={StaticResource TotalPriceConverter}}" />
+            </DataGrid.Columns>
         </DataGrid>
         <!-- Таблица с дополнительными данными -->
         <Grid Grid.Row="2" Visibility="{Binding OrderDetailsVisibility}">

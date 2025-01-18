@@ -14,6 +14,7 @@ namespace Project.Tools
                 { ""Name"": ""report"", ""RusName"": ""Отчеты"", ""Permissions"": { ""Read"": false, ""Write"": false } }
             ],
             ""Directoryes"": [
+                { ""Name"": ""Order"", ""RusName"": ""Заказы"", ""Permissions"": { ""Read"": false, ""Write"": false } },
                 { ""Name"": ""OrdersClient"", ""RusName"": ""Клиенты"", ""Permissions"": { ""Read"": false, ""Write"": false } },
                 { ""Name"": ""OrdersDelivery"", ""RusName"": ""Доставки"", ""Permissions"": { ""Read"": false, ""Write"": false } },
                 { ""Name"": ""OrdersPayment"", ""RusName"": ""Оплаты"", ""Permissions"": { ""Read"": false, ""Write"": false } },
