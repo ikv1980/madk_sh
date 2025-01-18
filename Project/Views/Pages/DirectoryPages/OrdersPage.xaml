@@ -11,7 +11,6 @@
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="OrdersPage">
     <Page.Resources>
-        <tools:MultiBindingConverter x:Key="MultiBindingConverter" />
         <tools:OrderLastStatusConverter x:Key="LastStatusConverter" />
         <tools:TotalPriceConverter x:Key="TotalPriceConverter" />
         <tools:PriceConverter x:Key="PriceConverter" />

@@ -10,9 +10,6 @@
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="UsersFunctionPage">
-    <Page.Resources>
-        <tools:MultiBindingConverter x:Key="MultiBindingConverter" />
-    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />

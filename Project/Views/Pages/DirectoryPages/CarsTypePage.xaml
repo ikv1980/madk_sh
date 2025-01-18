@@ -10,20 +10,17 @@
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="TypePage">
-    <Page.Resources>
-        <tools:MultiBindingConverter x:Key="MultiBindingConverter" />
-    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="📗 Справочник 'Типы кузова'"
                    FontSize="20"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Top" 
-                   Margin="15,15,0,0"/>
+                   VerticalAlignment="Top"
+                   Margin="15,15,0,0" />
         <!-- Таблица с данными -->
         <DataGrid Grid.Row="1"
                   AutoGenerateColumns="False"
@@ -160,7 +157,7 @@
                     Padding="0"
                     Width="40"
                     Height="35" />
-            </StackPanel>            
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
