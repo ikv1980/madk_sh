@@ -198,7 +198,7 @@
                                     <Setter Property="Background" Value="LightGray" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="DarkOrange" />
+                                    <Setter Property="Background" Value="SkyBlue" />
                                     <Setter Property="Opacity" Value="0.8"></Setter>
                                 </Trigger>
                             </Style.Triggers>

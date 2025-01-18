@@ -140,7 +140,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.Orders.Remove(item);   
+                    RemoveCarsAndUnblock(item.OrdersId);
+                    DbUtils.db.Orders.Remove(item);
                 }
                 else
                 {
@@ -165,6 +166,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         selectedStatus = 1; // Статус "Создан"
                     }
 
+                    // Удаление авто из заказа, если статус "Отменен"
+                    if (selectedStatus == 4)
+                    {
+                        RemoveCarsAndUnblock(item.OrdersId);
+                    }
+
+                    // Сохранение статуса, если он изменился
                     if (_currentStatus != selectedStatus.Value)
                     {
                         var newStatus = new MmOrdersStatus
@@ -177,23 +185,26 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         DbUtils.db.MmOrdersStatuses.Add(newStatus);
                     }
 
-                    // Сохранение автомобилей в заказе
-                    foreach (var car in SelectedOrderCars)
+                    // Сохранение автомобилей в заказе, если он не был Отменен
+                    if (selectedStatus != 4)
                     {
-                        if (!DbUtils.db.MmOrdersCars.Any(moc => moc.OrderId == item.OrdersId && moc.CarId == car.CarId))
+                        foreach (var car in SelectedOrderCars)
                         {
-                            var newOrderCar = new MmOrdersCar { OrderId = item.OrdersId, CarId = car.CarId };
-                            DbUtils.db.MmOrdersCars.Add(newOrderCar);
-                        }
+                            if (!DbUtils.db.MmOrdersCars.Any(moc =>
+                                    moc.OrderId == item.OrdersId && moc.CarId == car.CarId))
+                            {
+                                var newOrderCar = new MmOrdersCar { OrderId = item.OrdersId, CarId = car.CarId };
+                                DbUtils.db.MmOrdersCars.Add(newOrderCar);
+                            }
 
-                        // Устанавливаем флаг CarBlock = true
-                        var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
-                        if (carToUpdate != null)
-                        {
-                            carToUpdate.CarBlock = item.OrdersId;
+                            // Устанавливаем флаг CarBlock = номер заказа
+                            var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
+                            if (carToUpdate != null)
+                            {
+                                carToUpdate.CarBlock = item.OrdersId;
+                            }
                         }
                     }
-
                 }
 
                 DbUtils.db.SaveChanges();
@@ -226,7 +237,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             // Загружаем доступные автомобили (с учетом уже добавленных)
             UpdateAvailableCars();
-            
+
             DataContext = this;
         }
 
@@ -358,7 +369,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     CarTypeNavigation = c.CarTypeNavigation
                 })
                 .FirstOrDefault();
-            
+
             SelectedOrderCars.Add(selectedCar);
 
             if (_itemId != -1)
@@ -366,7 +377,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 var newOrderCar = new MmOrdersCar { OrderId = _itemId, CarId = selectedCar.CarId };
                 DbUtils.db.MmOrdersCars.Add(newOrderCar);
             }
-            
+
             UpdateAvailableCars();
         }
 
@@ -376,7 +387,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             var selectedCar = AddedCarsList.SelectedItem as Car;
             if (selectedCar == null)
             {
-                MessageBox.Show("Выберите автомобиль для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Выберите автомобиль для удаления.", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 return;
             }
 
@@ -401,6 +413,26 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             UpdateAvailableCars();
         }
 
+        // Удаление и разблокировка авто (удаление или отмена заказа)
+        private void RemoveCarsAndUnblock(int orderId)
+        {
+            var carsToRemove = DbUtils.db.MmOrdersCars.Where(moc => moc.OrderId == orderId).ToList();
+
+            DbUtils.db.MmOrdersCars.RemoveRange(carsToRemove);
+
+            foreach (var car in carsToRemove)
+            {
+                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
+                if (carToUnblock != null)
+                {
+                    carToUnblock.CarBlock = 0;
+                    //фкDbUtils.db.SaveChanges();
+                }
+            }
+
+            UpdateAvailableCars();
+        }
+
         // Обновление автомобилей в форме выбора
         private void UpdateAvailableCars()
         {
@@ -419,15 +451,15 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 .Where(c => !selectedCarIds.Contains(c.CarId))
                 .ToList();
         }
-        
-        // Вызов окна для добавление нового клиента
+
+        // Вызов окна для добавления нового клиента
         private void AddClient(object sender, RoutedEventArgs e)
         {
             var addClient = new EditOrdersClient();
             this.Close();
             addClient.ShowDialog();
         }
-        
+
         // Вызов окна для просмотра авто
         private void ShowCar(object sender, RoutedEventArgs e)
         {
