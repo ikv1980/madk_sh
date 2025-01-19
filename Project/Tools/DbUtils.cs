@@ -116,17 +116,40 @@ namespace Project.Tools
             {
                 var query = context.Set<TTable>().AsQueryable();
 
-                // Получаем навигационные свойства
-                var entityType = context.Model.FindEntityType(typeof(TTable));
-                var navigationProperties = entityType.GetNavigations()
-                    .Select(n => n.Name)
-                    .ToList();
-
-                // Применяем Include для загрузки всех связанных сущностей
-                foreach (var property in navigationProperties)
+                // Список таблиц, для которых не нужно загружать связанные сущности
+                var excludedTypes = new[]
                 {
-                    query = query.Include(property);
+                    typeof(OrdersClient),
+                    typeof(OrdersDelivery),
+                    typeof(OrdersPayment),
+                    typeof(OrdersStatus),
+                    typeof(CarsCountry),
+                    typeof(CarsMark),
+                    typeof(CarsModel),
+                    typeof(CarsType),
+                    typeof(CarsColor),
+                    typeof(UsersDepartment),
+                    typeof(UsersFunction),
+                    typeof(UsersStatus),
+                };
+
+                // Исключаем связанные сущности
+                if (!excludedTypes.Contains(typeof(TTable)))
+                {
+                    var entityType = context.Model.FindEntityType(typeof(TTable));
+                    var navigationProperties = entityType.GetNavigations()
+                        .Select(n => n.Name)
+                        .ToList();
+
+                    // Применяем Include для загрузки всех связанных сущностей
+                    foreach (var property in navigationProperties)
+                    {
+                        query = query.Include(property);
+                    }
                 }
+
+                // Применяем AsSplitQuery для разделения запросов
+                query = query.AsSplitQuery();
 
                 // Применяем сортировку, если указано поле
                 if (!string.IsNullOrEmpty(sortPropertyName))
