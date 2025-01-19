@@ -9,9 +9,9 @@ namespace Project.Tools
             ""Tabs"": [
                 { ""Name"": ""user"", ""RusName"": ""Пользователь"", ""Permissions"": { ""Read"": true, ""Write"": true } },
                 { ""Name"": ""order"", ""RusName"": ""Заказы"", ""Permissions"": { ""Read"": false, ""Write"": false } },
-                { ""Name"": ""dict"", ""RusName"": ""Словари"", ""Permissions"": { ""Read"": false, ""Write"": false } },
+                { ""Name"": ""report"", ""RusName"": ""Отчеты"", ""Permissions"": { ""Read"": false, ""Write"": false } },
                 { ""Name"": ""setting"", ""RusName"": ""Настройки"", ""Permissions"": { ""Read"": false, ""Write"": false } },
-                { ""Name"": ""report"", ""RusName"": ""Отчеты"", ""Permissions"": { ""Read"": false, ""Write"": false } }
+                { ""Name"": ""dict"", ""RusName"": ""Словари"", ""Permissions"": { ""Read"": false, ""Write"": false } },
             ],
             ""Directoryes"": [
                 { ""Name"": ""Order"", ""RusName"": ""Заказы"", ""Permissions"": { ""Read"": false, ""Write"": false } },

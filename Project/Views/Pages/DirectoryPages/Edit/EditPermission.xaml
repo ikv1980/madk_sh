@@ -11,29 +11,35 @@
              Title="Редактирование прав"
              ResizeMode="NoResize">
     <Grid>
-        <StackPanel Margin="0">
-            <TextBlock Text="Вкладки"
-                       FontWeight="SemiBold"
-                       FontSize="18"
-                       Padding="3,5"
-                       Background="LightSkyBlue"
-                       Margin="5" />
-            <ItemsControl x:Name="TabsList" />
-            
-            <TextBlock Text="Справочники"
-                       FontWeight="SemiBold"
-                       FontSize="18"
-                       Padding="3,5"
-                       Background="LightSkyBlue"
-                       Margin="5" />
-            <ItemsControl x:Name="DirectoriesList" />
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-                <Button Content="Сохранить" 
-                        Style="{StaticResource PrimaryButton}" 
+        <StackPanel Margin="10,5">
+            <Expander IsExpanded="False" Background="LightSkyBlue" Margin="5">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Видимость вкладок"
+                                   FontWeight="SemiBold"
+                                   FontSize="18"
+                                   Padding="0,5" />
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+                <ItemsControl x:Name="TabsList" Background="White" />
+            </Expander>
+            <Expander IsExpanded="False" Background="LightSkyBlue" Margin="5">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Настройки справочников"
+                                   FontWeight="SemiBold"
+                                   FontSize="18"
+                                   Padding="0,5" />
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+                <ItemsControl x:Name="DirectoriesList" Background="White" />
+            </Expander>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Сохранить"
+                        Style="{StaticResource PrimaryButton}"
                         Click="SaveButton_Click" Margin="5" />
-                <Button Content="Отмена" 
-                        Style="{StaticResource PrimaryButton}" 
+                <Button Content="Отмена"
+                        Style="{StaticResource PrimaryButton}"
                         Click="CancelButton_Click" Margin="5" />
             </StackPanel>
         </StackPanel>
