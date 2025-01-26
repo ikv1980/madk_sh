@@ -44,6 +44,15 @@ namespace Project.Views
 
             if (user != null && enteredPassword == user.UsersPassword)
             {
+                // Проверяем удаленного пользователя
+                if (user.Delete)
+                {
+                    MessageBox.Show(
+                        $"Пользователь был удален из системы.\nОбратитесь к администратору.",
+                        "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 // Проверяем статус пользователя
                 if (user.UsersStatus == 1 || user.UsersStatus == 3)
                 {

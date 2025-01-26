@@ -116,7 +116,16 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.Users.Remove(item);   
+                    // Запрет удаления самого себя
+                    if (Global.CurrentUser.UsersLogin == item.UsersLogin)
+                    {
+                        MessageBox.Show("Нельзя удалить самого себя.", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        item.Delete = true; //DbUtils.db.Users.Remove(item);  
+                    }
                 }
                 else
                 {
