@@ -18,6 +18,10 @@ namespace Project.Views
             _user = user;
             LoadPermissions();
             Title = "Права доступа: " + _user.UsersSurname + " " + _user.UsersName + " " + _user.UsersPatronymic;
+            if (!Global.GetWritePermissionForTab("setting"))
+            {
+                UpdateButton.Visibility = Visibility.Hidden;
+            }
         }
 
         private void LoadPermissions()
