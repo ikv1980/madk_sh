@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
@@ -78,22 +75,29 @@ namespace Project.ViewModels
 
         public ICommand GenerateReportCommand { get; }
         public ICommand ExportToExcelCommand { get; }
-        public ICommand GoBackCommand { get; }
 
         public ReportPageViewModel()
         {
             GenerateReportCommand = new RelayCommand(param => GenerateReport());
             ExportToExcelCommand = new RelayCommand(param => ExportToExcel());
-            GoBackCommand = new RelayCommand(param => GoBack());
             LoadManagers();
+
+            // Первоначальные настройки: [начало года - сегодня]
+            StartDate = new DateTime(DateTime.Now.Year, 1, 1);
+            EndDate = DateTime.Now;
+
+            // Генерация отчета при инициализации
+            GenerateReport();
         }
 
+        // Вывод менеджеров с заказами
         private async void LoadManagers()
         {
             using (var context = new Db())
             {
                 Managers = await context.Users
-                    .Where(u => u.UsersDepartment == 4) // Фильтр по отделу менеджеров
+                    .Where(u => u.UsersDepartment == 4 && 
+                                context.Orders.Any(o => o.OrdersUser == u.UsersId))
                     .ToListAsync();
             }
         }
@@ -200,13 +204,6 @@ namespace Project.ViewModels
                     MessageBox.Show("Отчет успешно сохранен!");
                 }
             }
-        }
-
-        private void GoBack()
-        {
-            // Логика для возврата на предыдущую страницу
-            //var navigationService = System.Windows.Navigation.NavigationService.GetNavigationService(this);
-            //navigationService?.GoBack();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
