@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
@@ -14,6 +16,11 @@ namespace Project.ViewModels
     public class ReportPageViewModel : INotifyPropertyChanged
     {
         private List<User> _managers;
+        private int _selectedManagerId;
+        private DateTime? _startDate;
+        private DateTime? _endDate;
+        private SeriesCollection _salesSeries;
+        private List<string> _salesDates;
 
         public List<User> Managers
         {
@@ -25,8 +32,6 @@ namespace Project.ViewModels
             }
         }
 
-        private int _selectedManagerId;
-
         public int SelectedManagerId
         {
             get => _selectedManagerId;
@@ -36,8 +41,6 @@ namespace Project.ViewModels
                 OnPropertyChanged(nameof(SelectedManagerId));
             }
         }
-
-        private DateTime? _startDate;
 
         public DateTime? StartDate
         {
@@ -49,8 +52,6 @@ namespace Project.ViewModels
             }
         }
 
-        private DateTime? _endDate;
-
         public DateTime? EndDate
         {
             get => _endDate;
@@ -61,8 +62,6 @@ namespace Project.ViewModels
             }
         }
 
-        private SeriesCollection _salesSeries;
-
         public SeriesCollection SalesSeries
         {
             get => _salesSeries;
@@ -70,6 +69,16 @@ namespace Project.ViewModels
             {
                 _salesSeries = value;
                 OnPropertyChanged(nameof(SalesSeries));
+            }
+        }
+
+        public List<string> SalesDates // Для меток по оси X
+        {
+            get => _salesDates;
+            set
+            {
+                _salesDates = value;
+                OnPropertyChanged(nameof(SalesDates));
             }
         }
 
@@ -132,21 +141,24 @@ namespace Project.ViewModels
                     .Select(g => new
                     {
                         Date = g.Key,
-                        Total = g.Sum(o =>
-                            o.MmOrdersCars.Sum(m => (decimal)m.Car.CarPrice)) // Преобразуем CarPrice в decimal
+                        Total = g.Sum(o => o.MmOrdersCars.Sum(m => (decimal)m.Car.CarPrice))
                     })
-                    .ToList(); // Преобразуем в список
+                    .ToList();
 
+                // Создаем коллекцию значений для графика
                 SalesSeries = new SeriesCollection
                 {
-                    new LineSeries
+                    new ColumnSeries
                     {
                         Title = "Продажи",
-                        Values = new ChartValues<decimal>(salesData.Select(d => d.Total)),
+                        Values = new ChartValues<decimal>(salesData.Select(d => Math.Round(d.Total))),
                         DataLabels = true,
-                        LabelPoint = point => point.Y.ToString("N2") // Форматируем значения в легенде
+                        LabelPoint = point => point.Y.ToString("N0") 
                     }
                 };
+
+                // Устанавливаем метки по оси X
+                SalesDates = salesData.Select(d => d.Date.ToString("d")).ToList(); // Форматируем даты
             }
         }
 
