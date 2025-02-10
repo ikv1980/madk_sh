@@ -105,7 +105,7 @@ namespace Project.ViewModels
             using (var context = new Db())
             {
                 Managers = await context.Users
-                    .Where(u => u.UsersDepartment == 4 && 
+                    .Where(u => u.UsersDepartment == 4 &&
                                 context.Orders.Any(o => o.OrdersUser == u.UsersId))
                     .ToListAsync();
             }
@@ -117,8 +117,9 @@ namespace Project.ViewModels
             {
                 var query = context.Orders
                     .Include(o => o.MmOrdersCars) // Включаем связанные автомобили
-                    .ThenInclude(m => m.Car)      // Включаем данные об автомобилях
+                    .ThenInclude(m => m.Car) // Включаем данные об автомобилях
                     .Include(o => o.MmOrdersStatuses) // Включаем статусы заказов
+                    .Include(o => o.OrdersUserNavigation) // Включаем данные о менеджере
                     .AsQueryable();
 
                 if (SelectedManagerId != 0)
@@ -136,29 +137,66 @@ namespace Project.ViewModels
                     query = query.Where(o => o.OrdersData <= EndDate.Value);
                 }
 
+                // Группируем по дате и менеджеру
                 var salesData = query
-                    .GroupBy(o => o.OrdersData.Value.Date) // Группируем по дате
+                    .GroupBy(o => new { o.OrdersData.Value.Date, o.OrdersUserNavigation.UsersId })
                     .Select(g => new
                     {
-                        Date = g.Key,
+                        Date = g.Key.Date,
+                        ManagerId = g.Key.UsersId,
+                        ManagerName = g.First().OrdersUserNavigation.UsersSurname + " " +
+                                      g.First().OrdersUserNavigation.UsersName,
                         Total = g.Sum(o => o.MmOrdersCars.Sum(m => (decimal)m.Car.CarPrice))
                     })
                     .ToList();
 
                 // Создаем коллекцию значений для графика
-                SalesSeries = new SeriesCollection
+                var seriesCollection = new SeriesCollection();
+
+                // Получаем список всех менеджеров с продажами
+                var managers = salesData
+                    .Select(d => new { d.ManagerId, d.ManagerName })
+                    .Distinct()
+                    .ToList();
+
+                // Получаем все уникальные даты из данных
+                var allDates = salesData
+                    .Select(d => d.Date)
+                    .Distinct()
+                    .OrderBy(d => d)
+                    .ToList();
+
+                // Создаем серию для каждого менеджера
+                foreach (var manager in managers)
                 {
-                    new ColumnSeries
+                    var managerSales = salesData
+                        .Where(d => d.ManagerId == manager.ManagerId)
+                        .OrderBy(d => d.Date)
+                        .ToList();
+
+                    // Создаем список значений для каждой даты
+                    var values = new List<decimal>();
+                    foreach (var date in allDates)
                     {
-                        Title = "Продажи",
-                        Values = new ChartValues<decimal>(salesData.Select(d => Math.Round(d.Total))),
-                        DataLabels = true,
-                        LabelPoint = point => point.Y.ToString("N0") 
+                        var sale = managerSales.FirstOrDefault(d => d.Date == date);
+                        values.Add(sale != null ? Math.Round(sale.Total) : 0);
                     }
-                };
+
+                    seriesCollection.Add(new ColumnSeries
+                    {
+                        Title = manager.ManagerName, // Имя менеджера в легенде
+                        Values = new ChartValues<decimal>(values),
+                        DataLabels = true,
+                        LabelPoint = point => point.Y.ToString("N0")
+                    });
+                }
+
+                SalesSeries = seriesCollection;
 
                 // Устанавливаем метки по оси X
-                SalesDates = salesData.Select(d => d.Date.ToString("d")).ToList(); // Форматируем даты
+                SalesDates = allDates
+                    .Select(d => d.ToString("d"))
+                    .ToList(); // Форматируем даты
             }
         }
 
