@@ -104,10 +104,16 @@ namespace Project.ViewModels
         {
             using (var context = new Db())
             {
-                Managers = await context.Users
+                var managers = await context.Users
                     .Where(u => u.UsersDepartment == 4 &&
                                 context.Orders.Any(o => o.OrdersUser == u.UsersId))
                     .ToListAsync();
+
+                // Добавляем элемент "Все" в начало списка
+                Managers = new List<User>
+                {
+                    new User { UsersId = 0, UsersSurname = "Все", UsersName = "" }
+                }.Concat(managers).ToList();
             }
         }
 
@@ -122,6 +128,7 @@ namespace Project.ViewModels
                     .Include(o => o.OrdersUserNavigation) // Включаем данные о менеджере
                     .AsQueryable();
 
+                // Если выбран не "Все", применяем фильтр по менеджеру
                 if (SelectedManagerId != 0)
                 {
                     query = query.Where(o => o.OrdersUser == SelectedManagerId);
@@ -181,8 +188,8 @@ namespace Project.ViewModels
                         var sale = managerSales.FirstOrDefault(d => d.Date == date);
                         values.Add(sale != null ? Math.Round(sale.Total) : 0);
                     }
-
-                    seriesCollection.Add(new ColumnSeries
+                    // StackedColumnSeries, ColumnSeries, LineSeries
+                    seriesCollection.Add(new StackedColumnSeries()
                     {
                         Title = manager.ManagerName, // Имя менеджера в легенде
                         Values = new ChartValues<decimal>(values),

@@ -5,8 +5,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      xmlns:tools="clr-namespace:Project.Tools"
       mc:Ignorable="d"
       Title="ReportPage">
+    <Page.Resources>
+        <tools:UserFullNameConverter x:Key="UserFullNameConverter" />
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,12 +29,17 @@
         <!-- Панель управления -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
             <ComboBox x:Name="ManagerComboBox"
-                      DisplayMemberPath="UsersName"
                       SelectedValuePath="UsersId"
                       SelectedValue="{Binding SelectedManagerId}"
                       Width="200"
                       Margin="10,0"
-                      ItemsSource="{Binding Managers}" />
+                      ItemsSource="{Binding Managers}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource UserFullNameConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <DatePicker x:Name="StartDatePicker"
                         SelectedDate="{Binding StartDate}"
                         Margin="10,0"

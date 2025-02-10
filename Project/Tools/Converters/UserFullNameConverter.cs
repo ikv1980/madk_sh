@@ -11,7 +11,7 @@ namespace Project.Tools
         {
             if (value is User user)
             {
-                return $"{user.UsersName} {user.UsersSurname}";
+                return $"{user.UsersSurname} {user.UsersName}";
             }
 
             return string.Empty;
