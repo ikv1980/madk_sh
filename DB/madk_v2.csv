@@ -1,0 +1,2 @@
+"car_id";"car_mark";"car_model";"car_country";"car_type";"car_vin";"car_pts";"car_date";"car_color";"car_photo";"car_price";"car_block";"delete"
+<div class="alert alert-danger" role="alert"><img src="themes/dot.gif" title="" alt="" class="icon ic_s_error"> TypeError: PhpMyAdmin\Encoding::convertString(): Return value must be of type string, bool returned</div></body></html>
