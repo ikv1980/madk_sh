@@ -47,10 +47,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "mm_model_country",
-         "ObjectType": 0
-      },
-      {
          "Name": "mm_orders_cars",
          "ObjectType": 0
       },

@@ -65,7 +65,7 @@ public partial class Db : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             // Настройка подключения с использованием MariaDB
-            var connectionString = "server=213.171.25.72;port=3306;database=madk;uid=madk;pwd=Kostik80";
+            var connectionString = "server=213.171.25.72;port=3306;database=sh_madk;uid=madk;pwd=Kostik80";
             var serverVersion = new MariaDbServerVersion("11.5.2");
 
             // Здесь вы можете указать строку подключения напрямую
