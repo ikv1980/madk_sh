@@ -93,7 +93,7 @@
                 <TabItem Visibility="Collapsed">
                 </TabItem>
                 <!-- Вкладка Справочники -->
-                <TabItem x:Name="Directoryes"
+                <TabItem x:Name="Directories"
                          MouseUp="Directoryes_MouseUp"
                          FocusVisualStyle="{x:Null}">
                     <TabItem.Header>
@@ -103,10 +103,10 @@
                         </StackPanel>
                     </TabItem.Header>
                     <Popup x:Name="SubMenuPopup"
-                           PlacementTarget="{Binding ElementName=Directoryes}" StaysOpen="False">
+                           PlacementTarget="{Binding ElementName=Directories}" StaysOpen="False">
                         <StackPanel
                             Background="White"
-                            Width="{Binding ActualWidth, ElementName=Directoryes}">
+                            Width="{Binding ActualWidth, ElementName=Directories}">
                             <!-- Кнопка "Заказы" с вложенными кнопками -->
                             <Expander
                                 x:Name="OrdersExpander"
@@ -133,22 +133,22 @@
                                     <Button
                                         x:Name="OrdersClientButton"
                                         Content="Клиенты"
-                                        Tag="{x:Type direct:OrdersClientPage}"
+                                        Tag="{x:Type direct:OrderClientsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="OrdersDeliveryButton"
                                         Content="Типы доставки"
-                                        Tag="{x:Type direct:OrdersDeliveryPage}"
+                                        Tag="{x:Type direct:OrderDeliveriesPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="OrdersPaymentButton"
                                         Content="Типы оплаты"
-                                        Tag="{x:Type direct:OrdersPaymentPage}"
+                                        Tag="{x:Type direct:OrderPaymentsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="OrdersStatusButton"
                                         Content="Статусы заказа"
-                                        Tag="{x:Type direct:OrdersStatusPage}"
+                                        Tag="{x:Type direct:OrderStatusesPage}"
                                         Click="SubMenuButton_Click" />
                                 </StackPanel>
                             </Expander>
@@ -176,35 +176,35 @@
                                         Tag="{x:Type direct:CarsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
-                                        x:Name="CarsCountryButton"
-                                        Content="Страны"
-                                        Tag="{x:Type direct:CarsCountryPage}"
-                                        Click="SubMenuButton_Click" />
-                                    <Button
                                         x:Name="CarsMarkButton"
                                         Content="Марки"
-                                        Tag="{x:Type direct:CarsMarkPage}"
+                                        Tag="{x:Type direct:CarMarksPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="CarsModelButton"
                                         Content="Модели"
-                                        Tag="{x:Type direct:CarsModelPage}"
+                                        Tag="{x:Type direct:CarModelsPage}"
+                                        Click="SubMenuButton_Click" />
+                                    <Button
+                                        x:Name="CarsCountryButton"
+                                        Content="Страны"
+                                        Tag="{x:Type direct:CarCountriesPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="CarsTypeButton"
                                         Content="Типы кузова"
-                                        Tag="{x:Type direct:CarsTypePage}"
+                                        Tag="{x:Type direct:CarTypesPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="CarsColorButton"
                                         Content="Цвета"
-                                        Tag="{x:Type direct:CarsColorPage}"
+                                        Tag="{x:Type direct:CarColorsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Separator Background="Gainsboro" />
                                     <Button
                                         x:Name="MmMarkModelButton"
                                         Content="Марка - Модель"
-                                        Tag="{x:Type direct:MmMarkModelPage}"
+                                        Tag="{x:Type direct:CarMarkModelCountries}"
                                         Click="SubMenuButton_Click" />
                                 </StackPanel>
                             </Expander>
@@ -234,23 +234,23 @@
                                     <Button
                                         x:Name="UsersDepartmentButton"
                                         Content="Отделы"
-                                        Tag="{x:Type direct:UsersDepartmentPage}"
+                                        Tag="{x:Type direct:UserDepartmentsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
-                                        x:Name="UsersFunctionButton"
+                                        x:Name="UsersPositionButton"
                                         Content="Должности"
-                                        Tag="{x:Type direct:UsersFunctionPage}"
+                                        Tag="{x:Type direct:UserPositionsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Button
                                         x:Name="UsersStatusButton"
-                                        Content="Статусы"
-                                        Tag="{x:Type direct:UsersStatusPage}"
+                                        Content="Статусы сотрудников"
+                                        Tag="{x:Type direct:UserStatusesPage}"
                                         Click="SubMenuButton_Click" />
                                     <Separator Background="Gainsboro" />
                                     <Button
-                                        x:Name="MmDepartmentFunctionButton"
+                                        x:Name="MmDepartmentPositionButton"
                                         Content="Отдел - Должность"
-                                        Tag="{x:Type direct:MmDepartmentFunctionPage}"
+                                        Tag="{x:Type direct:UserDepartmentPositionsPage}"
                                         Click="SubMenuButton_Click" />
                                     <Separator Background="Gainsboro" />
                                 </StackPanel>

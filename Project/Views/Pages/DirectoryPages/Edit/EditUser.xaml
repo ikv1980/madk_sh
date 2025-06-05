@@ -197,9 +197,9 @@
                               FontSize="17"
                               modern:ControlHelper.CornerRadius="5"
                               modern:ControlHelper.PlaceholderText="Выберите должность"
-                              x:Name="EditUsersFunction"
-                              SelectedValuePath="FunctionId"
-                              DisplayMemberPath="FunctionName"
+                              x:Name="EditUsersPosition"
+                              SelectedValuePath="PositionId"
+                              DisplayMemberPath="PositionName"
                               Width="350"
                               IsEnabled="False"
                               BorderBrush="DimGray" />

@@ -4,52 +4,44 @@ using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditOrdersClient : UiWindow, IRefresh
+    public partial class EditOrdersClient : IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
-        private readonly string _oldPassword;
+        private readonly ulong _itemId;
         private readonly ValidateField _validator;
 
         // Конструктор для добавления данных
         public EditOrdersClient()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
             SaveButton.Content = "Добавить";
             SaveButton.Icon = SymbolRegular.AddCircle24;
-            ShowClientLogin.Visibility = Visibility.Collapsed;
-            EditClientLogin.Visibility = Visibility.Visible;
             _validator = new ValidateField();
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditOrdersClient(OrdersClient item, string button) : this()
+        public EditOrdersClient(Client item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            _oldPassword = item.ClientPassword;
-            _itemId = item.ClientId;
+            
+            _itemId = item.Id;
             EditClientName.Text = item.ClientName;
             EditClientPhone.Text = item.ClientPhone;
             EditClientMail.Text = item.ClientMail;
             EditClientAddData.Text = item.ClientAddData;
-            ClientDateRegistrationTextBlock.Text = item.ClientDateRegistration.ToString("dd.MM.yyyy");
+            ClientDateRegistrationTextBlock.Text = item.CreatedAt?.ToString("dd.MM.yyyy") ?? DateTime.Now.ToString("dd.MM.yyyy");
             EditClientStatus.SelectedItem = EditClientStatus.Items
                 .Cast<ComboBoxItem>()
-                .FirstOrDefault(i => i.Tag.ToString() == (item.ClientStatus == true ? "1" : "0"));
-            ShowClientLogin.Text = item.ClientLogin;
-            EditClientLogin.Text = item.ClientLogin;
+                .FirstOrDefault(i => i.Tag.ToString() == (item.ClientStatus ? "1" : "0"));
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -58,16 +50,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 Title = "Изменение данных";
                 SaveButton.Content = "Изменить";
                 SaveButton.Icon = SymbolRegular.EditProhibited28;
-                ShowClientLogin.Visibility = Visibility.Visible;
-                EditClientLogin.Visibility = Visibility.Collapsed;
             }
             else if (button == "Show")
             {
                 _isEditMode = true;
                 Title = "Просмотр данных";
                 SaveButton.Visibility = Visibility.Collapsed;
-                ShowClientLogin.Visibility = Visibility.Visible;
-                EditClientLogin.Visibility = Visibility.Collapsed;
             }
 
             if (button == "Delete")
@@ -86,8 +74,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.OrdersClients.FirstOrDefault(x => x.ClientId == _itemId)
-                    : new OrdersClient();
+                    ? DbUtils.db.Clients.FirstOrDefault(x => x.Id == _itemId)
+                    : new Client();
 
                 if (item == null)
                 {
@@ -98,7 +86,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.OrdersClients.Remove(item); 
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.OrdersClients.Remove(item); 
                 }
                 else
                 {
@@ -113,9 +101,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.ClientLogin = EditClientLogin.Text.Trim();
                     UpdateItem(item);
-                    DbUtils.db.OrdersClients.Add(item);
+                    DbUtils.db.Clients.Add(item);
                 }
 
                 DbUtils.db.SaveChanges();
@@ -161,65 +148,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (!_isEditMode && !_isDeleteMode)
-            {
-                var clientLogin = EditClientLogin.Text.Trim();
-
-                if (string.IsNullOrWhiteSpace(clientLogin))
-                {
-                    MessageBox.Show("Логин клиента не может быть пустым.", "Ошибка",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                    return false;
-                }
-
-                if (DbUtils.db.OrdersClients.Any(x => x.ClientLogin == clientLogin))
-                {
-                    MessageBox.Show("Клиент с таким логином уже существует.", "Ошибка",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                    return false;
-                }
-
-                if (!_validator.IsValid(EditClientPassword.Password, "password"))
-                {
-                    MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                    return false;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(EditClientPassword.Password.Trim()) &&
-                !_validator.IsValid(EditClientPassword.Password, "password"))
-            {
-                MessageBox.Show("Пароль должен содержать не менее 6 символов.", "Ошибка",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                return false;
-            }
-
             return true;
         }
 
         // Обновление данных объекта
-        private void UpdateItem(OrdersClient item)
+        private void UpdateItem(Client item)
         {
             item.ClientName = EditClientName.Text.Trim();
             item.ClientPhone = EditClientPhone.Text.Trim();
             item.ClientMail = EditClientMail.Text.Trim();
             item.ClientAddData = EditClientAddData.Text.Trim();
             item.ClientStatus = ((ComboBoxItem)EditClientStatus.SelectedItem)?.Tag.ToString() == "1";
-
-            if (!string.IsNullOrWhiteSpace(EditClientPassword.Password))
-            {
-                Helpers helper = new Helpers();
-                item.ClientPassword = helper.HashPassword(EditClientPassword.Password);
-            }
-            else
-            {
-                item.ClientPassword = _oldPassword;
-            }
         }
 
         // Фокус на элементе

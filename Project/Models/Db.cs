@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-
 
 namespace Project.Models;
 
@@ -19,826 +17,1152 @@ public partial class Db : DbContext
     {
     }
 
+    public virtual DbSet<Cache> Caches { get; set; }
+
+    public virtual DbSet<CacheLock> CacheLocks { get; set; }
+
     public virtual DbSet<Car> Cars { get; set; }
 
-    public virtual DbSet<CarsColor> CarsColors { get; set; }
+    public virtual DbSet<CarColor> CarColors { get; set; }
 
-    public virtual DbSet<CarsCountry> CarsCountries { get; set; }
+    public virtual DbSet<CarCountry> CarCountries { get; set; }
 
-    public virtual DbSet<CarsMark> CarsMarks { get; set; }
+    public virtual DbSet<CarMark> CarMarks { get; set; }
 
-    public virtual DbSet<CarsModel> CarsModels { get; set; }
+    public virtual DbSet<CarMarkModelCountry> CarMarkModelCountries { get; set; }
 
-    public virtual DbSet<CarsType> CarsTypes { get; set; }
+    public virtual DbSet<CarModel> CarModels { get; set; }
 
-    public virtual DbSet<MmDepartmentFunction> MmDepartmentFunctions { get; set; }
+    public virtual DbSet<CarPhoto> CarPhotos { get; set; }
 
-    public virtual DbSet<MmMarkModel> MmMarkModels { get; set; }
+    public virtual DbSet<CarType> CarTypes { get; set; }
 
-    public virtual DbSet<MmOrdersCar> MmOrdersCars { get; set; }
+    public virtual DbSet<Client> Clients { get; set; }
 
-    public virtual DbSet<MmOrdersStatus> MmOrdersStatuses { get; set; }
+    public virtual DbSet<Delivery> Deliveries { get; set; }
+
+    public virtual DbSet<FailedJob> FailedJobs { get; set; }
+
+    public virtual DbSet<Job> Jobs { get; set; }
+
+    public virtual DbSet<JobBatch> JobBatches { get; set; }
+
+    public virtual DbSet<Migration> Migrations { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
-    public virtual DbSet<OrdersClient> OrdersClients { get; set; }
+    public virtual DbSet<OrderCar> OrderCars { get; set; }
 
-    public virtual DbSet<OrdersDelivery> OrdersDeliveries { get; set; }
+    public virtual DbSet<OrderStatus> OrderStatuses { get; set; }
 
-    public virtual DbSet<OrdersPayment> OrdersPayments { get; set; }
+    public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
-    public virtual DbSet<OrdersStatus> OrdersStatuses { get; set; }
+    public virtual DbSet<Payment> Payments { get; set; }
 
-    public virtual DbSet<SitePage> SitePages { get; set; }
+    public virtual DbSet<PersonalAccessToken> PersonalAccessTokens { get; set; }
+
+    public virtual DbSet<Session> Sessions { get; set; }
+
+    public virtual DbSet<Status> Statuses { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UsersDepartment> UsersDepartments { get; set; }
+    public virtual DbSet<UserDepartment> UserDepartments { get; set; }
 
-    public virtual DbSet<UsersFunction> UsersFunctions { get; set; }
+    public virtual DbSet<UserDepartmentPosition> UserDepartmentPositions { get; set; }
 
-    public virtual DbSet<UsersStatus> UsersStatuses { get; set; }
+    public virtual DbSet<UserPosition> UserPositions { get; set; }
+
+    public virtual DbSet<UserStatus> UserStatuses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Проверьте, был ли уже установлен optionsBuilder
-        if (!optionsBuilder.IsConfigured)
-        {
-            // Настройка подключения с использованием MariaDB
-            var connectionString = "server=213.171.25.72;port=3306;database=sh_madk;uid=madk;pwd=Kostik80";
-            var serverVersion = new MariaDbServerVersion("11.5.2");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=213.171.25.72;port=3306;database=madk;uid=madk;pwd=Kostik80", Microsoft.EntityFrameworkCore.ServerVersion.Parse("11.5.2-mariadb"));
 
-            // Здесь вы можете указать строку подключения напрямую
-            optionsBuilder.UseMySql(connectionString, serverVersion);
-            // Для этапа разработки. В production-среде отключить!!! ikv1980
-            optionsBuilder
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors();
-        }
-    }
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_uca1400_ai_ci")
             .HasCharSet("utf8mb4");
 
+        modelBuilder.Entity<Cache>(entity =>
+        {
+            entity.HasKey(e => e.Key).HasName("PRIMARY");
+
+            entity
+                .ToTable("cache")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.Property(e => e.Key).HasColumnName("key");
+            entity.Property(e => e.Expiration)
+                .HasColumnType("int(11)")
+                .HasColumnName("expiration");
+            entity.Property(e => e.Value)
+                .IsRequired()
+                .HasColumnType("mediumtext")
+                .HasColumnName("value");
+        });
+
+        modelBuilder.Entity<CacheLock>(entity =>
+        {
+            entity.HasKey(e => e.Key).HasName("PRIMARY");
+
+            entity
+                .ToTable("cache_locks")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.Property(e => e.Key).HasColumnName("key");
+            entity.Property(e => e.Expiration)
+                .HasColumnType("int(11)")
+                .HasColumnName("expiration");
+            entity.Property(e => e.Owner)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("owner");
+        });
+
         modelBuilder.Entity<Car>(entity =>
         {
-            entity.HasKey(e => e.CarId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
                 .ToTable("cars")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.CarColor, "car_color");
+            entity.HasIndex(e => e.ColorId, "cars_color_id_foreign");
 
-            entity.HasIndex(e => e.CarCountry, "car_country");
+            entity.HasIndex(e => e.CountryId, "cars_country_id_foreign");
 
-            entity.HasIndex(e => e.CarMark, "car_mark");
+            entity.HasIndex(e => e.MarkId, "cars_mark_id_foreign");
 
-            entity.HasIndex(e => e.CarModel, "car_model");
+            entity.HasIndex(e => e.ModelId, "cars_model_id_foreign");
 
-            entity.HasIndex(e => e.CarPts, "car_pts").IsUnique();
+            entity.HasIndex(e => e.Pts, "cars_pts_unique").IsUnique();
 
-            entity.HasIndex(e => e.CarVin, "car_vin").IsUnique();
+            entity.HasIndex(e => e.TypeId, "cars_type_id_foreign");
 
-            entity.HasIndex(e => e.CarType, "cars_type");
+            entity.HasIndex(e => e.Vin, "cars_vin_unique").IsUnique();
 
-            entity.Property(e => e.CarId)
-                .HasColumnType("int(10)")
-                .HasColumnName("car_id");
-            entity.Property(e => e.CarBlock)
-                .HasComment("Номер заказа")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_block");
-            entity.Property(e => e.CarColor)
-                .HasComment("Цвет")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_color");
-            entity.Property(e => e.CarCountry)
-                .HasComment("Страна производства")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_country");
-            entity.Property(e => e.CarDate)
-                .HasComment("Дата производства")
-                .HasColumnName("car_date");
-            entity.Property(e => e.CarMark)
-                .HasComment("Производитель(марка)")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_mark");
-            entity.Property(e => e.CarModel)
-                .HasComment("Модель")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_model");
-            entity.Property(e => e.CarPhoto)
-                .HasComment("Фотография")
-                .HasColumnType("mediumblob")
-                .HasColumnName("car_photo");
-            entity.Property(e => e.CarPrice)
-                .HasComment("Цена")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_price");
-            entity.Property(e => e.CarPts)
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Block)
+                .HasComment("блок")
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("block");
+            entity.Property(e => e.ColorId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("color_id");
+            entity.Property(e => e.CountryId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("country_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DateAt)
+                .HasComment("дата производства")
+                .HasColumnName("date_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.MarkId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("mark_id");
+            entity.Property(e => e.ModelId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("model_id");
+            entity.Property(e => e.Price)
+                .HasPrecision(10, 2)
+                .HasComment("цена")
+                .HasColumnName("price");
+            entity.Property(e => e.Pts)
                 .IsRequired()
                 .HasMaxLength(20)
-                .HasComment("ПТС авто")
-                .HasColumnName("car_pts")
-                .UseCollation("utf8mb4_uca1400_ai_ci");
-            entity.Property(e => e.CarType)
-                .HasComment("Тип")
-                .HasColumnType("int(4)")
-                .HasColumnName("car_type");
-            entity.Property(e => e.CarVin)
+                .HasComment("PTS")
+                .HasColumnName("pts");
+            entity.Property(e => e.TypeId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("type_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.Vin)
                 .IsRequired()
                 .HasMaxLength(20)
-                .HasComment("VIN-код")
-                .HasColumnName("car_vin")
-                .UseCollation("utf8mb4_uca1400_ai_ci");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+                .HasComment("VIN")
+                .HasColumnName("vin");
 
-            entity.HasOne(d => d.CarColorNavigation).WithMany(p => p.Cars)
-                .HasForeignKey(d => d.CarColor)
-                .HasConstraintName("cars_ibfk_4");
+            entity.HasOne(d => d.Color).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.ColorId)
+                .HasConstraintName("cars_color_id_foreign");
 
-            entity.HasOne(d => d.CarCountryNavigation).WithMany(p => p.Cars)
-                .HasForeignKey(d => d.CarCountry)
-                .HasConstraintName("cars_ibfk_11");
+            entity.HasOne(d => d.Country).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.CountryId)
+                .HasConstraintName("cars_country_id_foreign");
 
-            entity.HasOne(d => d.CarMarkNavigation).WithMany(p => p.Cars)
-                .HasForeignKey(d => d.CarMark)
-                .HasConstraintName("cars_ibfk_9");
+            entity.HasOne(d => d.Mark).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.MarkId)
+                .HasConstraintName("cars_mark_id_foreign");
 
-            entity.HasOne(d => d.CarModelNavigation).WithMany(p => p.Cars)
-                .HasForeignKey(d => d.CarModel)
-                .HasConstraintName("cars_ibfk_10");
+            entity.HasOne(d => d.Model).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.ModelId)
+                .HasConstraintName("cars_model_id_foreign");
 
-            entity.HasOne(d => d.CarTypeNavigation).WithMany(p => p.Cars)
-                .HasForeignKey(d => d.CarType)
-                .HasConstraintName("cars_ibfk_12");
+            entity.HasOne(d => d.Type).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.TypeId)
+                .HasConstraintName("cars_type_id_foreign");
         });
 
-        modelBuilder.Entity<CarsColor>(entity =>
+        modelBuilder.Entity<CarColor>(entity =>
         {
-            entity.HasKey(e => e.ColorId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("cars_color")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("car_colors")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.ColorName, "color_name").IsUnique();
+            entity.HasIndex(e => e.ColorName, "car_colors_color_name_unique").IsUnique();
 
-            entity.Property(e => e.ColorId)
-                .HasColumnType("int(10)")
-                .HasColumnName("color_id");
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
             entity.Property(e => e.ColorName)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
-                .HasColumnName("color_name")
-                .UseCollation("utf8mb4_uca1400_ai_ci");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+                .HasColumnName("color_name");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<CarsCountry>(entity =>
+        modelBuilder.Entity<CarCountry>(entity =>
         {
-            entity.HasKey(e => e.CountryId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("cars_country")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("car_countries")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.CountryName, "country_name").IsUnique();
+            entity.HasIndex(e => e.CountryName, "car_countries_country_name_unique").IsUnique();
 
-            entity.Property(e => e.CountryId)
-                .HasColumnType("int(10)")
-                .HasColumnName("country_id");
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
             entity.Property(e => e.CountryName)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
-                .HasColumnName("country_name")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+                .HasColumnName("country_name");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<CarsMark>(entity =>
+        modelBuilder.Entity<CarMark>(entity =>
         {
-            entity.HasKey(e => e.MarkId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("cars_mark");
+            entity
+                .ToTable("car_marks")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.MarkName, "model_name").IsUnique();
+            entity.HasIndex(e => e.MarkName, "car_marks_mark_name_unique").IsUnique();
 
-            entity.Property(e => e.MarkId)
-                .HasColumnType("int(10)")
-                .HasColumnName("mark_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.MarkName)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование марки")
                 .HasColumnName("mark_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<CarsModel>(entity =>
-        {
-            entity.HasKey(e => e.ModelId).HasName("PRIMARY");
-
-            entity
-                .ToTable("cars_model")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
-
-            entity.HasIndex(e => e.ModelName, "model_name").IsUnique();
-
-            entity.Property(e => e.ModelId)
-                .HasColumnType("int(10)")
-                .HasColumnName("model_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.ModelName)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Наименование")
-                .HasColumnName("model_name")
-                .UseCollation("utf8mb4_uca1400_ai_ci");
-        });
-
-        modelBuilder.Entity<CarsType>(entity =>
-        {
-            entity.HasKey(e => e.TypeId).HasName("PRIMARY");
-
-            entity
-                .ToTable("cars_type")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
-
-            entity.Property(e => e.TypeId)
-                .HasColumnType("int(4)")
-                .HasColumnName("type_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.TypeName)
-                .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
-                .HasColumnName("type_name")
-                .HasCharSet("utf8mb3");
-        });
-
-        modelBuilder.Entity<MmDepartmentFunction>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("mm_department_function");
-
-            entity.HasIndex(e => new { e.DepartmentId, e.FunctionId }, "department_id").IsUnique();
-
-            entity.HasIndex(e => e.FunctionId, "function_id");
-
-            entity.Property(e => e.Id)
-                .HasColumnType("int(10)")
-                .HasColumnName("id");
-            entity.Property(e => e.DepartmentId)
-                .HasColumnType("int(10)")
-                .HasColumnName("department_id");
-            entity.Property(e => e.FunctionId)
-                .HasColumnType("int(10)")
-                .HasColumnName("function_id");
-
-            entity.HasOne(d => d.Department).WithMany(p => p.MmDepartmentFunctions)
-                .HasForeignKey(d => d.DepartmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("mm_department_function_ibfk_2");
-
-            entity.HasOne(d => d.Function).WithMany(p => p.MmDepartmentFunctions)
-                .HasForeignKey(d => d.FunctionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("mm_department_function_ibfk_1");
-        });
-
-        modelBuilder.Entity<MmMarkModel>(entity =>
+        modelBuilder.Entity<CarMarkModelCountry>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("mm_mark_model")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("car_mark_model_countries")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.CountryId, "country_id");
+            entity.HasIndex(e => e.CountryId, "car_mark_model_countries_country_id_foreign");
 
-            entity.HasIndex(e => e.MarkId, "mark_id");
+            entity.HasIndex(e => e.ModelId, "car_mark_model_countries_model_id_foreign");
 
-            entity.HasIndex(e => e.ModelId, "model_id");
+            entity.HasIndex(e => new { e.MarkId, e.ModelId, e.CountryId }, "unique_mark_model_country").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("id");
             entity.Property(e => e.CountryId)
-                .HasComment("id для страны")
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("country_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
             entity.Property(e => e.MarkId)
-                .HasComment("id для марки")
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("mark_id");
             entity.Property(e => e.ModelId)
-                .HasComment("id для модели")
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("model_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
 
-            entity.HasOne(d => d.Country).WithMany(p => p.MmMarkModels)
+            entity.HasOne(d => d.Country).WithMany(p => p.CarMarkModelCountries)
                 .HasForeignKey(d => d.CountryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("mm_mark_model_ibfk_3");
+                .HasConstraintName("car_mark_model_countries_country_id_foreign");
 
-            entity.HasOne(d => d.Mark).WithMany(p => p.MmMarkModels)
+            entity.HasOne(d => d.Mark).WithMany(p => p.CarMarkModelCountries)
                 .HasForeignKey(d => d.MarkId)
-                .HasConstraintName("mm_mark_model_ibfk_1");
+                .HasConstraintName("car_mark_model_countries_mark_id_foreign");
 
-            entity.HasOne(d => d.Model).WithMany(p => p.MmMarkModels)
+            entity.HasOne(d => d.Model).WithMany(p => p.CarMarkModelCountries)
                 .HasForeignKey(d => d.ModelId)
-                .HasConstraintName("mm_mark_model_ibfk_2");
+                .HasConstraintName("car_mark_model_countries_model_id_foreign");
         });
 
-        modelBuilder.Entity<MmOrdersCar>(entity =>
+        modelBuilder.Entity<CarModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("mm_orders_cars")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("car_models")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.CarId, "car_id");
-
-            entity.HasIndex(e => e.OrderId, "order_id");
+            entity.HasIndex(e => e.ModelName, "car_models_model_name_unique").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("id");
-            entity.Property(e => e.CarId)
-                .HasComment("id для авто")
-                .HasColumnType("int(10)")
-                .HasColumnName("car_id");
-            entity.Property(e => e.OrderId)
-                .HasComment("id для заказа")
-                .HasColumnType("int(10)")
-                .HasColumnName("order_id");
-
-            entity.HasOne(d => d.Car).WithMany(p => p.MmOrdersCars)
-                .HasForeignKey(d => d.CarId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("mm_orders_cars_ibfk_2");
-
-            entity.HasOne(d => d.Order).WithMany(p => p.MmOrdersCars)
-                .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("mm_orders_cars_ibfk_1");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.ModelName)
+                .IsRequired()
+                .HasColumnName("model_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<MmOrdersStatus>(entity =>
+        modelBuilder.Entity<CarPhoto>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("mm_orders_status");
+            entity
+                .ToTable("car_photos")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.StatusId, "mm_orders_status_ibfk_4");
-
-            entity.HasIndex(e => e.OrderId, "order_id");
+            entity.HasIndex(e => e.CarId, "car_photos_car_id_foreign");
 
             entity.Property(e => e.Id)
-                .HasColumnType("int(11)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("id");
-            entity.Property(e => e.Date)
+            entity.Property(e => e.CarId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("car_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.Url)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("url");
+
+            entity.HasOne(d => d.Car).WithMany(p => p.CarPhotos)
+                .HasForeignKey(d => d.CarId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("car_photos_car_id_foreign");
+        });
+
+        modelBuilder.Entity<CarType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("car_types")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.TypeName, "car_types_type_name_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.TypeName)
+                .IsRequired()
+                .HasColumnName("type_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("clients")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.ClientMail, "clients_client_mail_unique").IsUnique();
+
+            entity.HasIndex(e => e.ClientName, "clients_client_name_unique").IsUnique();
+
+            entity.HasIndex(e => e.ClientPhone, "clients_client_phone_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.ClientAddData)
+                .HasColumnType("text")
+                .HasColumnName("client_add_data");
+            entity.Property(e => e.ClientAddress)
+                .HasMaxLength(255)
+                .HasColumnName("client_address");
+            entity.Property(e => e.ClientMail)
+                .IsRequired()
+                .HasColumnName("client_mail");
+            entity.Property(e => e.ClientName)
+                .IsRequired()
+                .HasColumnName("client_name");
+            entity.Property(e => e.ClientPhone)
+                .IsRequired()
+                .HasColumnName("client_phone");
+            entity.Property(e => e.ClientStatus).HasColumnName("client_status");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<Delivery>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("deliveries")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.DeliveryName, "deliveries_delivery_name_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.DeliveryName)
+                .IsRequired()
+                .HasColumnName("delivery_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<FailedJob>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("failed_jobs")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.Uuid, "failed_jobs_uuid_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Connection)
+                .IsRequired()
+                .HasColumnType("text")
+                .HasColumnName("connection");
+            entity.Property(e => e.Exception)
+                .IsRequired()
+                .HasColumnName("exception");
+            entity.Property(e => e.FailedAt)
                 .HasDefaultValueSql("current_timestamp()")
-                .HasComment("Дата смены статуса")
-                .HasColumnType("datetime")
-                .HasColumnName("date");
-            entity.Property(e => e.OrderId)
-                .HasComment("id заказа")
-                .HasColumnType("int(10)")
-                .HasColumnName("order_id");
-            entity.Property(e => e.StatusId)
-                .HasComment("id статуса")
-                .HasColumnType("int(4)")
-                .HasColumnName("status_id");
+                .HasColumnType("timestamp")
+                .HasColumnName("failed_at");
+            entity.Property(e => e.Payload)
+                .IsRequired()
+                .HasColumnName("payload");
+            entity.Property(e => e.Queue)
+                .IsRequired()
+                .HasColumnType("text")
+                .HasColumnName("queue");
+            entity.Property(e => e.Uuid)
+                .IsRequired()
+                .HasColumnName("uuid");
+        });
 
-            entity.HasOne(d => d.Order).WithMany(p => p.MmOrdersStatuses)
-                .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("mm_orders_status_ibfk_3");
+        modelBuilder.Entity<Job>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.HasOne(d => d.Status).WithMany(p => p.MmOrdersStatuses)
-                .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("mm_orders_status_ibfk_4");
+            entity
+                .ToTable("jobs")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.Queue, "jobs_queue_index");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Attempts)
+                .HasColumnType("tinyint(3) unsigned")
+                .HasColumnName("attempts");
+            entity.Property(e => e.AvailableAt)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("available_at");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Payload)
+                .IsRequired()
+                .HasColumnName("payload");
+            entity.Property(e => e.Queue)
+                .IsRequired()
+                .HasColumnName("queue");
+            entity.Property(e => e.ReservedAt)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("reserved_at");
+        });
+
+        modelBuilder.Entity<JobBatch>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("job_batches")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CancelledAt)
+                .HasColumnType("int(11)")
+                .HasColumnName("cancelled_at");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("int(11)")
+                .HasColumnName("created_at");
+            entity.Property(e => e.FailedJobIds)
+                .IsRequired()
+                .HasColumnName("failed_job_ids");
+            entity.Property(e => e.FailedJobs)
+                .HasColumnType("int(11)")
+                .HasColumnName("failed_jobs");
+            entity.Property(e => e.FinishedAt)
+                .HasColumnType("int(11)")
+                .HasColumnName("finished_at");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("name");
+            entity.Property(e => e.Options)
+                .HasColumnType("mediumtext")
+                .HasColumnName("options");
+            entity.Property(e => e.PendingJobs)
+                .HasColumnType("int(11)")
+                .HasColumnName("pending_jobs");
+            entity.Property(e => e.TotalJobs)
+                .HasColumnType("int(11)")
+                .HasColumnName("total_jobs");
+        });
+
+        modelBuilder.Entity<Migration>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("migrations")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Batch)
+                .HasColumnType("int(11)")
+                .HasColumnName("batch");
+            entity.Property(e => e.Migration1)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("migration");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrdersId).HasName("PRIMARY");
-
-            entity.ToTable("orders");
-
-            entity.HasIndex(e => e.OrdersClient, "orders_client");
-
-            entity.HasIndex(e => e.OrdersDelivery, "orders_delivery");
-
-            entity.HasIndex(e => e.OrdersUser, "orders_ibfk_5");
-
-            entity.HasIndex(e => e.OrdersPayment, "orders_payment");
-
-            entity.Property(e => e.OrdersId)
-                .HasColumnType("int(10)")
-                .HasColumnName("orders_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.OrdersAddress)
-                .HasComment("Адрес доставки")
-                .HasColumnType("text")
-                .HasColumnName("orders_address");
-            entity.Property(e => e.OrdersClient)
-                .HasComment("id клиента")
-                .HasColumnType("int(10)")
-                .HasColumnName("orders_client");
-            entity.Property(e => e.OrdersData)
-                .HasDefaultValueSql("current_timestamp()")
-                .HasComment("Дата создания заказа")
-                .HasColumnType("datetime")
-                .HasColumnName("orders_data");
-            entity.Property(e => e.OrdersDelivery)
-                .HasComment("Тип доставки")
-                .HasColumnType("int(4)")
-                .HasColumnName("orders_delivery");
-            entity.Property(e => e.OrdersPayment)
-                .HasComment("Тип оплаты")
-                .HasColumnType("int(4)")
-                .HasColumnName("orders_payment");
-            entity.Property(e => e.OrdersUser)
-                .HasComment("id сотрудника")
-                .HasColumnType("int(10)")
-                .HasColumnName("orders_user");
-
-            entity.HasOne(d => d.OrdersClientNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.OrdersClient)
-                .HasConstraintName("orders_ibfk_1");
-
-            entity.HasOne(d => d.OrdersDeliveryNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.OrdersDelivery)
-                .HasConstraintName("orders_ibfk_3");
-
-            entity.HasOne(d => d.OrdersPaymentNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.OrdersPayment)
-                .HasConstraintName("orders_ibfk_4");
-
-            entity.HasOne(d => d.OrdersUserNavigation).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.OrdersUser)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("orders_ibfk_5");
-        });
-
-        modelBuilder.Entity<OrdersClient>(entity =>
-        {
-            entity.HasKey(e => e.ClientId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("orders_client")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("orders")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.ClientLogin, "client_login").IsUnique();
+            entity.HasIndex(e => e.ClientId, "orders_client_id_foreign");
 
-            entity.HasIndex(e => e.ClientMail, "client_mail").IsUnique();
+            entity.HasIndex(e => e.DeliveryId, "orders_delivery_id_foreign");
 
+            entity.HasIndex(e => e.PaymentId, "orders_payment_id_foreign");
+
+            entity.HasIndex(e => e.UserId, "orders_user_id_foreign");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
             entity.Property(e => e.ClientId)
-                .HasColumnType("int(10)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("client_id");
-            entity.Property(e => e.ClientAddData)
-                .HasMaxLength(500)
-                .HasComment("Дополнительные данные")
-                .HasColumnName("client_add_data")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientDateRegistration)
-                .HasDefaultValueSql("current_timestamp()")
-                .HasComment("Дата регистрации")
-                .HasColumnName("client_date_registration");
-            entity.Property(e => e.ClientLogin)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Логин")
-                .HasColumnName("client_login")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientMail)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("E-mail")
-                .HasColumnName("client_mail")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientName)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Имя")
-                .HasColumnName("client_name")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientPassword)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Пароль (хеш)")
-                .HasColumnName("client_password")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientPhone)
-                .HasMaxLength(50)
-                .HasComment("Телефон")
-                .HasColumnName("client_phone")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.ClientStatus)
-                .IsRequired()
-                .HasDefaultValueSql("'1'")
-                .HasComment("неактивный/активный")
-                .HasColumnName("client_status");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-        });
-
-        modelBuilder.Entity<OrdersDelivery>(entity =>
-        {
-            entity.HasKey(e => e.DeliveryId).HasName("PRIMARY");
-
-            entity.ToTable("orders_delivery");
-
-            entity.HasIndex(e => e.DeliveryName, "delivery_name").IsUnique();
-
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.DeliveryAddress)
+                .HasColumnType("text")
+                .HasColumnName("delivery_address");
             entity.Property(e => e.DeliveryId)
-                .HasColumnType("int(4)")
+                .HasColumnType("bigint(20) unsigned")
                 .HasColumnName("delivery_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.DeliveryName)
-                .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
-                .HasColumnName("delivery_name");
+            entity.Property(e => e.PaymentId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("payment_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UserId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("user_id");
+
+            entity.HasOne(d => d.Client).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.ClientId)
+                .HasConstraintName("orders_client_id_foreign");
+
+            entity.HasOne(d => d.Delivery).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.DeliveryId)
+                .HasConstraintName("orders_delivery_id_foreign");
+
+            entity.HasOne(d => d.Payment).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.PaymentId)
+                .HasConstraintName("orders_payment_id_foreign");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("orders_user_id_foreign");
         });
 
-        modelBuilder.Entity<OrdersPayment>(entity =>
+        modelBuilder.Entity<OrderCar>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("orders_payment");
+            entity
+                .ToTable("order_cars")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.PaymentName, "payment_name").IsUnique();
+            entity.HasIndex(e => e.CarId, "order_cars_car_id_foreign");
 
-            entity.Property(e => e.PaymentId)
-                .HasColumnType("int(4)")
-                .HasColumnName("payment_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+            entity.HasIndex(e => new { e.OrderId, e.CarId }, "unique_order_car").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CarId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("car_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.OrderId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("order_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Car).WithMany(p => p.OrderCars)
+                .HasForeignKey(d => d.CarId)
+                .HasConstraintName("order_cars_car_id_foreign");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderCars)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("order_cars_order_id_foreign");
+        });
+
+        modelBuilder.Entity<OrderStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("order_statuses")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.OrderId, "order_statuses_order_id_foreign");
+
+            entity.HasIndex(e => e.StatusId, "order_statuses_status_id_foreign");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.OrderId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("order_id");
+            entity.Property(e => e.StatusId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("status_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderStatuses)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("order_statuses_order_id_foreign");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.OrderStatuses)
+                .HasForeignKey(d => d.StatusId)
+                .HasConstraintName("order_statuses_status_id_foreign");
+        });
+
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Email).HasName("PRIMARY");
+
+            entity
+                .ToTable("password_reset_tokens")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Token)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("token");
+        });
+
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("payments")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.PaymentName, "payments_payment_name_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.PaymentName)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
                 .HasColumnName("payment_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<OrdersStatus>(entity =>
+        modelBuilder.Entity<PersonalAccessToken>(entity =>
         {
-            entity.HasKey(e => e.OrderStatusId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("orders_status");
+            entity
+                .ToTable("personal_access_tokens")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.Property(e => e.OrderStatusId)
-                .HasColumnType("int(4)")
-                .HasColumnName("order_status_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.OrderStatusDescription)
-                .HasComment("Описание")
+            entity.HasIndex(e => e.Token, "personal_access_tokens_token_unique").IsUnique();
+
+            entity.HasIndex(e => new { e.TokenableType, e.TokenableId }, "personal_access_tokens_tokenable_type_tokenable_id_index");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Abilities)
                 .HasColumnType("text")
-                .HasColumnName("order_status_description");
-            entity.Property(e => e.OrderStatusName)
+                .HasColumnName("abilities");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("expires_at");
+            entity.Property(e => e.LastUsedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("last_used_at");
+            entity.Property(e => e.Name)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasComment("Наименование")
-                .HasColumnName("order_status_name");
+                .HasMaxLength(255)
+                .HasColumnName("name");
+            entity.Property(e => e.Token)
+                .IsRequired()
+                .HasMaxLength(64)
+                .HasColumnName("token");
+            entity.Property(e => e.TokenableId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("tokenable_id");
+            entity.Property(e => e.TokenableType)
+                .IsRequired()
+                .HasColumnName("tokenable_type");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<SitePage>(entity =>
+        modelBuilder.Entity<Session>(entity =>
         {
-            entity.HasKey(e => e.PageId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("site_pages");
+            entity
+                .ToTable("sessions")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.Property(e => e.PageId)
+            entity.HasIndex(e => e.LastActivity, "sessions_last_activity_index");
+
+            entity.HasIndex(e => e.UserId, "sessions_user_id_index");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IpAddress)
+                .HasMaxLength(45)
+                .HasColumnName("ip_address");
+            entity.Property(e => e.LastActivity)
                 .HasColumnType("int(11)")
-                .HasColumnName("page_id");
-            entity.Property(e => e.PageIcon)
+                .HasColumnName("last_activity");
+            entity.Property(e => e.Payload)
                 .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("page_icon");
-            entity.Property(e => e.PageNameEng)
+                .HasColumnName("payload");
+            entity.Property(e => e.UserAgent)
+                .HasColumnType("text")
+                .HasColumnName("user_agent");
+            entity.Property(e => e.UserId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("user_id");
+        });
+
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("statuses")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.StatusName, "statuses_status_name_unique").IsUnique();
+
+            entity.HasIndex(e => e.StatusNumber, "statuses_status_number_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.StatusDescription)
+                .HasColumnType("text")
+                .HasColumnName("status_description");
+            entity.Property(e => e.StatusName)
                 .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("page_name_eng");
-            entity.Property(e => e.PageNameRus)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("page_name_rus");
-            entity.Property(e => e.PageNumber)
-                .HasColumnType("int(4)")
-                .HasColumnName("page_number");
-            entity.Property(e => e.PageShow).HasColumnName("page_show");
+                .HasColumnName("status_name");
+            entity.Property(e => e.StatusNumber)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("status_number");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UsersId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
                 .ToTable("users")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.UsersDepartment, "user_department");
+            entity.HasIndex(e => e.DepartmentId, "users_department_id_foreign");
 
-            entity.HasIndex(e => e.UsersFunction, "user_function");
+            entity.HasIndex(e => e.Email, "users_email_unique").IsUnique();
 
-            entity.HasIndex(e => e.UsersLogin, "users_login").IsUnique();
+            entity.HasIndex(e => e.Login, "users_login_unique").IsUnique();
 
-            entity.HasIndex(e => e.UsersMail, "users_mail").IsUnique();
+            entity.HasIndex(e => e.PositionId, "users_position_id_foreign");
 
-            entity.HasIndex(e => e.UsersStatus, "users_status");
+            entity.HasIndex(e => e.StatusId, "users_status_id_foreign");
 
-            entity.Property(e => e.UsersId)
-                .HasColumnType("int(10)")
-                .HasColumnName("users_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.UsersBirthday)
-                .HasComment("Дата рождения")
-                .HasColumnName("users_birthday");
-            entity.Property(e => e.UsersDepartment)
-                .HasDefaultValueSql("'1'")
-                .HasComment("Отдел")
-                .HasColumnType("int(4)")
-                .HasColumnName("users_department");
-            entity.Property(e => e.UsersFunction)
-                .HasDefaultValueSql("'1'")
-                .HasComment("Должность")
-                .HasColumnType("int(4)")
-                .HasColumnName("users_function");
-            entity.Property(e => e.UsersLogin)
-                .IsRequired()
-                .HasComment("Логин")
-                .HasColumnName("users_login")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersMail)
-                .HasComment("E-mail")
-                .HasColumnName("users_mail")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersName)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Имя")
-                .HasColumnName("users_name")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersPassword)
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.Birthday)
+                .HasComment("день рождения")
+                .HasColumnName("birthday");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.DepartmentId)
+                .HasComment("отдел")
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("department_id");
+            entity.Property(e => e.Email)
+                .HasComment("email")
+                .HasColumnName("email");
+            entity.Property(e => e.Firstname)
                 .IsRequired()
                 .HasMaxLength(255)
-                .HasComment("Пароль (хеш)")
-                .HasColumnName("users_password")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersPatronymic)
-                .HasMaxLength(100)
-                .HasComment("Отчество")
-                .HasColumnName("users_patronymic")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersPermissions)
-                .HasComment("Разрешения")
-                .HasColumnType("text")
-                .HasColumnName("users_permissions")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersPhone)
-                .HasMaxLength(50)
-                .HasComment("Телефон")
-                .HasColumnName("users_phone")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.UsersStartWork)
-                .HasComment("Дата устройства на работу")
-                .HasColumnName("users_start_work");
-            entity.Property(e => e.UsersStatus)
-                .HasDefaultValueSql("'1'")
-                .HasComment("Статус")
-                .HasColumnType("int(4)")
-                .HasColumnName("users_status");
-            entity.Property(e => e.UsersStatusChange)
-                .HasComment("Дата смены статуса")
-                .HasColumnName("users_status_change");
-            entity.Property(e => e.UsersSurname)
+                .HasComment("имя")
+                .HasColumnName("firstname");
+            entity.Property(e => e.Login)
                 .IsRequired()
+                .HasComment("логин")
+                .HasColumnName("login");
+            entity.Property(e => e.Password)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("пароль")
+                .HasColumnName("password");
+            entity.Property(e => e.Patronymic)
+                .HasMaxLength(255)
+                .HasComment("отчество")
+                .HasColumnName("patronymic");
+            entity.Property(e => e.Permissions)
+                .HasComment("разрешения")
+                .HasColumnType("json")
+                .HasColumnName("permissions");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(255)
+                .HasComment("телефон")
+                .HasColumnName("phone");
+            entity.Property(e => e.PositionId)
+                .HasComment("должность")
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("position_id");
+            entity.Property(e => e.RememberToken)
                 .HasMaxLength(100)
-                .HasComment("Фамилия")
-                .HasColumnName("users_surname")
-                .HasCharSet("utf8mb3");
+                .HasColumnName("remember_token");
+            entity.Property(e => e.StartWork)
+                .HasComment("трудоустройство")
+                .HasColumnName("start_work");
+            entity.Property(e => e.StatusAt)
+                .HasComment("смена статуса")
+                .HasColumnName("status_at");
+            entity.Property(e => e.StatusId)
+                .HasComment("статус")
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("status_id");
+            entity.Property(e => e.Surname)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("фамилия")
+                .HasColumnName("surname");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
 
-            entity.HasOne(d => d.UsersDepartmentNavigation).WithMany(p => p.Users)
-                .HasForeignKey(d => d.UsersDepartment)
-                .HasConstraintName("users_ibfk_1");
+            entity.HasOne(d => d.Department).WithMany(p => p.Users)
+                .HasForeignKey(d => d.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("users_department_id_foreign");
 
-            entity.HasOne(d => d.UsersFunctionNavigation).WithMany(p => p.Users)
-                .HasForeignKey(d => d.UsersFunction)
-                .HasConstraintName("users_ibfk_4");
+            entity.HasOne(d => d.Position).WithMany(p => p.Users)
+                .HasForeignKey(d => d.PositionId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("users_position_id_foreign");
 
-            entity.HasOne(d => d.UsersStatusNavigation).WithMany(p => p.Users)
-                .HasForeignKey(d => d.UsersStatus)
-                .HasConstraintName("users_ibfk_3");
+            entity.HasOne(d => d.Status).WithMany(p => p.Users)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("users_status_id_foreign");
         });
 
-        modelBuilder.Entity<UsersDepartment>(entity =>
+        modelBuilder.Entity<UserDepartment>(entity =>
         {
-            entity.HasKey(e => e.DepartmentId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("users_department")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("user_departments")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.Property(e => e.DepartmentId)
-                .HasColumnType("int(4)")
-                .HasColumnName("department_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
+            entity.HasIndex(e => e.DepartmentMail, "user_departments_department_mail_unique").IsUnique();
+
+            entity.HasIndex(e => e.DepartmentName, "user_departments_department_name_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.DepartmentDescription)
-                .HasComment("Описание")
                 .HasColumnType("text")
-                .HasColumnName("department_description")
-                .HasCharSet("utf8mb3");
+                .HasColumnName("department_description");
             entity.Property(e => e.DepartmentMail)
-                .HasMaxLength(100)
-                .HasComment("E-mail отдела")
-                .HasColumnName("department_mail")
-                .UseCollation("utf8mb4_bin");
+                .IsRequired()
+                .HasColumnName("department_mail");
             entity.Property(e => e.DepartmentName)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("Наименование")
-                .HasColumnName("department_name")
-                .HasCharSet("utf8mb3");
+                .HasColumnName("department_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
-        modelBuilder.Entity<UsersFunction>(entity =>
+        modelBuilder.Entity<UserDepartmentPosition>(entity =>
         {
-            entity.HasKey(e => e.FunctionId).HasName("PRIMARY");
-
-            entity.ToTable("users_function");
-
-            entity.Property(e => e.FunctionId)
-                .HasColumnType("int(4)")
-                .HasColumnName("function_id");
-            entity.Property(e => e.Delete)
-                .HasComment("Метка удаления")
-                .HasColumnName("delete");
-            entity.Property(e => e.FunctionDescription)
-                .HasComment("Описание")
-                .HasColumnType("text")
-                .HasColumnName("function_description");
-            entity.Property(e => e.FunctionName)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("Наименование")
-                .HasColumnName("function_name");
-        });
-
-        modelBuilder.Entity<UsersStatus>(entity =>
-        {
-            entity.HasKey(e => e.StatusId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity
-                .ToTable("users_status")
-                .UseCollation("utf8mb3_uca1400_ai_ci");
+                .ToTable("user_department_positions")
+                .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.StatusName, "status_name").IsUnique();
+            entity.HasIndex(e => new { e.DepartmentId, e.PositionId }, "unique_department_position").IsUnique();
 
-            entity.Property(e => e.StatusId)
-                .HasColumnType("int(4)")
-                .HasColumnName("status_id");
-            entity.Property(e => e.Delete).HasColumnName("delete");
+            entity.HasIndex(e => e.PositionId, "user_department_positions_position_id_foreign");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.DepartmentId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("department_id");
+            entity.Property(e => e.PositionId)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("position_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Department).WithMany(p => p.UserDepartmentPositions)
+                .HasForeignKey(d => d.DepartmentId)
+                .HasConstraintName("user_department_positions_department_id_foreign");
+
+            entity.HasOne(d => d.Position).WithMany(p => p.UserDepartmentPositions)
+                .HasForeignKey(d => d.PositionId)
+                .HasConstraintName("user_department_positions_position_id_foreign");
+        });
+
+        modelBuilder.Entity<UserPosition>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("user_positions")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.PositionName, "user_positions_position_name_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.PositionDescription)
+                .HasColumnType("text")
+                .HasColumnName("position_description");
+            entity.Property(e => e.PositionName)
+                .IsRequired()
+                .HasColumnName("position_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<UserStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("user_statuses")
+                .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.StatusName, "user_statuses_status_name_unique").IsUnique();
+
+            entity.HasIndex(e => e.StatusNumber, "user_statuses_status_number_unique").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("bigint(20) unsigned")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.StatusName)
                 .IsRequired()
-                .HasMaxLength(30)
-                .HasColumnName("status_name")
-                .HasCharSet("utf8mb3");
+                .HasColumnName("status_name");
+            entity.Property(e => e.StatusNumber)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("status_number");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

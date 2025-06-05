@@ -7,10 +7,10 @@ namespace Project.Tools
     {
         public static readonly Dictionary<Type, string> DefaultSortProperties = new Dictionary<Type, string>
         {
-            { typeof(UsersDepartment), nameof(UsersDepartment.DepartmentName) },
-            { typeof(UsersFunction), nameof(UsersFunction.FunctionName) },
-            { typeof(UsersStatus), nameof(UsersStatus.StatusName) },
-            { typeof(CarsColor), nameof(CarsColor.ColorName) },
+            { typeof(UserDepartment), nameof(UserDepartment.DepartmentName) },
+            { typeof(UserPosition), nameof(UserPosition.PositionName) },
+            { typeof(UserStatus), nameof(UserStatus.StatusName) },
+            { typeof(CarColor), nameof(CarColor.ColorName) },
         };
     }
 
@@ -24,15 +24,15 @@ namespace Project.Tools
                     typeof(Car),
                     new List<string>
                     {
-                        "CarColorNavigation.ColorName",
-                        "CarCountryNavigation.CountryName",
-                        "CarMarkNavigation.MarkName",
-                        "CarModelNavigation.ModelName",
-                        "CarTypeNavigation.TypeName",
+                        "Color.ColorName",
+                        "Country.CountryName",
+                        "Mark.MarkName",
+                        "Model.ModelName",
+                        "Type.TypeName",
                     }
                 },
                 {
-                    typeof(MmMarkModel),
+                    typeof(CarMarkModelCountry),
                     new List<string>
                     {
                         "Mark.MarkName",
@@ -44,28 +44,28 @@ namespace Project.Tools
                     typeof(User),
                     new List<string>
                     {
-                        "UsersDepartmentNavigation.DepartmentName",
-                        "UsersFunctionNavigation.FunctionName",
-                        "UsersStatusNavigation.StatusName",
+                        "Department.DepartmentName",
+                        "Position.PositionName",
+                        "Status.StatusName",
                     }
                 },
                 {
-                    typeof(MmDepartmentFunction),
+                    typeof(UserDepartmentPosition),
                     new List<string>
                     {
                         "Department.DepartmentName",
-                        "Function.FunctionName",
+                        "Position.PositionName",
                     }
                 },
                 {
                     typeof(Order),
                     new List<string>
                     {
-                        "OrdersClientNavigation.ClientName",
-                        "OrdersDeliveryNavigation.DeliveryName",
-                        "OrdersPaymentNavigation.PaymentName",
-                        "OrdersUserNavigation.UsersName",
-                        "OrdersUserNavigation.UsersSurname",
+                        "Client.ClientName",
+                        "Delivery.DeliveryName",
+                        "Payment.PaymentName",
+                        "User.Firstname",
+                        "User.Surname",
                     }
                 },
             };

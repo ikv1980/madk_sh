@@ -7,88 +7,91 @@ namespace Project.Models;
 
 public partial class User
 {
-    public int UsersId { get; set; }
+    public ulong Id { get; set; }
 
     /// <summary>
-    /// Логин
+    /// логин
     /// </summary>
-    public string UsersLogin { get; set; }
+    public string Login { get; set; }
 
     /// <summary>
-    /// Пароль (хеш)
+    /// пароль
     /// </summary>
-    public string UsersPassword { get; set; }
+    public string Password { get; set; }
 
     /// <summary>
-    /// E-mail
+    /// имя
     /// </summary>
-    public string UsersMail { get; set; }
+    public string Firstname { get; set; }
 
     /// <summary>
-    /// Отдел
+    /// фамилия
     /// </summary>
-    public int UsersDepartment { get; set; }
+    public string Surname { get; set; }
 
     /// <summary>
-    /// Должность
+    /// отчество
     /// </summary>
-    public int UsersFunction { get; set; }
+    public string Patronymic { get; set; }
 
     /// <summary>
-    /// Статус
+    /// email
     /// </summary>
-    public int UsersStatus { get; set; }
+    public string Email { get; set; }
 
     /// <summary>
-    /// Дата смены статуса
+    /// телефон
     /// </summary>
-    public DateOnly? UsersStatusChange { get; set; }
+    public string Phone { get; set; }
 
     /// <summary>
-    /// Имя
+    /// день рождения
     /// </summary>
-    public string UsersName { get; set; }
+    public DateOnly? Birthday { get; set; }
 
     /// <summary>
-    /// Фамилия
+    /// отдел
     /// </summary>
-    public string UsersSurname { get; set; }
+    public ulong? DepartmentId { get; set; }
 
     /// <summary>
-    /// Отчество
+    /// должность
     /// </summary>
-    public string UsersPatronymic { get; set; }
+    public ulong? PositionId { get; set; }
 
     /// <summary>
-    /// Телефон
+    /// трудоустройство
     /// </summary>
-    public string UsersPhone { get; set; }
+    public DateOnly? StartWork { get; set; }
 
     /// <summary>
-    /// Дата рождения
+    /// статус
     /// </summary>
-    public DateOnly? UsersBirthday { get; set; }
+    public ulong? StatusId { get; set; }
 
     /// <summary>
-    /// Дата устройства на работу
+    /// смена статуса
     /// </summary>
-    public DateOnly? UsersStartWork { get; set; }
+    public DateOnly? StatusAt { get; set; }
 
     /// <summary>
-    /// Разрешения
+    /// разрешения
     /// </summary>
-    public string UsersPermissions { get; set; }
+    public string Permissions { get; set; }
 
-    /// <summary>
-    /// Метка удаления
-    /// </summary>
-    public bool Delete { get; set; }
+    public DateTime? DeletedAt { get; set; }
+
+    public string RememberToken { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual UserDepartment Department { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-    public virtual UsersDepartment UsersDepartmentNavigation { get; set; }
+    public virtual UserPosition Position { get; set; }
 
-    public virtual UsersFunction UsersFunctionNavigation { get; set; }
-
-    public virtual UsersStatus UsersStatusNavigation { get; set; }
+    public virtual UserStatus Status { get; set; }
 }

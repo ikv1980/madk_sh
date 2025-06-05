@@ -13,7 +13,7 @@ namespace Project.ViewModels
     {
         public ObservableCollection<Order> Orders { get; set; }
         public ObservableCollection<Car> SelectedOrderCars { get; set; }
-        public ObservableCollection<MmOrdersStatus> SelectedOrderStatuses { get; set; }
+        public ObservableCollection<OrderStatus> SelectedOrderStatuses { get; set; }
 
         private Order _selectedOrder;
 
@@ -36,7 +36,7 @@ namespace Project.ViewModels
         public OrderPageViewModel()
         {
             SelectedOrderCars = new ObservableCollection<Car>();
-            SelectedOrderStatuses = new ObservableCollection<MmOrdersStatus>();
+            SelectedOrderStatuses = new ObservableCollection<OrderStatus>();
 
             // Инициализация данных
             InitializeOrdersAsync();
@@ -54,8 +54,8 @@ namespace Project.ViewModels
 
             var orderValues = TableValue.Cast<Order>().Where(order =>
             {
-                var lastStatus = order.MmOrdersStatuses
-                    .OrderByDescending(status => status.Date)
+                var lastStatus = order.OrderStatuses
+                    .OrderByDescending(status => status.CreatedAt)
                     .FirstOrDefault();
 
                 if (lastStatus != null)
@@ -63,9 +63,11 @@ namespace Project.ViewModels
                     if (lastStatus.StatusId == 4)
                         return false;
 
-                    if (lastStatus.StatusId == 5)
+                    if (lastStatus?.CreatedAt != null)
                     {
-                        var daysSinceCompleted = (DateTime.Now - lastStatus.Date).TotalDays;
+                        TimeSpan timePassed = DateTime.Now - lastStatus.CreatedAt.Value;
+                        double daysSinceCompleted = timePassed.TotalDays;
+
                         if (daysSinceCompleted >= 5)
                             return false;
                     }
@@ -86,12 +88,11 @@ namespace Project.ViewModels
                 SelectedOrderStatuses.Clear();
 
                 // Загрузка автомобилей
-                var cars = DbUtils.db.MmOrdersCars
-                    .Include(m => m.Car)
-                    .ThenInclude(c => c.CarMarkNavigation)
-                    .Include(m => m.Car.CarModelNavigation)
-                    .Include(m => m.Car.CarColorNavigation)
-                    .Where(m => m.OrderId == SelectedOrder.OrdersId)
+                var cars = DbUtils.db.OrderCars
+                    .Include(m => m.Car).ThenInclude(mmc => mmc.Mark)
+                    .Include(m => m.Car).ThenInclude(mmc => mmc.Model)
+                    .Include(m => m.Car).ThenInclude(c => c.Color)
+                    .Where(m => m.OrderId == SelectedOrder.Id)
                     .Select(m => m.Car)
                     .ToList();
 
@@ -99,10 +100,10 @@ namespace Project.ViewModels
                     SelectedOrderCars.Add(car);
 
                 // Загрузка статусов
-                var statuses = DbUtils.db.MmOrdersStatuses
+                var statuses = DbUtils.db.OrderStatuses
                     .Include(s => s.Status)
-                    .Where(s => s.OrderId == SelectedOrder.OrdersId)
-                    .OrderBy(s => s.Date)
+                    .Where(s => s.OrderId == SelectedOrder.Id)
+                    .OrderBy(s => s.CreatedAt)
                     .ToList();
 
                 foreach (var status in statuses)

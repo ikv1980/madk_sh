@@ -10,6 +10,9 @@
       xmlns:wind="clr-namespace:Project.Views.Pages.DirectoryPages.Edit"
       d:DesignHeight="450" d:DesignWidth="1100"
       Title="UsersPage">
+    <Page.Resources>
+        <tools:IndexConverter x:Key="IndexConverter" />
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -30,6 +33,7 @@
                   BorderThickness="1"
                   BorderBrush="Gray"
                   FontSize="16"
+                  AlternationCount="1000"
                   ItemsSource="{Binding TableValue}">
             <DataGrid.Resources>
                 <!-- Контекстное меню -->
@@ -95,11 +99,11 @@
                             <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
                         <!-- Цвет выделения для ClientStatus = false -->
-                        <DataTrigger Binding="{Binding UsersStatus}" Value="1">
+                        <DataTrigger Binding="{Binding StatusId}" Value="1">
                             <Setter Property="Background" Value="Yellow" />
                             <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding UsersStatus}" Value="3">
+                        <DataTrigger Binding="{Binding StatusId}" Value="3">
                             <Setter Property="Background" Value="Pink" />
                             <Setter Property="Foreground" Value="Black" /> <!-- Цвет текста, если нужно -->
                         </DataTrigger>
@@ -108,21 +112,23 @@
             </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Логин" Binding="{Binding UsersLogin}" />
-                <DataGridTextColumn Header="Фамилия" Binding="{Binding UsersSurname}" />
-                <DataGridTextColumn Header="Имя" Binding="{Binding UsersName}" />
-                <DataGridTextColumn Header="Отчество" Binding="{Binding UsersPatronymic}" />
-                <DataGridTextColumn Header="Отдел" Binding="{Binding UsersDepartmentNavigation.DepartmentName}" />
-                <DataGridTextColumn Header="Должность" Binding="{Binding UsersFunctionNavigation.FunctionName}" />
+                <DataGridTextColumn Header="№"
+                                    Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
+                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" />
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
+                <DataGridTextColumn Header="Имя" Binding="{Binding Firstname}" />
+                <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
+                <DataGridTextColumn Header="Отдел" Binding="{Binding Department.DepartmentName}" />
+                <DataGridTextColumn Header="Должность" Binding="{Binding Position.PositionName}" />
                 <DataGridTextColumn Header="Дата приема"
-                                    Binding="{Binding UsersStartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Телефон" Binding="{Binding UsersPhone}" />
-                <DataGridTextColumn Header="E-mail" Binding="{Binding UsersMail}" />
+                                    Binding="{Binding StartWork, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" />
+                <DataGridTextColumn Header="E-mail" Binding="{Binding Email}" />
                 <DataGridTextColumn Header="Дата рождения"
-                                    Binding="{Binding UsersBirthday, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Статус" Binding="{Binding UsersStatusNavigation.StatusName}" />
+                                    Binding="{Binding Birthday, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status.StatusName}" />
                 <DataGridTextColumn Header="Дата статуса"
-                                    Binding="{Binding UsersStatusChange, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                    Binding="{Binding StatusAt, StringFormat='{}{0:dd.MM.yyyy}'}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Блок навигации внизу -->

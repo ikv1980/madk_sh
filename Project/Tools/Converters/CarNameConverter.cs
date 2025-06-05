@@ -11,7 +11,7 @@ namespace Project.Tools
         {
             if (value is Car car)
             {
-                return $"{car.CarMarkNavigation.MarkName} {car.CarModelNavigation.ModelName} ({car.CarColorNavigation.ColorName}, {car.CarDate}) ";
+                return $"{car.Mark.MarkName} {car.Model.ModelName} ({car.Color.ColorName}, {car.DateAt}) ";
             }
 
             return string.Empty;

@@ -4,17 +4,16 @@ using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditUser : UiWindow, IRefresh
+    public partial class EditUser : IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
         private readonly string _oldPassword;
         private readonly ValidateField _validator;
 
@@ -23,7 +22,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             InitializeComponent();
             Init();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -38,35 +36,31 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public EditUser(User item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            InitializeComponent();
+            
             Init();
-            _oldPassword = item.UsersPassword;
-            _itemId = item.UsersId;
+            _oldPassword = item.Password;
+            _itemId = item.Id;
 
             // Установка значений в форму
-            EditUsersSurname.Text = item.UsersSurname;
-            EditUsersName.Text = item.UsersName;
-            EditUsersPatronymic.Text = item.UsersPatronymic;
-            EditUsersBirthday.SelectedDate = item.UsersBirthday.HasValue
-                ? item.UsersBirthday.Value.ToDateTime(TimeOnly.MinValue)
+            EditUsersSurname.Text = item.Surname;
+            EditUsersName.Text = item.Firstname;
+            EditUsersPatronymic.Text = item.Patronymic;
+            EditUsersBirthday.SelectedDate = item.Birthday.HasValue
+                ? item.Birthday.Value.ToDateTime(TimeOnly.MinValue)
                 : (DateTime?)null;
-            EditUsersPhone.Text = item.UsersPhone;
-            EditUsersMail.Text = item.UsersMail;
-            EditUsersDepartment.SelectedItem =
-                DbUtils.db.UsersDepartments.FirstOrDefault(m => m.DepartmentId == item.UsersDepartment);
-            EditUsersFunction.SelectedItem =
-                DbUtils.db.UsersFunctions.FirstOrDefault(m => m.FunctionId == item.UsersFunction);
-            EditUsersStatus.SelectedItem =
-                DbUtils.db.UsersStatuses.FirstOrDefault(m => m.StatusId == item.UsersStatus);
-            EditUsersStartWork.SelectedDate = item.UsersStartWork.HasValue
-                ? item.UsersStartWork.Value.ToDateTime(TimeOnly.MinValue)
+            EditUsersPhone.Text = item.Phone;
+            EditUsersMail.Text = item.Email;
+            EditUsersDepartment.SelectedItem = DbUtils.db.UserDepartments.FirstOrDefault(m => m.Id == item.DepartmentId);
+            EditUsersPosition.SelectedItem = DbUtils.db.UserPositions.FirstOrDefault(m => m.Id == item.PositionId);
+            EditUsersStatus.SelectedItem = DbUtils.db.UserStatuses.FirstOrDefault(m => m.Id == item.StatusId);
+            EditUsersStartWork.SelectedDate = item.StartWork.HasValue
+                ? item.StartWork.Value.ToDateTime(TimeOnly.MinValue)
                 : (DateTime?)null;
-            EditUsersStatusChange.SelectedDate = item.UsersStatusChange.HasValue
-                ? item.UsersStatusChange.Value.ToDateTime(TimeOnly.MinValue)
+            EditUsersStatusChange.SelectedDate = item.StatusAt.HasValue
+                ? item.StatusAt.Value.ToDateTime(TimeOnly.MinValue)
                 : (DateTime?)null;
-            EditUsersLogin.Text = item.UsersLogin;
-            ShowUsersLogin.Text = item.UsersLogin;
+            EditUsersLogin.Text = item.Login;
+            ShowUsersLogin.Text = item.Login;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -103,7 +97,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.Users.FirstOrDefault(x => x.UsersId == _itemId)
+                    ? DbUtils.db.Users.FirstOrDefault(x => x.Id == _itemId)
                     : new User();
 
                 if (item == null)
@@ -117,14 +111,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 if (_isDeleteMode)
                 {
                     // Запрет удаления самого себя
-                    if (Global.CurrentUser.UsersLogin == item.UsersLogin)
+                    if (Global.CurrentUser.Login == item.Login)
                     {
                         MessageBox.Show("Нельзя удалить самого себя.", "Ошибка",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
-                        item.Delete = true; //DbUtils.db.Users.Remove(item);  
+                        item.DeletedAt = DateTime.Now; //DbUtils.db.Users.Remove(item);  
                     }
                 }
                 else
@@ -140,7 +134,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Добавление
                 if (!_isEditMode && !_isDeleteMode)
                 {
-                    item.UsersLogin = EditUsersLogin.Text.Trim();
+                    item.Login = EditUsersLogin.Text.Trim();
                     UpdateItem(item);
                     DbUtils.db.Users.Add(item);
                 }
@@ -165,9 +159,9 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            EditUsersDepartment.ItemsSource = DbUtils.db.UsersDepartments.Where(x => !x.Delete).ToList();
-            EditUsersFunction.ItemsSource = DbUtils.db.UsersFunctions.Where(x => !x.Delete).ToList();
-            EditUsersStatus.ItemsSource = DbUtils.db.UsersStatuses.Where(x => !x.Delete).ToList();
+            EditUsersDepartment.ItemsSource = DbUtils.db.UserDepartments.Where(x => x.DeletedAt == null).ToList();
+            EditUsersPosition.ItemsSource = DbUtils.db.UserPositions.Where(x => x.DeletedAt == null).ToList();
+            EditUsersStatus.ItemsSource = DbUtils.db.UserStatuses.Where(x => x.DeletedAt == null).ToList();
         }
 
         // Валидация данных
@@ -212,7 +206,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     return false;
                 }
 
-                if (DbUtils.db.Users.Any(x => x.UsersLogin == userLogin))
+                if (DbUtils.db.Users.Any(x => x.Login == userLogin))
                 {
                     MessageBox.Show("Клиент с таким логином уже существует.", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -241,33 +235,32 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(User item)
         {
-            item.UsersSurname = EditUsersSurname.Text.Trim();
-            item.UsersName = EditUsersName.Text.Trim();
-            item.UsersPatronymic = EditUsersPatronymic.Text.Trim();
-            item.UsersBirthday = EditUsersBirthday.SelectedDate.HasValue
+            item.Surname = EditUsersSurname.Text.Trim();
+            item.Firstname = EditUsersName.Text.Trim();
+            item.Patronymic = EditUsersPatronymic.Text.Trim();
+            item.Birthday = EditUsersBirthday.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(EditUsersBirthday.SelectedDate.Value)
                 : (DateOnly?)null;
-            item.UsersPhone = EditUsersPhone.Text.Trim();
-            item.UsersMail = EditUsersMail.Text.Trim();
-            item.UsersDepartment = (EditUsersDepartment.SelectedItem as UsersDepartment)?.DepartmentId ??
-                                   item.UsersDepartment;
-            item.UsersFunction = (EditUsersFunction.SelectedItem as UsersFunction)?.FunctionId ?? item.UsersFunction;
-            item.UsersStartWork = EditUsersStartWork.SelectedDate.HasValue
+            item.Phone = EditUsersPhone.Text.Trim();
+            item.Email = EditUsersMail.Text.Trim();
+            item.DepartmentId = (EditUsersDepartment.SelectedItem as UserDepartment)?.Id ?? item.DepartmentId;
+            item.PositionId = (EditUsersPosition.SelectedItem as UserPosition)?.Id ?? item.PositionId;
+            item.StartWork = EditUsersStartWork.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(EditUsersStartWork.SelectedDate.Value)
                 : DateOnly.FromDateTime(DateTime.Now);
-            item.UsersStatus = (EditUsersStatus.SelectedItem as UsersStatus)?.StatusId ?? item.UsersStatus;
-            item.UsersStatusChange = EditUsersStatusChange.SelectedDate.HasValue
+            item.StatusId = (EditUsersStatus.SelectedItem as UserStatus)?.Id ?? item.StatusId;
+            item.StatusAt = EditUsersStatusChange.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(EditUsersStatusChange.SelectedDate.Value)
                 : DateOnly.FromDateTime(DateTime.Now);
 
             if (!string.IsNullOrWhiteSpace(EditUsersPassword.Password))
             {
                 Helpers helper = new Helpers();
-                item.UsersPassword = helper.HashPassword(EditUsersPassword.Password);
+                item.Password = helper.HashPassword(EditUsersPassword.Password);
             }
             else
             {
-                item.UsersPassword = _oldPassword;
+                item.Password = _oldPassword;
             }
         }
 
@@ -279,18 +272,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
         private void SelectionDepartment(object sender, SelectionChangedEventArgs e)
         {
-            EditUsersFunction.IsEnabled = true;
-            var selectDepartment = EditUsersDepartment.SelectedItem as UsersDepartment;
+            EditUsersPosition.IsEnabled = true;
+            var selectDepartment = EditUsersDepartment.SelectedItem as UserDepartment;
             if (selectDepartment != null)
             {
-                EditUsersFunction.ItemsSource = DbUtils.db.MmDepartmentFunctions
-                    .Where(x => x.DepartmentId == selectDepartment.DepartmentId)
-                    .Select(x => x.Function)
+                EditUsersPosition.ItemsSource = DbUtils.db.UserDepartmentPositions
+                    .Where(x => x.DepartmentId == selectDepartment.Id)
+                    .Select(x => x.Position)
                     .ToList();
             }
             else
             {
-                EditUsersFunction.ItemsSource = null;
+                EditUsersPosition.ItemsSource = null;
             }
         }
     }

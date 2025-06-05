@@ -7,52 +7,33 @@ namespace Project.Models;
 
 public partial class Order
 {
-    public int OrdersId { get; set; }
+    public ulong Id { get; set; }
 
-    /// <summary>
-    /// id клиента
-    /// </summary>
-    public int OrdersClient { get; set; }
+    public ulong ClientId { get; set; }
 
-    /// <summary>
-    /// id сотрудника
-    /// </summary>
-    public int? OrdersUser { get; set; }
+    public ulong UserId { get; set; }
 
-    /// <summary>
-    /// Дата создания заказа
-    /// </summary>
-    public DateTime? OrdersData { get; set; }
+    public ulong PaymentId { get; set; }
 
-    /// <summary>
-    /// Тип оплаты
-    /// </summary>
-    public int OrdersPayment { get; set; }
+    public ulong DeliveryId { get; set; }
 
-    /// <summary>
-    /// Тип доставки
-    /// </summary>
-    public int OrdersDelivery { get; set; }
+    public string DeliveryAddress { get; set; }
 
-    /// <summary>
-    /// Адрес доставки
-    /// </summary>
-    public string OrdersAddress { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
-    /// <summary>
-    /// Метка удаления
-    /// </summary>
-    public bool Delete { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public virtual ICollection<MmOrdersCar> MmOrdersCars { get; set; } = new List<MmOrdersCar>();
+    public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<MmOrdersStatus> MmOrdersStatuses { get; set; } = new List<MmOrdersStatus>();
+    public virtual Client Client { get; set; }
 
-    public virtual OrdersClient OrdersClientNavigation { get; set; }
+    public virtual Delivery Delivery { get; set; }
 
-    public virtual OrdersDelivery OrdersDeliveryNavigation { get; set; }
+    public virtual ICollection<OrderCar> OrderCars { get; set; } = new List<OrderCar>();
 
-    public virtual OrdersPayment OrdersPaymentNavigation { get; set; }
+    public virtual ICollection<OrderStatus> OrderStatuses { get; set; } = new List<OrderStatus>();
 
-    public virtual User OrdersUserNavigation { get; set; }
+    public virtual Payment Payment { get; set; }
+
+    public virtual User User { get; set; }
 }

@@ -57,17 +57,17 @@
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\DirectoryPages\CarsCountryPage.xaml">
+    <Page Update="Views\Pages\DirectoryPages\CarCountriesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\DirectoryPages\OrdersClientPage.xaml">
+    <Page Update="Views\Pages\DirectoryPages\OrderClientsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Pages\DirectoryPages\UsersStatus.Pagexaml">
+    <Page Update="Views\Pages\DirectoryPages\StatusId.Pagexaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
@@ -77,6 +77,12 @@
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Pages\DirectoryPages\Edit\EditDepartmentPosition.xaml.cs">
+      <DependentUpon>EditDepartmentPosition.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

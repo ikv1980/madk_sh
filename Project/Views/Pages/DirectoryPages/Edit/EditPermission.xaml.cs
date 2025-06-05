@@ -6,18 +6,19 @@ using Project.Tools;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
-namespace Project.Views
+namespace Project.Views.Pages.DirectoryPages.Edit
 {
     public partial class EditPermission : UiWindow
     {
         private User _user;
+        private UserPermissions _userPermissions;
 
         public EditPermission(User user)
         {
             InitializeComponent();
             _user = user;
             LoadPermissions();
-            Title = "Права доступа: " + _user.UsersSurname + " " + _user.UsersName + " " + _user.UsersPatronymic;
+            Title = "Права доступа: " + _user.Surname + " " + _user.Firstname + " " + _user.Patronymic;
             if (!Global.GetWritePermissionForTab("setting"))
             {
                 UpdateButton.Visibility = Visibility.Hidden;
@@ -26,10 +27,10 @@ namespace Project.Views
 
         private void LoadPermissions()
         {
-            Global.ParsePermissions(_user);
-
+            _userPermissions = Global.ParsePermissions(_user);
+            
             // Отображение вкладок
-            foreach (var tab in Global.ParsedPermissions.Tabs)
+            foreach (var tab in _userPermissions.Tabs)
             {
                 var stackPanel = new StackPanel
                 {
@@ -53,7 +54,7 @@ namespace Project.Views
             }
 
             // Отображение справочников
-            foreach (var directory in Global.ParsedPermissions.Directoryes)
+            foreach (var directory in _userPermissions.Directories)
             {
                 var stackPanel = new StackPanel
                 {
@@ -80,8 +81,8 @@ namespace Project.Views
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             // Получаем текущие права из интерфейса
-            var tabs = Global.ParsedPermissions.Tabs;
-            var directories = Global.ParsedPermissions.Directoryes;
+            var tabs = _userPermissions.Tabs;
+            var directories = _userPermissions.Directories;
 
             // Обновляем права на основе чекбоксов
             for (int i = 0; i < TabsList.Items.Count; i++)
@@ -110,10 +111,10 @@ namespace Project.Views
                 using (var context = new Db())
                 {
                     // Найдите пользователя в базе данных
-                    var userToUpdate = context.Users.Find(_user.UsersId);
+                    var userToUpdate = context.Users.Find(_user.Id);
                     if (userToUpdate != null)
                     {
-                        userToUpdate.UsersPermissions = JsonSerializer.Serialize(Global.ParsedPermissions);
+                        userToUpdate.Permissions = JsonSerializer.Serialize(_userPermissions);
                         context.SaveChanges();
                     }
                 }

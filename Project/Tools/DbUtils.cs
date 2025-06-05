@@ -119,18 +119,18 @@ namespace Project.Tools
                 // Список таблиц, для которых не нужно загружать связанные сущности
                 var excludedTypes = new[]
                 {
-                    typeof(OrdersClient),
-                    typeof(OrdersDelivery),
-                    typeof(OrdersPayment),
-                    typeof(OrdersStatus),
-                    typeof(CarsCountry),
-                    typeof(CarsMark),
-                    typeof(CarsModel),
-                    typeof(CarsType),
-                    typeof(CarsColor),
-                    typeof(UsersDepartment),
-                    typeof(UsersFunction),
-                    typeof(UsersStatus),
+                    typeof(Client),
+                    typeof(Delivery),
+                    typeof(Payment),
+                    typeof(OrderStatus),
+                    typeof(CarCountry),
+                    typeof(CarMark),
+                    typeof(CarModel),
+                    typeof(CarType),
+                    typeof(CarColor),
+                    typeof(UserDepartment),
+                    typeof(UserPosition),
+                    typeof(Status),
                 };
 
                 // Исключаем связанные сущности

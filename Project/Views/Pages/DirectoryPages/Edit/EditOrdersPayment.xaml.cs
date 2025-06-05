@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditOrdersPayment()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditOrdersPayment(OrdersPayment item, string button) : this()
+        public EditOrdersPayment(Payment item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.PaymentId;
+            _itemId = item.Id;
             EditPaymentName.Text = item.PaymentName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.OrdersPayments.FirstOrDefault(x => x.PaymentId == _itemId)
-                    : new OrdersPayment();
+                    ? DbUtils.db.Payments.FirstOrDefault(x => x.Id == _itemId)
+                    : new Payment();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.OrdersPayments.Remove(item);   
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.Payments.Remove(item);   
                 }
                 else
                 {
@@ -86,11 +85,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         return;
 
                     // Изменение или добавление
-                    item.PaymentName = EditPaymentName.Text.Trim().ToLower();
+                    item.PaymentName = EditPaymentName.Text.Trim();
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.OrdersPayments.Add(item);
+                        DbUtils.db.Payments.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.OrdersPayments.Any(x => x.PaymentName == item && x.PaymentId != _itemId))
+            if (DbUtils.db.Payments.Any(x => x.PaymentName == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditPaymentName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

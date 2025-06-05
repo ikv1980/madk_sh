@@ -35,29 +35,29 @@ namespace Project.Views.Pages
         public class UserViewModel
         {
             public string FullName { get; }
-            public string UsersLogin { get; }
-            public string UsersPassword { get; set; }
+            public string Login { get; }
+            public string Password { get; set; }
             public string UsersEmail { get; set; }
-            public string UsersPhone { get; set; }
-            public string UsersBirthday { get; }
-            public string UsersDepartment { get; }
-            public string UsersFunction { get; }
-            public string UsersStatus { get; }
-            public string UsersStartWork { get; }
+            public string Phone { get; set; }
+            public string Birthday { get; }
+            public string DepartmentId { get; }
+            public string PositionId { get; }
+            public string StatusId { get; }
+            public string StartWork { get; }
 
             public UserViewModel(User user)
             {
-                FullName = $"{user.UsersName} {user.UsersPatronymic} {user.UsersSurname}";
-                UsersLogin = user.UsersLogin;
-                UsersEmail = user.UsersMail;
-                UsersPhone = user.UsersPhone;
-                UsersBirthday = user.UsersBirthday?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
+                FullName = $"{user.Firstname} {user.Patronymic} {user.Surname}";
+                Login = user.Login;
+                UsersEmail = user.Email;
+                Phone = user.Phone;
+                Birthday = user.Birthday?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
                                 string.Empty;
-                UsersStartWork = user.UsersStartWork?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
+                StartWork = user.StartWork?.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) ??
                                  string.Empty;
-                UsersStatus = $"{user.UsersStatusNavigation.StatusName} (с {user.UsersStatusChange:dd.MM.yyyy})";
-                UsersDepartment = user.UsersDepartmentNavigation.DepartmentName;
-                UsersFunction = user.UsersFunctionNavigation.FunctionName;
+                StatusId = $"{user.Status.StatusName} (с {user.StatusAt:dd.MM.yyyy})";
+                DepartmentId = user.Department.DepartmentName;
+                PositionId = user.Position.PositionName;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Project.Views.Pages
         {
             _showButton = _flagWriter && (!string.IsNullOrWhiteSpace(NewPasswordBox.Password) ||
                                           NewEmailTextBox.Text != _viewModel.UsersEmail ||
-                                          NewPhoneTextBox.Text != _viewModel.UsersPhone);
+                                          NewPhoneTextBox.Text != _viewModel.Phone);
             UpdateButton.Visibility = _showButton ? Visibility.Visible : Visibility.Hidden;
         }
 
@@ -80,28 +80,28 @@ namespace Project.Views.Pages
 
             // Добавление новых данных
             if (!string.IsNullOrWhiteSpace(NewPasswordBox.Password))
-                _viewModel.UsersPassword = NewPasswordBox.Password;
+                _viewModel.Password = NewPasswordBox.Password;
 
             if (NewEmailTextBox.Text != _viewModel.UsersEmail)
                 _viewModel.UsersEmail = NewEmailTextBox.Text;
 
-            if (NewPhoneTextBox.Text != _viewModel.UsersPhone)
-                _viewModel.UsersPhone = NewPhoneTextBox.Text;
+            if (NewPhoneTextBox.Text != _viewModel.Phone)
+                _viewModel.Phone = NewPhoneTextBox.Text;
 
             try
             {
                 var currentUser =
-                    await DbUtils.db.Users.SingleOrDefaultAsync(u => u.UsersLogin == _viewModel.UsersLogin);
+                    await DbUtils.db.Users.SingleOrDefaultAsync(u => u.Login == _viewModel.Login);
 
                 if (currentUser != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(_viewModel.UsersPassword))
+                    if (!string.IsNullOrWhiteSpace(_viewModel.Password))
                     {
-                        currentUser.UsersPassword = _helper.HashPassword(_viewModel.UsersPassword);
+                        currentUser.Password = _helper.HashPassword(_viewModel.Password);
                     }
 
-                    currentUser.UsersMail = _viewModel.UsersEmail;
-                    currentUser.UsersPhone = _viewModel.UsersPhone;
+                    currentUser.Email = _viewModel.UsersEmail;
+                    currentUser.Phone = _viewModel.Phone;
 
                     await DbUtils.db.SaveChangesAsync();
 

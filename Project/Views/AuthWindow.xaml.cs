@@ -1,4 +1,5 @@
-﻿using Project.Models;
+﻿using System.Text.Json;
+using Project.Models;
 using Project.Tools;
 using System.Windows;
 using Wpf.Ui.Controls;
@@ -29,23 +30,23 @@ namespace Project.Views
         // Авторизация пользователя 
         private async void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            //string login = LoginTextBox.Text;
-            //string enteredPassword = _helper.HashPassword(PasswordBox.Password);
+            string login = LoginTextBox.Text;
+            string enteredPassword = _helper.HashPassword(PasswordBox.Password);
 
-            string login = "admin";
-            string enteredPassword = _helper.HashPassword("Kostik80");
+            //string login = "admin";
+            //string enteredPassword = _helper.HashPassword("kostik80");
 
             var user = await DbUtils.db.Users
-                .Where(u => u.UsersLogin == login)
-                .Include(u => u.UsersDepartmentNavigation)
-                .Include(u => u.UsersFunctionNavigation)
-                .Include(u => u.UsersStatusNavigation)
+                .Where(u => u.Login == login)
+                .Include(u => u.Department)
+                .Include(u => u.Position)
+                .Include(u => u.Status)
                 .SingleOrDefaultAsync();
 
-            if (user != null && enteredPassword == user.UsersPassword)
+            if (user != null && enteredPassword == user.Password)
             {
                 // Проверяем удаленного пользователя
-                if (user.Delete)
+                if (user.DeletedAt != null)
                 {
                     MessageBox.Show(
                         $"Пользователь был удален из системы.\nОбратитесь к администратору.",
@@ -54,10 +55,18 @@ namespace Project.Views
                 }
 
                 // Проверяем статус пользователя
-                if (user.UsersStatus == 1 || user.UsersStatus == 3)
+                if (user.StatusId == null)
                 {
                     MessageBox.Show(
-                        $"Ваш аккаунт заблокирован.\nСтатус в системе [{user.UsersStatusNavigation.StatusName}].\nОбратитесь к администратору.",
+                        $"Ваш аккаунт не активирован.\nОбратитесь к администратору.",
+                        "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                
+                if (user.Status.StatusName.ToLower() == "уволен" || user.Status.StatusName.ToLower() == "не работает")
+                {
+                    MessageBox.Show(
+                        $"Ваш аккаунт заблокирован.\nСтатус в системе [{user.Status.StatusName}].\nОбратитесь к администратору.",
                         "Ошибка авторизации", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
@@ -106,7 +115,7 @@ namespace Project.Views
                 return;
             }
 
-            if (DbUtils.db.Users.Any(u => u.UsersLogin == login))
+            if (DbUtils.db.Users.Any(u => u.Login == login))
             {
                 MessageBox.Show("Пользователь с таким логином уже существует.", "Ошибка", MessageBoxButton.OK,
                     MessageBoxImage.Warning);
@@ -116,14 +125,13 @@ namespace Project.Views
             // Добавление нового пользователя в базу данных
             var newUser = new User
             {
-                UsersLogin = login,
-                UsersPassword = password,
-                UsersName = name,
-                UsersSurname = surname,
-                UsersDepartment = 1,
-                UsersFunction = 1,
-                UsersStatus = 1,
-                UsersPermissions = DefaultPermissions.User,
+                // Обязательные поля
+                Login = login,
+                Password = password,
+                Firstname = name,
+                Surname = surname,
+                // Необязательные поля
+                Permissions = DefaultPermissions.User,
             };
 
             await Task.Run(() =>

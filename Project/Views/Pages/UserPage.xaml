@@ -50,7 +50,7 @@
                            Grid.Row="0" Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersLogin}"
+                <TextBlock Text="{Binding Login}"
                            Grid.Row="0" Grid.Column="1"
                            FontSize="18" />
             </Grid>
@@ -107,7 +107,7 @@
                     <Border.Effect>
                         <DropShadowEffect Color="DarkGray" Direction="270" BlurRadius="0" ShadowDepth="1" />
                     </Border.Effect>
-                    <xctk:MaskedTextBox Text="{Binding UsersPhone}"
+                    <xctk:MaskedTextBox Text="{Binding Phone}"
                                         Mask="+70000000000"
                                         FontSize="16"
                                         BorderThickness="0"
@@ -125,7 +125,7 @@
                            Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersBirthday}"
+                <TextBlock Text="{Binding Birthday}"
                            Grid.Column="1"
                            FontSize="18" />
             </Grid>
@@ -140,52 +140,52 @@
             <Grid Grid.Row="8" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="500" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Департамент:"
                            Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersDepartment}"
+                <TextBlock Text="{Binding DepartmentId}"
                            Grid.Column="1"
                            FontSize="18" />
             </Grid>
             <Grid Grid.Row="9" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="500" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Должность:"
                            Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersFunction}"
+                <TextBlock Text="{Binding PositionId}"
                            Grid.Column="1"
                            FontSize="18" />
             </Grid>
             <Grid Grid.Row="10" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="500" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Дата приема:"
                            Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersStartWork}"
+                <TextBlock Text="{Binding StartWork}"
                            Grid.Column="1"
                            FontSize="18" />
             </Grid>
             <Grid Grid.Row="11" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="500" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Текущий статус:"
                            Grid.Column="0"
                            FontSize="18" FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding UsersStatus}"
+                <TextBlock Text="{Binding StatusId}"
                            Grid.Column="1"
                            FontSize="18" />
             </Grid>

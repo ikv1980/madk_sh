@@ -13,14 +13,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditMarkModel()
         {
             InitializeComponent();
             Init();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -35,17 +34,16 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMarkModel(MmMarkModel item, string button) : this()
+        public EditMarkModel(CarMarkModelCountry item, string button) : this()
         {
-            InitializeComponent();
             Init();
             _itemId = item.Id;
             EditMarkName.SelectedItem = 
-                DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.MarkId);
+                DbUtils.db.CarMarks.FirstOrDefault(m => m.Id == item.MarkId);
             EditModelName.SelectedItem = 
-                DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.ModelId);
+                DbUtils.db.CarModels.FirstOrDefault(m => m.Id == item.ModelId);
             EditCountryName.SelectedItem = 
-                DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CountryId);
+                DbUtils.db.CarCountries.FirstOrDefault(m => m.Id == item.CountryId);
             EditModelName.Width = 300;
             EditMarkName.Width = 300;
             EditCountryName.Width = 300;
@@ -83,8 +81,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.MmMarkModels.FirstOrDefault(x => x.Id == _itemId)
-                    : new MmMarkModel();
+                    ? DbUtils.db.CarMarkModelCountries.FirstOrDefault(x => x.Id == _itemId)
+                    : new CarMarkModelCountry();
 
                 if (item == null)
                 {
@@ -96,7 +94,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    DbUtils.db.MmMarkModels.Remove(item);
+                    DbUtils.db.CarMarkModelCountries.Remove(item);
                 }
                 else
                 {
@@ -108,7 +106,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.MmMarkModels.Add(item);
+                        DbUtils.db.CarMarkModelCountries.Add(item);
                     }
                 }
 
@@ -132,9 +130,9 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            EditMarkName.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
-            EditModelName.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
-            EditCountryName.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
+            EditMarkName.ItemsSource = DbUtils.db.CarMarks.Where(x => x.DeletedAt == null).ToList();
+            EditModelName.ItemsSource = DbUtils.db.CarModels.Where(x => x.DeletedAt == null).ToList();
+            EditCountryName.ItemsSource = DbUtils.db.CarCountries.Where(x => x.DeletedAt == null).ToList();
         }
 
         // Валидация данных
@@ -161,10 +159,10 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.MmMarkModels.Any(x =>
-                    x.MarkId == (int)EditMarkName.SelectedValue &&
-                    x.ModelId == (int)EditModelName.SelectedValue &&
-                    x.CountryId == (int)EditCountryName.SelectedValue &&
+            if (DbUtils.db.CarMarkModelCountries.Any(x =>
+                    x.MarkId == (ulong)EditMarkName.SelectedValue &&
+                    x.ModelId == (ulong)EditModelName.SelectedValue &&
+                    x.CountryId == (ulong)EditCountryName.SelectedValue &&
                     x.Id != _itemId))
             {
                 MessageBox.Show("Такая запись уже существует в базе данных.", "Ошибка",
@@ -176,11 +174,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Обновление данных объекта
-        private void UpdateItem(MmMarkModel item)
+        private void UpdateItem(CarMarkModelCountry item)
         {
-            item.MarkId = (EditMarkName.SelectedItem as CarsMark)?.MarkId ?? item.MarkId;
-            item.ModelId = (EditModelName.SelectedItem as CarsModel)?.ModelId ?? item.ModelId;
-            item.CountryId = (EditCountryName.SelectedItem as CarsCountry)?.CountryId ?? item.CountryId;
+            item.MarkId = (EditMarkName.SelectedItem as CarMark)?.Id ?? item.MarkId;
+            item.ModelId = (EditModelName.SelectedItem as CarModel)?.Id ?? item.ModelId;
+            item.CountryId = (EditCountryName.SelectedItem as CarCountry)?.Id ?? item.CountryId;
         }
 
         // События после загрузки окна

@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ModernWpf.Controls;
 using Project.Models;
 using Project.Tools;
 using Project.Views.Pages;
@@ -14,8 +13,10 @@ namespace Project.Views
         public ProjectWindow(User user)
         {
             InitializeComponent();
+            // Данные текущего пользователя
             Global.CurrentUser = user;
-            Global.ParsePermissions(user);
+            Global.CurrentPermissions = Global.ParsePermissions(Global.CurrentUser);
+            
             this.Loaded += change_Screeen;
             MainTabControl.SelectedIndex = 1;
             SecondTabControl.SelectedIndex = 0;
@@ -26,7 +27,7 @@ namespace Project.Views
         // Доступ к вкладкам и справочникам пользователя
         private void SetAccess()
         {
-            if (Global.ParsedPermissions?.Tabs == null || Global.ParsedPermissions.Tabs.Count == 0)
+            if (Global.CurrentPermissions.Tabs == null || Global.CurrentPermissions.Tabs.Count == 0)
             {
                 MessageBox.Show("Разрешения пользователя не определены. Доступ ограничен.", "Информация",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -34,7 +35,7 @@ namespace Project.Views
             }
 
             // Доступ к вкладкам
-            foreach (var tabPermission in Global.ParsedPermissions.Tabs)
+            foreach (var tabPermission in Global.CurrentPermissions.Tabs)
             {
                 var visibility = tabPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
 
@@ -53,75 +54,75 @@ namespace Project.Views
                         SettingTab.Visibility = visibility;
                         break;
                     case "dict":
-                        Directoryes.Visibility = visibility;
+                        Directories.Visibility = visibility;
                         break;
                 }
             }
 
             // Доступ к справочникам
-            foreach (var directoryesPermission in Global.ParsedPermissions.Directoryes)
+            foreach (var directoriesPermission in Global.CurrentPermissions.Directories)
             {
-                var visibility = directoryesPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
+                var visibility = directoriesPermission.Permissions.Read ? Visibility.Visible : Visibility.Collapsed;
 
-                switch (directoryesPermission.Name.ToLower())
+                switch (directoriesPermission.Name.ToLower())
                 {
                     // для Заказов
                     case "order":
+                        OrdersButton.Visibility = visibility;
+                        break;
+                    case "client":
                         OrdersClientButton.Visibility = visibility;
                         break;
-                    case "ordersclient":
-                        OrdersClientButton.Visibility = visibility;
-                        break;
-                    case "ordersdelivery":
+                    case "delivery":
                         OrdersDeliveryButton.Visibility = visibility;
                         break;
-                    case "orderspayment":
+                    case "payment":
                         OrdersPaymentButton.Visibility = visibility;
                         break;
-                    case "ordersstatus":
+                    case "orderstatus":
                         OrdersStatusButton.Visibility = visibility;
                         break;
                     // для Автомобилей
                     case "car":
                         CarsButton.Visibility = visibility;
                         break;
-                    case "carscountry":
-                        CarsCountryButton.Visibility = visibility;
-                        break;
-                    case "carsmark":
+                    case "carmark":
                         CarsMarkButton.Visibility = visibility;
                         break;
-                    case "carsmodel":
+                    case "carmodel":
                         CarsModelButton.Visibility = visibility;
                         break;
-                    case "carstype":
+                    case "carcountry":
+                        CarsCountryButton.Visibility = visibility;
+                        break;
+                    case "cartype":
                         CarsTypeButton.Visibility = visibility;
                         break;
-                    case "carscolor":
+                    case "carcolor":
                         CarsColorButton.Visibility = visibility;
                         break;
-                    case "mmmarkmodel":
+                    case "carmarkmodelcountry":
                         MmMarkModelButton.Visibility = visibility;
                         break;
                     // для Пользователей
                     case "user":
                         UsersButton.Visibility = visibility;
                         break;
-                    case "usersdepartment":
+                    case "userdepartment":
                         UsersDepartmentButton.Visibility = visibility;
                         break;
-                    case "usersfunction":
-                        UsersFunctionButton.Visibility = visibility;
+                    case "userposition":
+                        UsersPositionButton.Visibility = visibility;
                         break;
-                    case "usersstatus":
+                    case "userstatus":
                         UsersStatusButton.Visibility = visibility;
                         break;
-                    case "mmdepartmentfunction":
-                        MmDepartmentFunctionButton.Visibility = visibility;
+                    case "userdepartmentposition":
+                        MmDepartmentPositionButton.Visibility = visibility;
                         break;
                     // по умолчанию
                     default:
-                        Console.WriteLine($"Unknown directory: {directoryesPermission.Name}");
+                        Console.WriteLine($"Unknown directory: {directoriesPermission.Name}");
                         break;
                 }
             }
@@ -160,17 +161,17 @@ namespace Project.Views
                 }
             }
 
-            TabItem selectedItem = MainTabControl.SelectedItem as TabItem;
+            TabItem? selectedItem = MainTabControl.SelectedItem as TabItem;
             if (selectedItem != null)
             {
                 // Проверяем, является ли Tag типом страницы
                 if (selectedItem.Tag is string pageTypeString)
                 {
-                    Type pageType = Type.GetType(pageTypeString);
+                    Type? pageType = Type.GetType(pageTypeString);
                     if (pageType != null && typeof(Page).IsAssignableFrom(pageType))
                     {
                         // Создаем страницу и устанавливаем ее как содержимое TabItem
-                        var page = (Page)Activator.CreateInstance(pageType);
+                        var page = (Page)Activator.CreateInstance(pageType)!;
                         MainContent.Content = page; // Устанавливаем содержимое в Frame
                     }
                 }
@@ -178,21 +179,6 @@ namespace Project.Views
                 {
                     this.Close();
                 }
-            }
-        }
-
-        // Выбор справочника
-        private void NavigationView_SelectionChanged(ModernWpf.Controls.NavigationView sender,
-            ModernWpf.Controls.NavigationViewSelectionChangedEventArgs args)
-        {
-            NavigationViewItem item = args.SelectedItem as NavigationViewItem;
-            if (item.Tag is Type pageType && typeof(System.Windows.Controls.Page).IsAssignableFrom(pageType))
-            {
-                MainContent.Content = (System.Windows.Controls.Page)Activator.CreateInstance(pageType);
-            }
-            else if (item.Tag != null)
-            {
-                this.Close();
             }
         }
 

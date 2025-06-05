@@ -7,77 +7,60 @@ namespace Project.Models;
 
 public partial class Car
 {
-    public int CarId { get; set; }
+    public ulong Id { get; set; }
+
+    public ulong MarkId { get; set; }
+
+    public ulong ModelId { get; set; }
+
+    public ulong CountryId { get; set; }
+
+    public ulong TypeId { get; set; }
+
+    public ulong ColorId { get; set; }
 
     /// <summary>
-    /// Производитель(марка)
+    /// VIN
     /// </summary>
-    public int CarMark { get; set; }
+    public string Vin { get; set; }
 
     /// <summary>
-    /// Модель
+    /// PTS
     /// </summary>
-    public int CarModel { get; set; }
+    public string Pts { get; set; }
 
     /// <summary>
-    /// Страна производства
+    /// дата производства
     /// </summary>
-    public int CarCountry { get; set; }
+    public DateOnly DateAt { get; set; }
 
     /// <summary>
-    /// Тип
+    /// цена
     /// </summary>
-    public int CarType { get; set; }
+    public decimal Price { get; set; }
 
     /// <summary>
-    /// VIN-код
+    /// блок
     /// </summary>
-    public string CarVin { get; set; }
+    public ulong Block { get; set; }
 
-    /// <summary>
-    /// ПТС авто
-    /// </summary>
-    public string CarPts { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
-    /// <summary>
-    /// Дата производства
-    /// </summary>
-    public DateOnly? CarDate { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    /// <summary>
-    /// Цвет
-    /// </summary>
-    public int CarColor { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    /// <summary>
-    /// Фотография
-    /// </summary>
-    public byte[] CarPhoto { get; set; }
+    public virtual ICollection<CarPhoto> CarPhotos { get; set; } = new List<CarPhoto>();
 
-    /// <summary>
-    /// Цена
-    /// </summary>
-    public int CarPrice { get; set; }
+    public virtual CarColor Color { get; set; }
 
-    /// <summary>
-    /// Номер заказа
-    /// </summary>
-    public int CarBlock { get; set; }
+    public virtual CarCountry Country { get; set; }
 
-    /// <summary>
-    /// Метка удаления
-    /// </summary>
-    public bool Delete { get; set; }
+    public virtual CarMark Mark { get; set; }
 
-    public virtual CarsColor CarColorNavigation { get; set; }
+    public virtual CarModel Model { get; set; }
 
-    public virtual CarsCountry CarCountryNavigation { get; set; }
+    public virtual ICollection<OrderCar> OrderCars { get; set; } = new List<OrderCar>();
 
-    public virtual CarsMark CarMarkNavigation { get; set; }
-
-    public virtual CarsModel CarModelNavigation { get; set; }
-
-    public virtual CarsType CarTypeNavigation { get; set; }
-
-    public virtual ICollection<MmOrdersCar> MmOrdersCars { get; set; } = new List<MmOrdersCar>();
+    public virtual CarType Type { get; set; }
 }

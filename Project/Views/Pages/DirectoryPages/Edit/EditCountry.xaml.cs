@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditCountry()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditCountry(CarsCountry item, string button) : this()
+        public EditCountry(CarCountry item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.CountryId;
+            _itemId = item.Id;
             EditCountryName.Text = item.CountryName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsCountries.FirstOrDefault(x => x.CountryId == _itemId)
-                    : new CarsCountry();
+                    ? DbUtils.db.CarCountries.FirstOrDefault(x => x.Id == _itemId)
+                    : new CarCountry();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    DbUtils.db.CarsCountries.Remove(item);
+                    DbUtils.db.CarCountries.Remove(item);
                 }
                 else
                 {
@@ -90,7 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.CarsCountries.Add(item);
+                        DbUtils.db.CarCountries.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsCountries.Any(x => x.CountryName.Trim().ToLower() == item && x.CountryId != _itemId))
+            if (DbUtils.db.CarCountries.Any(x => x.CountryName.Trim().ToLower() == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditCountryName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

@@ -6,18 +6,17 @@ using Project.Interfaces;
 using Project.Models;
 using Project.Tools;
 using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Project.Views.Pages.DirectoryPages.Edit
 {
-    public partial class EditOrder : UiWindow, IRefresh
+    public partial class EditOrder : IRefresh
     {
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
-        private readonly int _currentStatus;
+        private readonly ulong _itemId;
+        private readonly ulong _currentStatus;
         public ObservableCollection<Car> SelectedOrderCars { get; set; } = new ObservableCollection<Car>();
 
         // Конструктор для добавления данных
@@ -25,7 +24,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             InitializeComponent();
             Init();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             // Установка значений в форму
@@ -34,59 +32,52 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             SaveButton.Icon = SymbolRegular.AddCircle24;
             ShowStatus.Visibility = Visibility.Collapsed;
             EditOrdersStatus.Visibility = Visibility.Collapsed;
-            EditOrdersStatus.SelectedItem = DbUtils.db.OrdersStatuses
-                .FirstOrDefault(m => m.OrderStatusId == 1);
+            EditOrdersStatus.SelectedItem = DbUtils.db.Statuses
+                .FirstOrDefault(m => m.Id == 1);
             EditOrdersData.SelectedDate = DateTime.Now;
             EditOrdersUsers.SelectedItem = DbUtils.db.Users
-                .FirstOrDefault(m => m.UsersId == Global.CurrentUser.UsersId);
+                .FirstOrDefault(m => m.Id == Global.CurrentUser.Id);
         }
 
         // Конструктор для изменения (удаления) данных
         public EditOrder(Order item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            InitializeComponent();
+            
             Init();
-            _itemId = item.OrdersId;
+            _itemId = item.Id;
 
             // Установка значений в форму
             ShowId.Visibility = Visibility.Visible;
-            ShowOrdersId.Text = item.OrdersId.ToString();
+            ShowOrdersId.Text = item.Id.ToString();
             EditOrdersClient.SelectedItem =
-                DbUtils.db.OrdersClients.FirstOrDefault(m => m.ClientId == item.OrdersClient);
+                DbUtils.db.Clients.FirstOrDefault(m => m.Id == item.ClientId);
             EditOrdersUsers.SelectedItem =
-                DbUtils.db.Users.FirstOrDefault(m => m.UsersId == item.OrdersUser);
-            ShowOrdersData.Text = item.OrdersData.HasValue
-                ? item.OrdersData.Value.ToString("dd.MM.yyyy")
-                : DateTime.Now.ToString("dd.MM.yyyy");
-            EditOrdersData.SelectedDate = item.OrdersData.HasValue
-                ? item.OrdersData.Value.Date
-                : DateTime.Now;
+                DbUtils.db.Users.FirstOrDefault(m => m.Id == item.UserId);
+            ShowOrdersData.Text = item.CreatedAt?.ToString("dd.MM.yyyy") ?? DateTime.Now.ToString("dd.MM.yyyy");
+            EditOrdersData.SelectedDate = item.CreatedAt ?? DateTime.Now;
             EditOrdersPayment.SelectedItem =
-                DbUtils.db.OrdersPayments.FirstOrDefault(m => m.PaymentId == item.OrdersPayment);
+                DbUtils.db.Payments.FirstOrDefault(m => m.Id == item.PaymentId);
             EditOrdersDelivery.SelectedItem =
-                DbUtils.db.OrdersDeliveries.FirstOrDefault(m => m.DeliveryId == item.OrdersDelivery);
-            EditOrdersAddress.Text = item.OrdersAddress;
+                DbUtils.db.Deliveries.FirstOrDefault(m => m.Id == item.DeliveryId);
+            EditOrdersAddress.Text = item.DeliveryAddress;
             // Получение статуса Заказа
             ShowStatus.Visibility = Visibility.Visible;
             EditOrdersStatus.Visibility = Visibility.Visible;
-            var latestStatusId = item.MmOrdersStatuses
-                .OrderByDescending(s => s.Date)
+            var latestStatusId = item.OrderStatuses
+                .OrderByDescending(s => s.CreatedAt)
                 .FirstOrDefault()?.StatusId;
-            _currentStatus = (int)latestStatusId;
+            _currentStatus = (ulong)(latestStatusId ?? 1);
             EditOrdersStatus.SelectedItem =
-                DbUtils.db.OrdersStatuses.FirstOrDefault(m => m.OrderStatusId == latestStatusId);
+                DbUtils.db.OrderStatuses.FirstOrDefault(m => m.Id == _currentStatus);
 
             // Загрузка связанных автомобилей
-            var carsInOrder = DbUtils.db.MmOrdersCars
+            var carsInOrder = DbUtils.db.OrderCars
                 .Include(m => m.Car)
-                .ThenInclude(c => c.CarMarkNavigation)
-                .Include(m => m.Car.CarModelNavigation)
-                .Include(m => m.Car.CarColorNavigation)
-                .Include(m => m.Car.CarCountryNavigation)
-                .Include(m => m.Car.CarTypeNavigation)
-                .Where(moc => moc.OrderId == item.OrdersId)
+                
+                .Include(m => m.Car.Color)
+                .Include(m => m.Car.Type)
+                .Where(moc => moc.OrderId == item.Id)
                 .Select(moc => moc.Car)
                 .ToList();
 
@@ -127,7 +118,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.Orders.FirstOrDefault(x => x.OrdersId == _itemId)
+                    ? DbUtils.db.Orders.FirstOrDefault(x => x.Id == _itemId)
                     : new Order();
 
                 if (item == null)
@@ -140,7 +131,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    RemoveCarsAndUnblock(item.OrdersId);
+                    RemoveCarsAndUnblock(item.Id);
                     DbUtils.db.Orders.Remove(item);
                 }
                 else
@@ -159,7 +150,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     DbUtils.db.SaveChanges();
 
                     // Сохранение нового статуса заказа
-                    var selectedStatus = (EditOrdersStatus.SelectedItem as OrdersStatus)?.OrderStatusId;
+                    var selectedStatus = (EditOrdersStatus.SelectedItem as Status)?.Id;
 
                     if (selectedStatus == null)
                     {
@@ -169,20 +160,20 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     // Удаление авто из заказа, если статус "Отменен"
                     if (selectedStatus == 4)
                     {
-                        RemoveCarsAndUnblock(item.OrdersId);
+                        RemoveCarsAndUnblock(item.Id);
                     }
 
                     // Сохранение статуса, если он изменился
                     if (_currentStatus != selectedStatus.Value)
                     {
-                        var newStatus = new MmOrdersStatus
+                        var newStatus = new OrderStatus
                         {
-                            OrderId = item.OrdersId,
+                            OrderId = item.Id,
                             StatusId = selectedStatus.Value,
-                            Date = DateTime.Now
+                            CreatedAt = DateTime.Now
                         };
 
-                        DbUtils.db.MmOrdersStatuses.Add(newStatus);
+                        DbUtils.db.OrderStatuses.Add(newStatus);
                     }
 
                     // Сохранение автомобилей в заказе, если он не был Отменен
@@ -190,18 +181,18 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     {
                         foreach (var car in SelectedOrderCars)
                         {
-                            if (!DbUtils.db.MmOrdersCars.Any(moc =>
-                                    moc.OrderId == item.OrdersId && moc.CarId == car.CarId))
+                            if (!DbUtils.db.OrderCars.Any(moc =>
+                                    moc.OrderId == item.Id && moc.CarId == car.Id))
                             {
-                                var newOrderCar = new MmOrdersCar { OrderId = item.OrdersId, CarId = car.CarId };
-                                DbUtils.db.MmOrdersCars.Add(newOrderCar);
+                                var newOrderCar = new OrderCar { OrderId = item.Id, CarId = car.Id };
+                                DbUtils.db.OrderCars.Add(newOrderCar);
                             }
 
-                            // Устанавливаем флаг CarBlock = номер заказа
-                            var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
+                            // Устанавливаем флаг Block = номер заказа
+                            var carToUpdate = DbUtils.db.Cars.FirstOrDefault(c => c.Id == car.Id);
                             if (carToUpdate != null)
                             {
-                                carToUpdate.CarBlock = item.OrdersId;
+                                carToUpdate.Block = item.Id;
                             }
                         }
                     }
@@ -213,7 +204,6 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -228,12 +218,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных
         private void Init()
         {
-            EditOrdersClient.ItemsSource = DbUtils.db.OrdersClients.Where(x => !x.Delete).ToList();
+            EditOrdersClient.ItemsSource = DbUtils.db.Clients.Where(x => x.DeletedAt == null && x.ClientStatus).ToList();
             // Только из Отдела продаж
-            EditOrdersUsers.ItemsSource = DbUtils.db.Users.Where(x => !x.Delete && x.UsersDepartment == 4).ToList();
-            EditOrdersPayment.ItemsSource = DbUtils.db.OrdersPayments.Where(x => !x.Delete).ToList();
-            EditOrdersDelivery.ItemsSource = DbUtils.db.OrdersDeliveries.Where(x => !x.Delete).ToList();
-            EditOrdersStatus.ItemsSource = DbUtils.db.OrdersStatuses.Where(x => !x.Delete).ToList();
+            EditOrdersUsers.ItemsSource = DbUtils.db.Users.Where(x => x.DeletedAt == null && x.DepartmentId == 4).ToList();
+            EditOrdersPayment.ItemsSource = DbUtils.db.Payments.Where(x => x.DeletedAt == null).ToList();
+            EditOrdersDelivery.ItemsSource = DbUtils.db.Deliveries.Where(x => x.DeletedAt == null).ToList();
+            EditOrdersStatus.ItemsSource = DbUtils.db.Statuses.Where(x => x.DeletedAt == null).ToList();
 
             // Загружаем доступные автомобили (с учетом уже добавленных)
             UpdateAvailableCars();
@@ -292,18 +282,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(Order item)
         {
-            item.OrdersClient = (EditOrdersClient.SelectedItem as OrdersClient)?.ClientId ??
-                                item.OrdersClient;
-            item.OrdersUser = (EditOrdersUsers.SelectedItem as User)?.UsersId ??
-                              item.OrdersClient;
-            item.OrdersData = EditOrdersData.SelectedDate.HasValue
+            item.ClientId = (EditOrdersClient.SelectedItem as Client)?.Id ?? item.ClientId;
+            item.UserId = (EditOrdersUsers.SelectedItem as User)?.Id ?? item.UserId;
+            item.CreatedAt = EditOrdersData.SelectedDate.HasValue
                 ? (DateTime?)EditOrdersData.SelectedDate.Value
                 : DateTime.Now;
-            item.OrdersPayment = (EditOrdersPayment.SelectedItem as OrdersPayment)?.PaymentId ??
-                                 item.OrdersPayment;
-            item.OrdersDelivery = (EditOrdersDelivery.SelectedItem as OrdersDelivery)?.DeliveryId ??
-                                  item.OrdersDelivery;
-            item.OrdersAddress = (item.OrdersDelivery == 1)
+            item.PaymentId = (EditOrdersPayment.SelectedItem as Payment)?.Id ?? item.PaymentId;
+            item.DeliveryId = (EditOrdersDelivery.SelectedItem as Delivery)?.Id ?? item.DeliveryId;
+            item.DeliveryAddress = (item.DeliveryId == 1)
                 ? "Москва. Основной склад"
                 : EditOrdersAddress.Text.Trim();
         }
@@ -317,11 +303,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Выбор типа доставки
         private void SelectionDelivery(object sender, SelectionChangedEventArgs e)
         {
-            var selectDelivery = EditOrdersDelivery.SelectedItem as OrdersDelivery;
+            var selectDelivery = EditOrdersDelivery.SelectedItem as Delivery;
 
             if (selectDelivery != null)
             {
-                if (selectDelivery.DeliveryId == 1)
+                if (selectDelivery.Id == 1)
                 {
                     EditAddressName.Visibility = Visibility.Collapsed;
                     EditAddressData.Visibility = Visibility.Collapsed;
@@ -346,36 +332,19 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return;
             }
 
-            if (SelectedOrderCars.Any(c => c.CarId == selectedCar.CarId))
+            if (SelectedOrderCars.Any(c => c.Id == selectedCar.Id))
             {
                 MessageBox.Show("Этот автомобиль уже добавлен.", "Ошибка", MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return;
             }
 
-            // Загружаем связанные данные перед добавлением
-            var fullCar = DbUtils.db.Cars
-                .Where(c => c.CarId == selectedCar.CarId)
-                .Select(c => new Car
-                {
-                    CarId = c.CarId,
-                    CarVin = c.CarVin,
-                    CarPts = c.CarPts,
-                    CarDate = c.CarDate,
-                    CarMarkNavigation = c.CarMarkNavigation,
-                    CarModelNavigation = c.CarModelNavigation,
-                    CarColorNavigation = c.CarColorNavigation,
-                    CarCountryNavigation = c.CarCountryNavigation,
-                    CarTypeNavigation = c.CarTypeNavigation
-                })
-                .FirstOrDefault();
-
             SelectedOrderCars.Add(selectedCar);
 
-            if (_itemId != -1)
+            if (_itemId != 0UL)
             {
-                var newOrderCar = new MmOrdersCar { OrderId = _itemId, CarId = selectedCar.CarId };
-                DbUtils.db.MmOrdersCars.Add(newOrderCar);
+                var newOrderCar = new OrderCar { OrderId = _itemId, CarId = selectedCar.Id };
+                DbUtils.db.OrderCars.Add(newOrderCar);
             }
 
             UpdateAvailableCars();
@@ -394,19 +363,19 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
             SelectedOrderCars.Remove(selectedCar);
 
-            if (_itemId != -1)
+            if (_itemId != 0UL)
             {
-                var carToRemove = DbUtils.db.MmOrdersCars
-                    .FirstOrDefault(moc => moc.CarId == selectedCar.CarId && moc.OrderId == _itemId);
+                var carToRemove = DbUtils.db.OrderCars
+                    .FirstOrDefault(moc => moc.CarId == selectedCar.Id && moc.OrderId == _itemId);
 
                 if (carToRemove != null)
-                    DbUtils.db.MmOrdersCars.Remove(carToRemove);
+                    DbUtils.db.OrderCars.Remove(carToRemove);
 
-                // Снимаем блокировку автомобиля (CarBlock = false)
-                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == selectedCar.CarId);
+                // Снимаем блокировку автомобиля (Block = false)
+                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.Id == selectedCar.Id);
                 if (carToUnblock != null)
                 {
-                    carToUnblock.CarBlock = 0;
+                    carToUnblock.Block = 0;
                 }
             }
 
@@ -414,19 +383,19 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Удаление и разблокировка авто (удаление или отмена заказа)
-        private void RemoveCarsAndUnblock(int orderId)
+        private void RemoveCarsAndUnblock(ulong orderId)
         {
-            var carsToRemove = DbUtils.db.MmOrdersCars.Where(moc => moc.OrderId == orderId).ToList();
+            var carsToRemove = DbUtils.db.OrderCars.Where(moc => moc.OrderId == orderId).ToList();
 
-            DbUtils.db.MmOrdersCars.RemoveRange(carsToRemove);
+            DbUtils.db.OrderCars.RemoveRange(carsToRemove);
 
             foreach (var car in carsToRemove)
             {
-                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.CarId == car.CarId);
+                var carToUnblock = DbUtils.db.Cars.FirstOrDefault(c => c.Id == car.CarId);
                 if (carToUnblock != null)
                 {
-                    carToUnblock.CarBlock = 0;
-                    //фкDbUtils.db.SaveChanges();
+                    carToUnblock.Block = 0;
+                    // DbUtils.db.SaveChanges();
                 }
             }
 
@@ -437,21 +406,20 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         private void UpdateAvailableCars()
         {
             // Получаем ID уже добавленных автомобилей
-            var selectedCarIds = SelectedOrderCars.Select(c => c.CarId).ToList();
+            var selectedCarIds = SelectedOrderCars.Select(c => c.Id).ToList();
 
             // Фильтруем доступные автомобили
             AvailableCarsComboBox.ItemsSource = DbUtils.db.Cars
-                .Where(c => !c.Delete && (c.CarBlock == 0))
-                .Include(c => c.CarMarkNavigation)
-                .Include(c => c.CarModelNavigation)
-                .Include(c => c.CarColorNavigation)
-                .Include(c => c.CarCountryNavigation)
-                .Include(c => c.CarTypeNavigation)
+                .Where(c => c.DeletedAt == null && (c.Block == 0))
+                .Include(m => m.Mark)
+                .Include(m => m.Model)
+                .Include(c => c.Color)
+                .Include(c => c.Type)
                 .AsEnumerable()
-                .Where(c => !selectedCarIds.Contains(c.CarId))
+                .Where(c => !selectedCarIds.Contains(c.Id))
                 .ToList();
         }
-
+        
         // Вызов окна для добавления нового клиента
         private void AddClient(object sender, RoutedEventArgs e)
         {
@@ -465,8 +433,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             var selectedCar = AddedCarsList.SelectedItem as Car;
 
-            var showCar = new EditCar(selectedCar, "Show");
-            showCar.ShowDialog();
+            if (selectedCar != null)
+            {
+                var showCar = new EditCar(selectedCar, "Show");
+                showCar.ShowDialog();
+            }
         }
     }
 }

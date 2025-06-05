@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditOrdersStatus()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,13 +27,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditOrdersStatus(OrdersStatus item, string button) : this()
+        public EditOrdersStatus(Status item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.OrderStatusId;
-            EditStatusName.Text = item.OrderStatusName;
-            EditDescriptionName.Text = item.OrderStatusDescription;
+            _itemId = item.Id;
+            EditStatusName.Text = item.StatusName;
+            EditDescriptionName.Text = item.StatusDescription;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -66,8 +65,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.OrdersStatuses.FirstOrDefault(x => x.OrderStatusId == _itemId)
-                    : new OrdersStatus();
+                    ? DbUtils.db.Statuses.FirstOrDefault(x => x.Id == _itemId)
+                    : new Status();
 
                 if (item == null)
                 {
@@ -79,7 +78,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.OrdersStatuses.Remove(item);   
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.Statuses.Remove(item);   
                 }
                 else
                 {
@@ -87,12 +86,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         return;
 
                     // Изменение или добавление
-                    item.OrderStatusName = EditStatusName.Text.Trim();
-                    item.OrderStatusDescription = EditDescriptionName.Text.Trim();
+                    item.StatusName = EditStatusName.Text.Trim();
+                    item.StatusDescription = EditDescriptionName.Text.Trim();
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.OrdersStatuses.Add(item);
+                        DbUtils.db.Statuses.Add(item);
                     }
                 }
 
@@ -133,7 +132,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.OrdersStatuses.Any(x => x.OrderStatusName == status && x.OrderStatusId != _itemId))
+            if (DbUtils.db.Statuses.Any(x => x.StatusName == status && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditStatusName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

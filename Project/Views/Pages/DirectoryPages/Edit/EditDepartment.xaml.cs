@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditDepartment()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditDepartment(UsersDepartment item, string button) : this()
+        public EditDepartment(UserDepartment item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.DepartmentId;
+            _itemId = item.Id;
             EditDepartmentName.Text = item.DepartmentName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.UsersDepartments.FirstOrDefault(x => x.DepartmentId == _itemId)
-                    : new UsersDepartment();
+                    ? DbUtils.db.UserDepartments.FirstOrDefault(x => x.Id == _itemId)
+                    : new UserDepartment();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.UsersDepartments.Remove(item);   
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.UsersDepartments.Remove(item);   
                 }
                 else
                 {
@@ -90,7 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.UsersDepartments.Add(item);
+                        DbUtils.db.UserDepartments.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
+            if (DbUtils.db.UserDepartments.Any(x => x.DepartmentName == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditDepartmentName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

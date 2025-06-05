@@ -11,24 +11,33 @@ namespace Project.Tools
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int orderId)
+            var russianCulture = new CultureInfo("ru-RU");
+            if (value is ulong orderId)
             {
                 using (var db = new Db())
                 {
-                    var totalPrice = db.MmOrdersCars
+                    var totalPrice = db.OrderCars
                         .Where(oc => oc.OrderId == orderId)
-                        .Sum(oc => oc.Car.CarPrice);
+                        .Sum(oc => oc.Car.Price);
 
-                    return totalPrice.ToString("N0", culture) + " ₽";
+                    return totalPrice.ToString("N2", russianCulture) + " ₽";
                 }
             }
 
-            return "0 ₽";
+            return "0,00 ₽";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value;
+            if (value is string stringValue)
+            {
+                if (decimal.TryParse(stringValue.Replace(" ₽", ""), NumberStyles.Any, new CultureInfo("ru-RU"), out decimal price))
+                {
+                    return price;
+                }
+            }
+            
+            return 0m;
         }
     }
 }

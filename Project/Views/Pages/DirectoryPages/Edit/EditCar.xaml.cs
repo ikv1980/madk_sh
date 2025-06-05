@@ -19,15 +19,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
-        private byte[] _carImageBytes;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditCar()
         {
             InitializeComponent();
             Init();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -39,32 +37,30 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public EditCar(Car item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-
-            InitializeComponent();
+            
             Init();
-            _itemId = item.CarId;
+            _itemId = item.Id;
 
             // Установка значений в форму
             EditCarMark.SelectedItem =
-                DbUtils.db.CarsMarks.FirstOrDefault(m => m.MarkId == item.CarMark);
+                DbUtils.db.CarMarks.FirstOrDefault(m => m.Id == item.MarkId);
             EditCarModel.SelectedItem =
-                DbUtils.db.CarsModels.FirstOrDefault(m => m.ModelId == item.CarModel);
+                DbUtils.db.CarModels.FirstOrDefault(m => m.Id == item.ModelId);
             EditCarCountry.SelectedItem =
-                DbUtils.db.CarsCountries.FirstOrDefault(m => m.CountryId == item.CarCountry);
+                DbUtils.db.CarCountries.FirstOrDefault(m => m.Id == item.CountryId);
             EditCarType.SelectedItem =
-                DbUtils.db.CarsTypes.FirstOrDefault(m => m.TypeId == item.CarType);
+                DbUtils.db.CarTypes.FirstOrDefault(m => m.Id == item.TypeId);
             EditCarColor.SelectedItem =
-                DbUtils.db.CarsColors.FirstOrDefault(m => m.ColorId == item.CarColor);
-            EditCarVin.Text = item.CarVin;
-            EditCarPts.Text = item.CarPts;
-            EditCarDate.SelectedDate = item.CarDate.HasValue
-                ? item.CarDate.Value.ToDateTime(TimeOnly.MinValue)
-                : (DateTime?)null;
-            ShowCarBlock.Text = (item.CarBlock != 0 ? "В заказе №" + item.CarBlock.ToString() : "Свободна к продаже");
-            ShowCarBlock.Background = item.CarBlock != 0 ? Brushes.Pink : Brushes.LightGreen;
-            EditPrice.Text = item.CarPrice.ToString();
-            _carImageBytes = item.CarPhoto;
-            DisplayImage(item.CarPhoto);
+                DbUtils.db.CarColors.FirstOrDefault(m => m.Id == item.ColorId);
+            EditCarVin.Text = item.Vin;
+            EditCarPts.Text = item.Pts;
+            EditCarDate.SelectedDate = item.DateAt == default 
+                ? (DateTime?)null 
+                : item.DateAt.ToDateTime(TimeOnly.MinValue);
+            ShowCarBlock.Text = (item.Block != 0  ? "В заказе №" + item.Block.ToString() : "Свободна к продаже");
+            ShowCarBlock.Background = item.Block != 0 ? Brushes.Pink : Brushes.LightGreen;
+            EditPrice.Text = item.Price.ToString();
+            //DisplayImage();
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
             if (button == "Change")
@@ -95,7 +91,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.Cars.FirstOrDefault(x => x.CarId == _itemId)
+                    ? DbUtils.db.Cars.FirstOrDefault(x => x.Id == _itemId)
                     : new Car();
 
                 if (item == null)
@@ -108,7 +104,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.Cars.Remove(item);   
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.Cars.Remove(item);   
                 }
                 else
                 {
@@ -123,14 +119,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                         DbUtils.db.Cars.Add(item);
                     }
                 }
-
+                
                 DbUtils.db.SaveChanges();
                 RefreshRequested?.Invoke();
                 Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -145,11 +140,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Инициализация данных для списков
         private void Init()
         {
-            EditCarMark.ItemsSource = DbUtils.db.CarsMarks.Where(x => !x.Delete).ToList();
-            EditCarModel.ItemsSource = DbUtils.db.CarsModels.Where(x => !x.Delete).ToList();
-            EditCarCountry.ItemsSource = DbUtils.db.CarsCountries.Where(x => !x.Delete).ToList();
-            EditCarType.ItemsSource = DbUtils.db.CarsTypes.Where(x => !x.Delete).ToList();
-            EditCarColor.ItemsSource = DbUtils.db.CarsColors.Where(x => !x.Delete).ToList();
+            EditCarMark.ItemsSource = DbUtils.db.CarMarks.Where(x => x.DeletedAt == null).ToList();
+            EditCarModel.ItemsSource = DbUtils.db.CarModels.Where(x => x.DeletedAt == null).ToList();
+            EditCarCountry.ItemsSource = DbUtils.db.CarCountries.Where(x => x.DeletedAt == null).ToList();
+            EditCarType.ItemsSource = DbUtils.db.CarTypes.Where(x => x.DeletedAt == null).ToList();
+            EditCarColor.ItemsSource = DbUtils.db.CarColors.Where(x => x.DeletedAt == null).ToList();
         }
 
         // Валидация данных
@@ -223,14 +218,14 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 var vin = EditCarVin.Text.Trim();
                 var pts = EditCarPts.Text.Trim();
 
-                if (DbUtils.db.Cars.Any(x => x.CarVin == vin))
+                if (DbUtils.db.Cars.Any(x => x.Vin == vin))
                 {
                     MessageBox.Show("Такой VIN уже существует", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
-                if (DbUtils.db.Cars.Any(x => x.CarPts == pts))
+                if (DbUtils.db.Cars.Any(x => x.Pts == pts))
                 {
                     MessageBox.Show("Такой ПТС уже существует", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -244,18 +239,17 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         // Обновление данных объекта
         private void UpdateItem(Car item)
         {
-            item.CarMark = (EditCarMark.SelectedItem as CarsMark)?.MarkId ?? item.CarMark;
-            item.CarModel = (EditCarModel.SelectedItem as CarsModel)?.ModelId ?? item.CarModel;
-            item.CarCountry = (EditCarCountry.SelectedItem as CarsCountry)?.CountryId ?? item.CarCountry;
-            item.CarType = (EditCarType.SelectedItem as CarsType)?.TypeId ?? item.CarType;
-            item.CarColor = (EditCarColor.SelectedItem as CarsColor)?.ColorId ?? item.CarColor;
-            item.CarVin = EditCarVin.Text.Trim().ToUpper();;
-            item.CarPts = EditCarPts.Text.Trim().ToUpper();;
-            item.CarDate = EditCarDate.SelectedDate.HasValue
+            item.MarkId = (EditCarMark.SelectedItem as CarMark)?.Id ?? item.MarkId;
+            item.ModelId = (EditCarModel.SelectedItem as CarModel)?.Id ?? item.ModelId;
+            item.CountryId = (EditCarCountry.SelectedItem as CarCountry)?.Id ?? item.CountryId;
+            item.TypeId = (EditCarType.SelectedItem as CarType)?.Id ?? item.TypeId;
+            item.ColorId = (EditCarColor.SelectedItem as CarColor)?.Id ?? item.ColorId;
+            item.Vin = EditCarVin.Text.Trim().ToUpper();
+            item.Pts = EditCarPts.Text.Trim().ToUpper();
+            item.DateAt = EditCarDate.SelectedDate.HasValue
                 ? DateOnly.FromDateTime(EditCarDate.SelectedDate.Value)
-                : (DateOnly?)null;
-            item.CarPrice = int.TryParse(EditPrice.Text.Trim(), out int price) ? price : 0;
-            item.CarPhoto = EditCarImage.Source != null ? _carImageBytes : null;
+                : DateOnly.MinValue; // или другое значение по умолчанию
+            item.Price = decimal.TryParse(EditPrice.Text.Trim(), out decimal price) ? price : 0;
         }
 
         // Фокус на элементе
@@ -269,12 +263,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             EditCarModel.IsEnabled = true;
 
-            var selectMark = EditCarMark.SelectedItem as CarsMark;
+            var selectMark = EditCarMark.SelectedItem as CarMark;
 
             if (selectMark != null)
             {
-                var models = DbUtils.db.MmMarkModels
-                    .Where(x => x.MarkId == selectMark.MarkId)
+                var models = DbUtils.db.CarMarkModelCountries
+                    .Where(x => x.MarkId == selectMark.Id)
                     .Select(x => x.Model)
                     .ToList();
 
@@ -300,13 +294,13 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         {
             EditCarCountry.IsEnabled = true;
 
-            var selectMark = EditCarMark.SelectedItem as CarsMark;
-            var selectModel = EditCarModel.SelectedItem as CarsModel;
+            var selectMark = EditCarMark.SelectedItem as CarMark;
+            var selectModel = EditCarModel.SelectedItem as CarModel;
 
             if (selectMark != null && selectModel != null)
             {
-                var countries = DbUtils.db.MmMarkModels
-                    .Where(x => x.MarkId == selectMark.MarkId && x.ModelId == selectModel.ModelId)
+                var countries = DbUtils.db.CarMarkModelCountries
+                    .Where(x => x.MarkId == selectMark.Id && x.ModelId == selectModel.Id)
                     .Select(x => x.Country)
                     .ToList();
 
@@ -351,12 +345,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                     string filePath = openFileDialog.FileName;
                     BitmapImage bitmap = new BitmapImage(new Uri(filePath));
                     EditCarImage.Source = bitmap;
-
-                    // Сжимаем изображение и конвертируем в массив байтов
-                    //_carImageBytes = File.ReadAllBytes(filePath);
-                    _carImageBytes = CompressImage(filePath, 50);
-                    //_carImageBytes = File.ReadAllBytes(filePath);
-
+                    
                     MessageBox.Show("Фото успешно загружено и сохранено в базе данных.", "Успех", 
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
@@ -394,7 +383,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
         
         // Отображение фотографии
-        private void DisplayImage(byte[] imageBytes)
+        /*private void DisplayImage(byte[] imageBytes)
         {
             if (imageBytes != null && imageBytes.Length > 0)
             {
@@ -412,7 +401,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             {
                 MessageBox.Show("Фото отсутствует.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-        }
+        }*/
 
         // Цена: ввод только цифр
         private void EditPrice_Input(object sender, TextCompositionEventArgs e)

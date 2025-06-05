@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditType()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditType(CarsType item, string button) : this()
+        public EditType(CarType item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.TypeId;
+            _itemId = item.Id;
             EditTypeName.Text = item.TypeName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsTypes.FirstOrDefault(x => x.TypeId == _itemId)
-                    : new Models.CarsType();
+                    ? DbUtils.db.CarTypes.FirstOrDefault(x => x.Id == _itemId)
+                    : new Models.CarType();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.CarsTypes.Remove(item);
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.CarTypes.Remove(item);
                 }
                 else
                 {
@@ -90,7 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.CarsTypes.Add(item);
+                        DbUtils.db.CarTypes.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsTypes.Any(x => x.TypeName.Trim().ToLower() == item && x.TypeId != _itemId))
+            if (DbUtils.db.CarTypes.Any(x => x.TypeName.Trim().ToLower() == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditTypeName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

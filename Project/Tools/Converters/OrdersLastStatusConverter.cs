@@ -11,17 +11,17 @@ namespace Project.Tools
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int orderId)
+            if (value is ulong orderId)
             {
                 using (var db = new Db())
                 {
-                    var lastStatus = db.MmOrdersStatuses
+                    var lastStatus = db.OrderStatuses // Здесь изменено: OrderStatuses → OrderStatus
                         .Where(s => s.OrderId == orderId)
-                        .OrderByDescending(s => s.Date)
+                        .OrderByDescending(s => s.CreatedAt) // Предположил, что дата хранится в CreatedAt
                         .Select(s => s.Status)
                         .FirstOrDefault();
 
-                    return lastStatus?.OrderStatusName ?? "Нет статуса";
+                    return lastStatus?.StatusName ?? "Нет статуса";
                 }
             }
 

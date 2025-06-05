@@ -16,7 +16,7 @@ namespace Project.ViewModels
     public class ReportPageViewModel : INotifyPropertyChanged
     {
         private List<User> _managers;
-        private int _selectedManagerId;
+        private ulong _selectedManagerId;
         private DateTime? _startDate;
         private DateTime? _endDate;
         private SeriesCollection _salesSeries;
@@ -32,7 +32,7 @@ namespace Project.ViewModels
             }
         }
 
-        public int SelectedManagerId
+        public ulong SelectedManagerId
         {
             get => _selectedManagerId;
             set
@@ -105,14 +105,14 @@ namespace Project.ViewModels
             using (var context = new Db())
             {
                 var managers = await context.Users
-                    .Where(u => u.UsersDepartment == 4 &&
-                                context.Orders.Any(o => o.OrdersUser == u.UsersId))
+                    .Where(u => u.DepartmentId == 4 &&
+                                context.Orders.Any(o => o.UserId == u.Id))
                     .ToListAsync();
 
                 // Добавляем элемент "Все" в начало списка
                 Managers = new List<User>
                 {
-                    new User { UsersId = 0, UsersSurname = "Все", UsersName = "" }
+                    new User { Id = 0, Surname = "Все", Firstname = "" }
                 }.Concat(managers).ToList();
             }
         }
@@ -122,38 +122,38 @@ namespace Project.ViewModels
             using (var context = new Db())
             {
                 var query = context.Orders
-                    .Include(o => o.MmOrdersCars) // Включаем связанные автомобили
+                    .Include(o => o.OrderCars) // Включаем связанные автомобили
                     .ThenInclude(m => m.Car) // Включаем данные об автомобилях
-                    .Include(o => o.MmOrdersStatuses) // Включаем статусы заказов
-                    .Include(o => o.OrdersUserNavigation) // Включаем данные о менеджере
+                    .Include(o => o.OrderStatuses) // Включаем статусы заказов
+                    .Include(o => o.User) // Включаем данные о менеджере
                     .AsQueryable();
 
                 // Если выбран не "Все", применяем фильтр по менеджеру
                 if (SelectedManagerId != 0)
                 {
-                    query = query.Where(o => o.OrdersUser == SelectedManagerId);
+                    query = query.Where(o => o.UserId == SelectedManagerId);
                 }
 
                 if (StartDate.HasValue)
                 {
-                    query = query.Where(o => o.OrdersData >= StartDate.Value);
+                    query = query.Where(o => o.CreatedAt >= StartDate.Value);
                 }
 
                 if (EndDate.HasValue)
                 {
-                    query = query.Where(o => o.OrdersData <= EndDate.Value);
+                    query = query.Where(o => o.CreatedAt <= EndDate.Value);
                 }
 
                 // Группируем по дате и менеджеру
                 var salesData = query
-                    .GroupBy(o => new { o.OrdersData.Value.Date, o.OrdersUserNavigation.UsersId })
+                    .GroupBy(o => new { o.CreatedAt.Value.Date, o.User.Id })
                     .Select(g => new
                     {
                         Date = g.Key.Date,
-                        ManagerId = g.Key.UsersId,
-                        ManagerName = g.First().OrdersUserNavigation.UsersSurname + " " +
-                                      g.First().OrdersUserNavigation.UsersName,
-                        Total = g.Sum(o => o.MmOrdersCars.Sum(m => (decimal)m.Car.CarPrice))
+                        ManagerId = g.Key.Id,
+                        ManagerName = g.First().User.Surname + " " +
+                                      g.First().User.Firstname,
+                        Total = g.Sum(o => o.OrderCars.Sum(m => (decimal)m.Car.Price))
                     })
                     .ToList();
 
@@ -212,25 +212,25 @@ namespace Project.ViewModels
             using (var context = new Db())
             {
                 var query = context.Orders
-                    .Include(o => o.OrdersClientNavigation) // Включаем данные клиента
-                    .Include(o => o.OrdersUserNavigation) // Включаем данные менеджера
-                    .Include(o => o.MmOrdersCars) // Включаем связанные автомобили
+                    .Include(o => o.Client) // Включаем данные клиента
+                    .Include(o => o.User) // Включаем данные менеджера
+                    .Include(o => o.OrderCars) // Включаем связанные автомобили
                     .ThenInclude(m => m.Car) // Включаем данные об автомобилях
                     .AsQueryable();
 
                 if (SelectedManagerId != 0)
                 {
-                    query = query.Where(o => o.OrdersUser == SelectedManagerId);
+                    query = query.Where(o => o.UserId == SelectedManagerId);
                 }
 
                 if (StartDate.HasValue)
                 {
-                    query = query.Where(o => o.OrdersData >= StartDate.Value);
+                    query = query.Where(o => o.CreatedAt >= StartDate.Value);
                 }
 
                 if (EndDate.HasValue)
                 {
-                    query = query.Where(o => o.OrdersData <= EndDate.Value);
+                    query = query.Where(o => o.CreatedAt <= EndDate.Value);
                 }
 
                 var orders = query.ToList();
@@ -247,12 +247,12 @@ namespace Project.ViewModels
 
                     for (int i = 0; i < orders.Count; i++)
                     {
-                        worksheet.Cells[i + 2, 1].Value = orders[i].OrdersId;
-                        worksheet.Cells[i + 2, 2].Value = orders[i].OrdersClientNavigation?.ClientName ?? "N/A";
-                        worksheet.Cells[i + 2, 3].Value = orders[i].OrdersUserNavigation?.UsersName ?? "N/A";
-                        worksheet.Cells[i + 2, 4].Value = orders[i].OrdersData;
+                        worksheet.Cells[i + 2, 1].Value = orders[i].Id;
+                        worksheet.Cells[i + 2, 2].Value = orders[i].Client?.ClientName ?? "N/A";
+                        worksheet.Cells[i + 2, 3].Value = orders[i].User?.Firstname ?? "N/A";
+                        worksheet.Cells[i + 2, 4].Value = orders[i].CreatedAt;
                         worksheet.Cells[i + 2, 5].Value =
-                            orders[i].MmOrdersCars.Sum(m => m.Car.CarPrice); // Сумма цен автомобилей
+                            orders[i].OrderCars.Sum(m => m.Car.Price); // Сумма цен автомобилей
                     }
 
                     var fileInfo = new FileInfo("Отчет_по_заказам.xlsx");

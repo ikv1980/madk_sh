@@ -116,15 +116,15 @@
                             <Setter Property="Opacity" Value="0.8"></Setter>
                         </Trigger>
                         <!-- Цвет выделения для LastStatusConverter = 3 -->
-                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                        <DataTrigger Binding="{Binding Id, Converter={StaticResource LastStatusConverter}}"
                                      Value="Создан">
                             <Setter Property="Background" Value="Yellow" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                        <DataTrigger Binding="{Binding Id, Converter={StaticResource LastStatusConverter}}"
                                      Value="Подтвержден">
                             <Setter Property="Background" Value="LightGreen" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}"
+                        <DataTrigger Binding="{Binding Id, Converter={StaticResource LastStatusConverter}}"
                                      Value="Выполнен">
                             <Setter Property="Background" Value="ForestGreen" />
                             <Setter Property="Foreground" Value="White" />
@@ -134,25 +134,25 @@
             </DataGrid.RowStyle>
             <!-- Основной контент -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№ заказа" Binding="{Binding OrdersId}" />
-                <DataGridTextColumn Header="Клиент" Binding="{Binding OrdersClientNavigation.ClientName}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Client.ClientName}" />
                 <DataGridTextColumn Header="Менеджер">
                     <DataGridTextColumn.Binding>
                         <MultiBinding StringFormat="{}{0} {1}">
-                            <Binding Path="OrdersUserNavigation.UsersSurname" />
-                            <Binding Path="OrdersUserNavigation.UsersName" />
+                            <Binding Path="User.Surname" />
+                            <Binding Path="User.Firstname" />
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Дата создания"
-                                    Binding="{Binding OrdersData, StringFormat='{}{0:dd.MM.yyyy}'}" />
-                <DataGridTextColumn Header="Тип оплаты" Binding="{Binding OrdersPaymentNavigation.PaymentName}" />
-                <DataGridTextColumn Header="Тип доставки" Binding="{Binding OrdersDeliveryNavigation.DeliveryName}" />
-                <DataGridTextColumn Header="Адрес доставки" Binding="{Binding OrdersAddress}" />
+                                    Binding="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <DataGridTextColumn Header="Тип оплаты" Binding="{Binding Payment.PaymentName}" />
+                <DataGridTextColumn Header="Тип доставки" Binding="{Binding Delivery.DeliveryName}" />
+                <DataGridTextColumn Header="Адрес доставки" Binding="{Binding DeliveryAddress}" Width="200" />
                 <DataGridTextColumn Header="Статус"
-                                    Binding="{Binding OrdersId, Converter={StaticResource LastStatusConverter}}" />
+                                    Binding="{Binding Id, Converter={StaticResource LastStatusConverter}}" />
                 <DataGridTextColumn Header="ИТОГО"
-                                    Binding="{Binding OrdersId, Converter={StaticResource TotalPriceConverter}}" />
+                                    Binding="{Binding Id, Converter={StaticResource TotalPriceConverter}}" />
             </DataGrid.Columns>
         </DataGrid>
         <!-- Таблица с дополнительными данными -->
@@ -171,20 +171,20 @@
                           BorderThickness="1"
                           BorderBrush="LightGray"
                           FontSize="16"
-                          AlternationCount="20"
+                          AlternationCount="1000"
                           RowHeight="30" MaxHeight="185"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderCars}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="№"
                                             Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
-                        <DataGridTextColumn Header="Марка" Binding="{Binding CarMarkNavigation.MarkName}" />
-                        <DataGridTextColumn Header="Модель" Binding="{Binding CarModelNavigation.ModelName}" />
-                        <DataGridTextColumn Header="Цвет" Binding="{Binding CarColorNavigation.ColorName}" />
+                        <DataGridTextColumn Header="Марка" Binding="{Binding Mark.MarkName}" />
+                        <DataGridTextColumn Header="Модель" Binding="{Binding Model.ModelName}" />
+                        <DataGridTextColumn Header="Цвет" Binding="{Binding Color.ColorName}" />
                         <DataGridTextColumn Header="Дата производства"
-                                            Binding="{Binding CarDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                                            Binding="{Binding DateAt, StringFormat='{}{0:dd.MM.yyyy}'}" />
                         <DataGridTextColumn Header="Цена, ₽"
-                                            Binding="{Binding CarPrice, Converter={StaticResource PriceConverter}}" />
+                                            Binding="{Binding Price, Converter={StaticResource PriceConverter}}" />
                     </DataGrid.Columns>
                     <!-- Стиль для заголовка -->
                     <DataGrid.ColumnHeaderStyle>
@@ -216,7 +216,7 @@
                           BorderThickness="1"
                           BorderBrush="LightGray"
                           FontSize="16"
-                          AlternationCount="20"
+                          AlternationCount="1000"
                           RowHeight="30" MaxHeight="185"
                           ScrollViewer.CanContentScroll="False"
                           ItemsSource="{Binding SelectedOrderStatuses}">
@@ -224,8 +224,8 @@
                         <DataGridTextColumn Header="№"
                                             Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}, Path=AlternationIndex, Converter={StaticResource IndexConverter}}" />
                         <DataGridTextColumn Header="Дата изменения"
-                                            Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
-                        <DataGridTextColumn Header="Статус" Binding="{Binding Status.OrderStatusName}" />
+                                            Binding="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status.StatusName}" />
                     </DataGrid.Columns>
                     <!-- Стиль для заголовка -->
                     <DataGrid.ColumnHeaderStyle>

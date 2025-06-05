@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace Project.Tools
 {
-    internal class MultiBindingConverter : IMultiValueConverter
+    public class MultiBindingConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

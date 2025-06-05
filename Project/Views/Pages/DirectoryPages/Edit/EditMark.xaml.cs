@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditMark()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditMark(CarsMark item, string button) : this()
+        public EditMark(CarMark item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.MarkId;
+            _itemId = item.Id;
             EditMarkName.Text = item.MarkName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsMarks.FirstOrDefault(x => x.MarkId == _itemId)
-                    : new CarsMark();
+                    ? DbUtils.db.CarMarks.FirstOrDefault(x => x.Id == _itemId)
+                    : new CarMark();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.CarsMarks.Remove(item);
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.CarMarks.Remove(item);
                 }
                 else
                 {
@@ -90,7 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.CarsMarks.Add(item);
+                        DbUtils.db.CarMarks.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.MarkId != _itemId))
+            if (DbUtils.db.CarMarks.Any(x => x.MarkName.Trim().ToLower() == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditMarkName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

@@ -1,11 +1,11 @@
 ﻿{
    "CodeGenerationMode": 3,
    "ContextClassName": "Db",
-   "ContextNamespace": null,
+   "ContextNamespace": "Models",
    "FilterSchemas": false,
    "IncludeConnectionString": true,
-   "ModelNamespace": null,
-   "OutputContextPath": null,
+   "ModelNamespace": "Models",
+   "OutputContextPath": "Models",
    "OutputPath": "Models",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "Project",
@@ -15,43 +15,75 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "cache",
+         "ObjectType": 0
+      },
+      {
+         "Name": "cache_locks",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_colors",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_countries",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_mark_model_countries",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_marks",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_models",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_photos",
+         "ObjectType": 0
+      },
+      {
+         "Name": "car_types",
+         "ObjectType": 0
+      },
+      {
          "Name": "cars",
          "ObjectType": 0
       },
       {
-         "Name": "cars_color",
+         "Name": "clients",
          "ObjectType": 0
       },
       {
-         "Name": "cars_country",
+         "Name": "deliveries",
          "ObjectType": 0
       },
       {
-         "Name": "cars_mark",
+         "Name": "failed_jobs",
          "ObjectType": 0
       },
       {
-         "Name": "cars_model",
+         "Name": "job_batches",
          "ObjectType": 0
       },
       {
-         "Name": "cars_type",
+         "Name": "jobs",
          "ObjectType": 0
       },
       {
-         "Name": "mm_department_function",
+         "Name": "migrations",
          "ObjectType": 0
       },
       {
-         "Name": "mm_mark_model",
+         "Name": "order_cars",
          "ObjectType": 0
       },
       {
-         "Name": "mm_orders_cars",
-         "ObjectType": 0
-      },
-      {
-         "Name": "mm_orders_status",
+         "Name": "order_statuses",
          "ObjectType": 0
       },
       {
@@ -59,39 +91,43 @@
          "ObjectType": 0
       },
       {
-         "Name": "orders_client",
+         "Name": "password_reset_tokens",
          "ObjectType": 0
       },
       {
-         "Name": "orders_delivery",
+         "Name": "payments",
          "ObjectType": 0
       },
       {
-         "Name": "orders_payment",
+         "Name": "personal_access_tokens",
          "ObjectType": 0
       },
       {
-         "Name": "orders_status",
+         "Name": "sessions",
          "ObjectType": 0
       },
       {
-         "Name": "site_pages",
+         "Name": "statuses",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user_department_positions",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user_departments",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user_positions",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user_statuses",
          "ObjectType": 0
       },
       {
          "Name": "users",
-         "ObjectType": 0
-      },
-      {
-         "Name": "users_department",
-         "ObjectType": 0
-      },
-      {
-         "Name": "users_function",
-         "ObjectType": 0
-      },
-      {
-         "Name": "users_status",
          "ObjectType": 0
       }
    ],

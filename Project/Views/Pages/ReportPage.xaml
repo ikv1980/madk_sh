@@ -29,7 +29,7 @@
         <!-- Панель управления -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
             <ComboBox x:Name="ManagerComboBox"
-                      SelectedValuePath="UsersId"
+                      SelectedValuePath="Id"
                       SelectedValue="{Binding SelectedManagerId}"
                       Width="200"
                       Margin="10,0"

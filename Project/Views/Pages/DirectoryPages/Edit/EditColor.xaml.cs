@@ -13,13 +13,12 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         public event Action RefreshRequested;
         private readonly bool _isEditMode;
         private readonly bool _isDeleteMode;
-        private readonly int _itemId;
+        private readonly ulong _itemId;
 
         // Конструктор для добавления данных
         public EditColor()
         {
             InitializeComponent();
-            _itemId = -1;
             _isEditMode = false;
             _isDeleteMode = false;
             Title = "Добавление данных";
@@ -28,11 +27,11 @@ namespace Project.Views.Pages.DirectoryPages.Edit
         }
 
         // Конструктор для изменения (удаления) данных
-        public EditColor(CarsColor item, string button) : this()
+        public EditColor(CarColor item, string button) : this()
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            _itemId = item.ColorId;
+            _itemId = item.Id;
             EditColorName.Text = item.ColorName;
 
             // изменяем диалоговое окно, в зависимости от нажатой кнопки
@@ -65,8 +64,8 @@ namespace Project.Views.Pages.DirectoryPages.Edit
             try
             {
                 var item = (_isEditMode || _isDeleteMode)
-                    ? DbUtils.db.CarsColors.FirstOrDefault(x => x.ColorId == _itemId)
-                    : new CarsColor();
+                    ? DbUtils.db.CarColors.FirstOrDefault(x => x.Id == _itemId)
+                    : new CarColor();
 
                 if (item == null)
                 {
@@ -78,7 +77,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 // Удаление
                 if (_isDeleteMode)
                 {
-                    item.Delete = true; //DbUtils.db.CarsColors.Remove(item);   
+                    item.DeletedAt = DateTime.Now; //DbUtils.db.CarColors.Remove(item);   
                 }
                 else
                 {
@@ -90,7 +89,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
 
                     if (!_isEditMode)
                     {
-                        DbUtils.db.CarsColors.Add(item);
+                        DbUtils.db.CarColors.Add(item);
                     }
                 }
 
@@ -123,7 +122,7 @@ namespace Project.Views.Pages.DirectoryPages.Edit
                 return false;
             }
 
-            if (DbUtils.db.CarsColors.Any(x => x.ColorName == item && x.ColorId != _itemId))
+            if (DbUtils.db.CarColors.Any(x => x.ColorName == item && x.Id != _itemId))
             {
                 MessageBox.Show($"Запись '{EditColorName.Text}' уже существует в базе.", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
